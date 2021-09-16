@@ -13,12 +13,15 @@
     @apply px-6 mx-auto w-full;
     max-width: 1600px;
   }
+  .cover {
+    @apply fixed flex items-center justify-center h-screen w-full;
+  }
   .cover video {
     position: absolute;
-    width: 108%;
-    height: 108%;
-    top: -4%;
-    left: -4%;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
     object-fit: cover;
   }
   .full-bg:after {
@@ -31,9 +34,18 @@
     background: #111;
     opacity: 0.25;
   }
+  .home-links {
+    @apply bg-white relative z-10;
+    padding: 80px 200px 70px;
+  }
+  .home-links > div {
+    @apply flex justify-around  text-gray-500 links;
+    margin-top: 50px;
+  }
   .links a {
     transition: 0.3s;
     font-size: 18px;
+    padding: 10px 20px;
   }
   .links a:hover {
     color: #000;

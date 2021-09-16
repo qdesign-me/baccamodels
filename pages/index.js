@@ -1,3 +1,4 @@
+import Header from 'components/Header';
 import Head from 'next/head';
 import Link from 'next/link';
 
@@ -5,29 +6,30 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Bacca</title>
+        <title>Bacca Model Management</title>
+        <meta
+          name="description"
+          content="Bacca Models based in Russia is an international model agency representing female and male models world wide with an inspiration to embrace traditional and non traditional beauty."
+        />
+
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
-      <header className="cover fixed flex items-center justify-center h-screen w-full full-bg">
-        <video autoPlay muted loop playsInline>
-          <source src="/video/home.mp4" type="video/mp4" />
-        </video>
-        <main className="bg-white px-40 py-20 relative z-10">
-          <img className="h-20" src="/images/logo.svg" alt="" />
-          <div className="flex justify-around mt-5 text-gray-500 links">
-            <Link href="/">
-              <a className="p-3">Russia</a>
+      <Header video="/video/home.mp4">
+        <main className="home-links">
+          <img className="h-30" src="/images/logo.jpg" alt="" />
+          <div>
+            <Link href="/russia">
+              <a>Russia</a>
             </Link>
-            <Link href="/">
-              <a className="p-3">Kazakhstan</a>
+            <Link href="/russia">
+              <a>Kazakhstan</a>
             </Link>
-            <Link href="/">
-              <a className="p-3">Kids</a>
+            <Link href="/russia">
+              <a>Kids</a>
             </Link>
           </div>
         </main>
-      </header>
+      </Header>
     </>
   );
 }
