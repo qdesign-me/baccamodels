@@ -13,4 +13,29 @@
     @apply px-6 mx-auto w-full;
     max-width: 1600px;
   }
+  .cover video {
+    position: absolute;
+    width: 108%;
+    height: 108%;
+    top: -4%;
+    left: -4%;
+    object-fit: cover;
+  }
+  .full-bg:after {
+    content: '';
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 100%;
+    background: #111;
+    opacity: 0.25;
+  }
+  .links a {
+    transition: 0.3s;
+    font-size: 18px;
+  }
+  .links a:hover {
+    color: #000;
+  }
 }
