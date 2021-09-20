@@ -24,6 +24,7 @@ function Search() {
               <div className="flex flex-wrap mt-28">
                 <SearchItem />
                 <SearchItem />
+
                 <SearchItem />
               </div>
             </div>
