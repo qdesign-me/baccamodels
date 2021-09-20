@@ -1,7 +1,6 @@
 import Header from 'components/Header';
 import Head from 'next/head';
-import Link from 'next/link';
-
+import RegionLinks from 'components/RegionLinks';
 export default function Home() {
   return (
     <>
@@ -16,18 +15,8 @@ export default function Home() {
       </Head>
       <Header video="/video/home.mp4">
         <main className="home-links">
-          <img className="h-30" src="/images/logo.jpg" alt="" />
-          <div>
-            <Link href="/russia">
-              <a>Russia</a>
-            </Link>
-            <Link href="/russia">
-              <a>Kazakhstan</a>
-            </Link>
-            <Link href="/russia">
-              <a>Kids</a>
-            </Link>
-          </div>
+          <img className="h-[100px] invert-color" src="/images/logo.svg" alt="" />
+          <RegionLinks />
         </main>
       </Header>
     </>

@@ -1,17 +1,44 @@
+@import url('https://fonts.googleapis.com/css2?family=Julius+Sans+One&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   body {
+    font-family: 'Julius Sans One', sans-serif;
     font-size: 14px;
   }
 }
 
 @layer components {
+  @keyframes move {
+    0% {
+      transform: translateZ(0);
+    }
+    25% {
+      transform: translate3d(0, -3px, 0);
+    }
+    75% {
+      transform: translate3d(0, 3px, 0);
+    }
+    to {
+      transform: translateZ(0);
+    }
+  }
+  .scroll-down {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    animation-name: move;
+    animation-duration: 0.7s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+  }
   .container {
     @apply px-6 mx-auto w-full;
-    max-width: 1600px;
+    max-width: calc(100% - 14rem);
+  }
+  .wrap {
+    @apply max-w-4xl mx-auto;
   }
   .cover {
     @apply fixed flex items-center justify-center h-screen w-full;
@@ -23,6 +50,13 @@
     top: 0;
     left: 0;
     object-fit: cover;
+  }
+  .cover + div {
+    top: 100vh;
+    position: relative;
+
+    z-index: 111;
+    background: #fff;
   }
   .full-bg:after {
     content: '';
@@ -38,16 +72,166 @@
     @apply bg-white relative z-10;
     padding: 80px 200px 70px;
   }
-  .home-links > div {
-    @apply flex justify-around  text-gray-500 links;
+  .home-links > ul {
+    @apply flex justify-around  text-gray-500;
     margin-top: 50px;
   }
-  .links a {
+  .home-links a {
     transition: 0.3s;
     font-size: 18px;
     padding: 10px 20px;
   }
-  .links a:hover {
+  .home-links a:hover {
     color: #000;
+  }
+  .icons-nav {
+    @apply absolute w-full top-auto bottom-28 z-10;
+  }
+  h2 {
+    @apply text-6xl mb-12;
+  }
+  nav {
+    @apply fixed w-full left-0 z-[1000] top-28 text-white;
+  }
+
+  .text ol + p,
+  .text p + ol,
+  .text p + ul,
+  .text ul + p,
+  p + h3,
+  p + p {
+    @apply mt-3;
+  }
+  .icon-button {
+    @apply transition cursor-pointer p-2 h-10 w-10;
+  }
+  .icon-button:hover {
+    opacity: 0.75;
+  }
+  .invert-color {
+    filter: grayscale(1) invert(1);
+  }
+  .menu {
+    width: calc((100% - 120px) / 8 * 3 + 45px);
+    min-width: 500px;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 100%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-direction: column;
+    text-align: left;
+    color: #111;
+    background: #fff;
+    z-index: 1001;
+    visibility: hidden;
+    padding: 75px;
+    transition: 1s;
+  }
+  .menu.open {
+    @apply left-auto right-0 visible;
+  }
+  .menu .close {
+    @apply text-gray-400 transition hover:text-black cursor-pointer absolute z-[1000] p-5 top-[50px] right-[55px];
+  }
+  .menu.open + .menu-bg {
+    opacity: 0.4;
+    visibility: visible;
+  }
+  .menu-bg {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: #111;
+    z-index: 99;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+  }
+  .links-top {
+    @apply -ml-5;
+  }
+  .links-top ul {
+    @apply flex;
+  }
+  .links-top a {
+    @apply px-5 py-4 text-gray-400;
+  }
+  .links-top a + a {
+    @apply ml-3;
+  }
+  .links-main {
+    @apply -ml-5 mb-10;
+  }
+  .links-main a {
+    @apply text-2xl px-5 py-1 block;
+  }
+  .links-bottom {
+    @apply -ml-5;
+  }
+  .links-bottom a {
+    @apply text-xl px-5 py-1 block font-thin;
+  }
+  .links-group a {
+    @apply transition;
+  }
+  .links-group:hover a {
+    @apply text-gray-400;
+  }
+  .links-group:hover a:hover {
+    @apply !text-black;
+  }
+  .link-follow {
+    @apply inline-flex items-center border-2 border-black transition px-4 py-3 hover:bg-black hover:text-white;
+  }
+  .legend {
+    @apply text-lg text-gray-400 mt-3 font-thin;
+  }
+  .legend a {
+    @apply text-black font-normal;
+  }
+  footer ul + ul {
+    margin-left: 100px;
+  }
+  footer ul:first-child {
+    margin-right: 100px;
+  }
+  footer a {
+    line-height: 1.8rem;
+  }
+  .search-results {
+    @apply pt-28;
+    width: 100%;
+    min-height: 100vh;
+    position: fixed;
+    top: 0;
+    right: 0;
+
+    background: #111;
+    background: hsla(0, 0%, 7%, 0.97);
+    z-index: 9;
+    color: #fff;
+    visibility: hidden;
+    opacity: 0;
+  }
+  .search-open .search-results {
+    visibility: visible;
+    opacity: 1;
+  }
+  .search-open .search-results + div {
+    position: relative;
+    z-index: 10;
+  }
+  .search-open .can-hide {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+  .search-open input[type='text'] {
+    @apply outline-none border-0 bg-transparent;
   }
 }
