@@ -6,7 +6,7 @@ function Header({ video, img, scroll, children, className = 'cover full-bg' }) {
   const [muted, setMuted] = useLocalStorage('muted', true);
   return (
     <header className={className}>
-      {img && <img src={img} alt="" />}
+      {img && <img src={img} alt="" className="img" />}
       {video && <video autoPlay muted={muted} loop playsInline src={video} />}
       {children}
       <div className="icons-nav">

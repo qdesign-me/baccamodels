@@ -71,7 +71,7 @@
   header.static {
     @apply flex items-center justify-center h-screen w-full;
   }
-  header img {
+  header .img {
     @apply absolute top-0 right-0 bottom-0 w-auto h-full;
   }
   .home-links {
