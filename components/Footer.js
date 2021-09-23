@@ -5,7 +5,7 @@ import RegionLinks from './RegionLinks';
 
 function Footer() {
   return (
-    <footer className="py-10">
+    <footer className="pb-10 pt-20">
       <div className="wrap">
         <div className="flex">
           <RegionLinks />
