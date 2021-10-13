@@ -3,8 +3,8 @@ import Link from 'next/link';
 
 function Social() {
   return (
-    <div className="text-black flex space-x-6 links-group">
-      <Link href="">
+    <div className="text-black flex space-x-6 links-group social">
+      <Link href="/">
         <a>
           <svg className="h-5" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="instagram" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
             <path
@@ -15,7 +15,7 @@ function Social() {
         </a>
       </Link>
 
-      <Link href="">
+      <Link href="/">
         <a>
           <svg
             className="h-5"
@@ -35,7 +35,7 @@ function Social() {
         </a>
       </Link>
 
-      <Link href="">
+      <Link href="/">
         <a>
           <svg className="h-5" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="vk" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
             <path

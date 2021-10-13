@@ -1,9 +1,12 @@
 import React from 'react';
 import Link from 'next/link';
+import useLocalStorage from 'hooks/useLocalStorage';
 function Favorites() {
+  const [favorites] = useLocalStorage('favorites', []);
   return (
     <Link href="/favorites">
-      <a>
+      <a className="icon-favorites">
+        {favorites.length > 0 && <span>{favorites.length}</span>}
         <svg xmlns="http://www.w3.org/2000/svg" className="icon-button" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path
             strokeLinecap="round"

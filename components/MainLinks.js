@@ -1,25 +1,28 @@
 import React from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 function MainLinks() {
+  const router = useRouter();
+  const country = router.query.country;
   return (
     <ul>
       <li>
-        <Link href="/russia/women">
+        <Link href={`/${country}/women`}>
           <a>Women</a>
         </Link>
       </li>
       <li>
-        <Link href="/russia/main">
+        <Link href={`/${country}/main`}>
           <a>Main</a>
         </Link>
       </li>
       <li>
-        <Link href="/russia/development">
+        <Link href={`/${country}/development`}>
           <a>Development</a>
         </Link>
       </li>
       <li>
-        <Link href="/russia/talent">
+        <Link href={`/${country}/talent`}>
           <a>Talent</a>
         </Link>
       </li>

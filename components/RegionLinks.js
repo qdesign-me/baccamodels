@@ -10,12 +10,12 @@ function Links() {
         </Link>
       </li>
       <li>
-        <Link href="/russia">
+        <Link href="/kazakhstan">
           <a>Kazakhstan</a>
         </Link>
       </li>
       <li>
-        <Link href="/russia">
+        <Link href="/kids">
           <a>Kids</a>
         </Link>
       </li>

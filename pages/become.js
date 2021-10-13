@@ -3,6 +3,7 @@ import Footer from 'components/Footer';
 import Header from 'components/Header';
 import Nav from 'components/Nav';
 import { useDropzone } from 'react-dropzone';
+import { useForm } from 'react-hook-form';
 
 const thumbsContainer = {
   display: 'flex',
@@ -36,7 +37,13 @@ const img = {
 };
 
 function Become() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
   const [files, setFiles] = useState([]);
+  const [form, setForm] = useState({});
   const { getRootProps, getInputProps } = useDropzone({
     accept: 'image/*',
     onDrop: (acceptedFiles) => {
@@ -60,12 +67,29 @@ function Become() {
 
   useEffect(
     () => () => {
-      // Make sure to revoke the data uris to avoid memory leaks
       files.forEach((file) => URL.revokeObjectURL(file.preview));
     },
     [files]
   );
 
+  const onSubmit = (data) => console.log(data);
+
+  function toFeet(n) {
+    const realFeet = (n * 0.3937) / 12;
+
+    const feet = Math.floor(realFeet);
+    const inches = (realFeet - feet) * 12;
+    let add = '';
+    let realInches = Math.floor(inches);
+    const fraction = inches - realInches;
+    if (fraction > 0.25 && fraction < 0.75) {
+      add = ' 1/2';
+    }
+    if (fraction >= 0.75) {
+      realInches++;
+    }
+    return `${feet}′ ${realInches ? `${realInches}″` : ''} ${add}`;
+  }
   return (
     <>
       <Nav className="relative" />
@@ -91,75 +115,104 @@ function Become() {
         <main>
           <div className="wrap py-20 text-lg text">
             <div className="max-w-[600px]">
-              <form action="#" className="text-gray-500">
+              <form action="#" className="text-gray-500" onSubmit={handleSubmit(onSubmit)}>
                 <div className="mb-4">
                   <div className="flex space-x-10">
                     <label>
-                      <input type="radio" id="radio1" name="genreOption" value="m" /> <span>Male</span>
+                      <input type="radio" name="genreOption" value="Male" {...register('gender')} /> <span>Male</span>
                     </label>
                     <label>
-                      <input type="radio" id="radio1" name="genreOption" value="m" /> <span>Femile</span>
+                      <input type="radio" name="genreOption" value="Female" {...register('gender')} /> <span>Female</span>
                     </label>
                   </div>
                 </div>
                 <div className="mb-4">
-                  <input type="text" placeholder="First name" />
+                  <div className="ir">
+                    <input type="text" placeholder="First name" {...register('firstName', { required: true })} />
+                    {errors.firstName && <div className="error">First name is required</div>}
+                  </div>
                 </div>
                 <div className="mb-4">
-                  <input type="text" placeholder="First name" />
+                  <div className="ir">
+                    <input type="text" placeholder="Last name" {...register('lastName', { required: true })} />
+                    {errors.lastName && <div className="error">Last name is required</div>}
+                  </div>
                 </div>
 
                 <div className="mb-4 flex space-x-10">
                   <div className="flex-1">
-                    <input type="tel" placeholder="Phone" />
+                    <div className="ir">
+                      <input type="tel" placeholder="Phone" {...register('phone', { required: true })} />
+                      {errors.lastName && <div className="error">Phone is required</div>}
+                    </div>
                   </div>
                   <div className="flex-1">
-                    <input type="email" placeholder="Email" />
-                  </div>
-                </div>
-                <div className="mb-4 flex space-x-10">
-                  <div className="flex-1">
-                    <input type="text" placeholder="City" />
-                  </div>
-                  <div className="flex-1">
-                    <input type="text" placeholder="Country" />
+                    <div className="ir">
+                      <input type="email" placeholder="Email" {...register('email', { required: true })} />
+                      {errors.lastName && <div className="error">Email is required</div>}
+                    </div>
                   </div>
                 </div>
                 <div className="mb-4 flex space-x-10">
                   <div className="flex-1">
-                    <input type="text" placeholder="Agency (if already modeling)" />
+                    <input type="text" placeholder="City" {...register('city')} />
                   </div>
                   <div className="flex-1">
-                    <input type="text" placeholder="Height" />
-                  </div>
-                </div>
-                <div className="mb-4 flex space-x-10">
-                  <div className="flex-1">
-                    <input type="text" placeholder="Waist" />
-                  </div>
-                  <div className="flex-1">
-                    <input type="text" placeholder="Bust/Chest" />
+                    <input type="text" placeholder="Country" {...register('country')} />
                   </div>
                 </div>
                 <div className="mb-4 flex space-x-10">
                   <div className="flex-1">
-                    <input type="text" placeholder="Hips" />
+                    <input type="text" placeholder="Agency (if already modeling)" {...register('agency')} />
                   </div>
                   <div className="flex-1">
-                    <input type="text" placeholder="Shoe size" />
+                    <select placeholder="Height" {...register('height')}>
+                      {(function (rows, i, len) {
+                        rows.push(
+                          <option disabled value selected>
+                            Height
+                          </option>
+                        );
+                        while (++i <= len) {
+                          const value = `${i} cm - ${toFeet(i)}`;
+                          rows.push(
+                            <option key={i} value={value}>
+                              {value}
+                            </option>
+                          );
+                        }
+                        return rows;
+                      })([], 149, 200)}
+                    </select>
                   </div>
                 </div>
                 <div className="mb-4 flex space-x-10">
                   <div className="flex-1">
-                    <input type="text" placeholder="Hair color" />
+                    <input type="text" placeholder="Waist" {...register('waist')} />
                   </div>
                   <div className="flex-1">
-                    <input type="text" placeholder="Eye color" />
+                    <input type="text" placeholder="Bust/Chest" {...register('bustAndChest')} />
+                  </div>
+                </div>
+                <div className="mb-4 flex space-x-10">
+                  <div className="flex-1">
+                    <input type="text" placeholder="Hips" {...register('hips')} />
+                  </div>
+                  <div className="flex-1">
+                    <input type="text" placeholder="Shoe size" {...register('shoeSize')} />
+                  </div>
+                </div>
+                <div className="mb-4 flex space-x-10">
+                  <div className="flex-1">
+                    <input type="text" placeholder="Hair color" {...register('hairColor')} />
+                  </div>
+                  <div className="flex-1">
+                    <input type="text" placeholder="Eye color" {...register('eyeColor')} />
                   </div>
                 </div>
 
                 <div className="mb-4">
-                  <input type="date" placeholder="Date of birth" />
+                  <input type="date" placeholder="Date of birth" {...register('dob')} />
                 </div>
                 <div className="mt-14 mb-3">3 files, up to 5mb each</div>
 
@@ -173,7 +226,7 @@ function Become() {
 
                 <div className="mb-4 flex">
                   <label className="mr-3">
-                    <input type="radio" id="radio1" name="genreOption" value="m" />
+                    <input type="checkbox" value="On" {...register('terms')} />
                   </label>
                   <div>
                     I have read and I accept the Terms & Conditions.
@@ -184,7 +237,7 @@ function Become() {
 
                 <div className="mb-4 flex">
                   <label className="mr-3">
-                    <input type="radio" id="radio1" name="genreOption" value="m" />
+                    <input type="checkbox" value="On" {...register('sms')} />
                   </label>
                   <div>
                     I understand and agree that, upon my acceptance (that is not compulsory) you will also send me information by email and/or SMS about existing and new services
@@ -194,7 +247,7 @@ function Become() {
 
                 <div className="mb-4 flex">
                   <label className="mr-3">
-                    <input type="radio" id="radio1" name="genreOption" value="m" />
+                    <input type="checkbox" value="On" {...register('offer')} />
                   </label>
                   <div>
                     I understand and agree that upon my acceptance (that is not compulsory) you will be entitled to transfer my data to third parties with whom you have a

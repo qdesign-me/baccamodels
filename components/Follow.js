@@ -1,10 +1,10 @@
 import React from 'react';
 import Link from 'next/link';
 
-function Follow({ className }) {
+function Follow({ className, url }) {
   return (
-    <Link href={''}>
-      <a className={`${className ?? ''} link-follow`}>
+    <Link href={url}>
+      <a target="_blank" className={`${className ?? ''} link-follow`}>
         <div className="mr-4">Follow Bacca Models</div>
         <svg className="h-5" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="instagram" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
           <path
