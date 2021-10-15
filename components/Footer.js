@@ -5,12 +5,14 @@ import RegionLinks from './RegionLinks';
 
 function Footer() {
   return (
-    <footer className="pb-10 pt-20">
-      <div className="wrap">
-        <div className="flex">
-          <RegionLinks />
-          <MainLinks />
-          <MoreLinks />
+    <footer>
+      <div className="container">
+        <div className="wrap">
+          <div className="flex flex-wrap">
+            <RegionLinks />
+            <MainLinks />
+            <MoreLinks />
+          </div>
         </div>
       </div>
     </footer>

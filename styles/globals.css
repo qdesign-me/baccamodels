@@ -34,7 +34,7 @@
     animation-timing-function: linear;
   }
   .container {
-    @apply px-6 mx-auto w-full;
+    @apply mx-auto w-full;
     max-width: calc(100% - 14rem);
   }
   .wrap {
@@ -76,9 +76,10 @@
   header .map {
     width: 40%;
   }
+
   .home-links {
-    @apply bg-white relative z-10;
-    padding: 80px 200px 70px;
+    @apply bg-white relative z-10 flex flex-col justify-center items-center max-w-3xl mx-auto;
+    padding: 80px 100px 70px;
   }
   .home-links > ul {
     @apply flex justify-around  text-gray-500;
@@ -93,11 +94,11 @@
     color: #000;
   }
   .name-filter {
-    position: fixed;
-    bottom: 25px;
-    left: 100px;
-    display: flex;
-    user-select: none;
+    @apply fixed flex select-none bg-black text-white left-28 bottom-8 transition;
+    transform: translateY(200px);
+  }
+  .name-filter.on {
+    transform: translateY(0);
   }
   .name-filter .active {
     @apply w-10 h-10 text-xs bg-white text-black border-2 border-black flex items-center justify-center cursor-pointer;
@@ -113,10 +114,9 @@
     @apply bg-black text-white;
   }
   .name-filter .all > div {
-    @apply w-10 h-10 flex items-center justify-center;
+    @apply w-10 h-10 flex items-center justify-center text-black cursor-pointer;
     border: 2px solid #000;
     border-width: 2px 0 2px 0;
-    cursor: pointer;
   }
   .name-filter .all > div:last-child {
     border-right: 2px solid #000;
@@ -156,8 +156,26 @@
     pointer-events: initial;
   }
   nav.stick .links-block,
-  nav.stick .icon-menu {
+  nav.stick .icon-button {
     @apply text-black;
+  }
+  nav .logo-wrap {
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    opacity: 0;
+    visibility: hidden;
+    cursor: pointer;
+    @apply max-w-6xl mx-auto;
+  }
+  nav .logo-wrap img {
+    @apply w-36;
+  }
+  nav.stick .logo-wrap {
+    opacity: 1;
+    visibility: visible;
   }
 
   .text ol + p,
@@ -175,7 +193,7 @@
     @apply relative;
   }
   .icon-favorites span {
-    @apply absolute right-0 text-xs text-black;
+    @apply absolute right-0 text-xs;
   }
   .icon-button {
     @apply transition cursor-pointer p-2 h-10 w-10;
@@ -271,11 +289,15 @@
   .legend a {
     @apply text-black font-normal;
   }
+
+  footer {
+    @apply py-20;
+  }
   footer ul + ul {
-    margin-left: 100px;
+    @apply ml-24;
   }
   footer ul:first-child {
-    margin-right: 100px;
+    @apply mr-24;
   }
   footer a {
     line-height: 1.8rem;
@@ -328,6 +350,9 @@
   }
   .box {
     @apply py-32;
+  }
+  .box-sm {
+    @apply py-20;
   }
   .box-contacts {
     @aplly text-gray-400;
@@ -412,7 +437,7 @@
   }
 
   .grid-thumbs {
-    @apply grid grid-cols-6 gap-x-6 gap-y-6;
+    @apply grid grid-cols-2 gap-x-4 gap-y-4 sm:grid-cols-3  md:grid-cols-4  lg:grid-cols-6 lg:gap-x-8 lg:gap-y-8;
   }
   .grid-thumbs div {
     @apply relative cursor-pointer overflow-hidden;
@@ -449,11 +474,116 @@
   .error {
     @apply text-xs text-red-400 absolute;
   }
+  .carousel {
+    @apply px-2 overflow-hidden;
+  }
+  .carousel .img-slide {
+    @apply px-2;
+  }
+  .carousel .img-slide img {
+    @apply w-full;
+  }
+
+  .carousel .react-multiple-carousel__arrow {
+    background: #fff;
+    min-width: 30px;
+    min-height: 30px;
+    opacity: 1;
+    cursor: pointer;
+    border: 2px solid #000;
+    border-radius: 0;
+  }
+  .carousel .react-multiple-carousel__arrow:before {
+    color: #000;
+    font-size: 15px;
+  }
+  .carousel .react-multiple-carousel__arrow:hover {
+    background: #000;
+  }
+  .carousel .react-multiple-carousel__arrow:hover:before {
+    color: #fff;
+  }
   button,
   img,
   .menu,
   footer,
   header {
     user-select: none;
+  }
+  @media (max-width: 1536px) {
+    h1 {
+      font-size: 60px;
+    }
+    h2 {
+      @apply text-3xl mb-12;
+    }
+
+    nav {
+      @apply top-10;
+    }
+    .icons-nav {
+      @apply bottom-10;
+    }
+    .container {
+      @apply px-10 max-w-full;
+    }
+
+    .icon-search {
+      @apply ml-auto;
+    }
+    .icon-instagram {
+      @apply hidden;
+    }
+  }
+  @media (max-width: 1200px) {
+    nav .logo-wrap {
+      @apply px-10;
+    }
+  }
+  @media (max-width: 1024px) {
+    nav {
+      @apply top-4;
+    }
+
+    .box-sm,
+    footer {
+      @apply py-8;
+    }
+    .icons-nav {
+      @apply bottom-4;
+    }
+    nav .logo-wrap {
+      @apply px-4;
+    }
+    .container {
+      @apply px-4;
+    }
+    footer ul:first-child {
+      margin-right: 0;
+    }
+  }
+  @media (max-width: 768px) {
+    body {
+      font-size: 12px;
+    }
+    .text-lg,
+    .legend {
+      font-size: 1rem !important;
+    }
+    .home-links {
+      padding: 20px 30px 40px;
+    }
+    .home-links > ul {
+      @apply mt-4;
+    }
+    .home-links a {
+      @apply p-2;
+    }
+    footer ul {
+      @apply flex flex-wrap  w-full !-ml-1 !-mr-1;
+    }
+    footer ul a {
+      @apply p-1;
+    }
   }
 }

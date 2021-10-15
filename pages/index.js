@@ -1,7 +1,7 @@
 import Header from 'components/Header';
 import Head from 'next/head';
 import RegionLinks from 'components/RegionLinks';
-export default function Home() {
+export default function Home({ data }) {
   return (
     <>
       <Head>
@@ -13,12 +13,22 @@ export default function Home() {
 
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Header video="/video/home.mp4">
-        <main className="home-links">
-          <img className="h-[100px] invert-color" src="/images/logo.svg" alt="" />
-          <RegionLinks />
-        </main>
+      <Header video={data.info.video}>
+        <div className="container">
+          <main className="home-links">
+            <img className="h-[120px] invert-color" src="/images/logo.svg" alt="" />
+            <RegionLinks />
+          </main>
+        </div>
       </Header>
     </>
   );
+}
+
+export async function getServerSideProps(context) {
+  const response = await fetch(`${process.env.HOSTNAME}/api/country/all/home`).then((res) => res.json());
+
+  return {
+    props: { data: response.data },
+  };
 }

@@ -16,15 +16,19 @@ function Index({ data }) {
       </Header>
       <div className="content">
         <main>
-          <div className="wrap py-20 text-lg text">
-            <div className="max-w-[600px]">
-              <div className="content" dangerouslySetInnerHTML={{ __html: data.introtext }}></div>
+          <div className="container">
+            <div className="wrap box text-lg text">
+              <div className="max-w-[600px]">
+                <div className="content" dangerouslySetInnerHTML={{ __html: data.introtext }}></div>
+              </div>
             </div>
           </div>
           <Latest slides={data.latest} />
-          <div className="wrap py-20">
-            <div className="max-w-[600px]">
-              <Follow className="mt-16" url={data.info.instagram} />
+          <div className="container">
+            <div className="wrap box">
+              <div className="max-w-[600px]">
+                <Follow url={data.info.instagram} />
+              </div>
             </div>
           </div>
         </main>
@@ -38,8 +42,9 @@ export default Index;
 
 export async function getServerSideProps(context) {
   const country = context.params.country;
-
+  console.log(`${process.env.HOSTNAME}/api/country/${country}/info`);
   const response = await fetch(`${process.env.HOSTNAME}/api/country/${country}/info`).then((res) => res.json());
+
   return {
     props: { data: response.data },
   };

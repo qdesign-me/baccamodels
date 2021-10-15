@@ -8,7 +8,7 @@ function Menu() {
   const [open, setOpen] = useState(false);
   return (
     <>
-      <svg onClick={(e) => setOpen(!open)} xmlns="http://www.w3.org/2000/svg" className="icon-menu icon-button" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <svg onClick={(e) => setOpen(!open)} xmlns="http://www.w3.org/2000/svg" className="ml-4 md:ml-10 icon-menu icon-button" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
       </svg>
 

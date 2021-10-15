@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { GlobalContext } from 'pages/_app';
+
 function MainLinks() {
   const router = useRouter();
-  const country = router.query.country;
+  const global = useContext(GlobalContext);
+  const country = router.query.country ?? global.country;
+
   return (
     <ul>
       <li>
@@ -12,7 +16,7 @@ function MainLinks() {
         </Link>
       </li>
       <li>
-        <Link href={`/${country}/main`}>
+        <Link href={`/${country}`}>
           <a>Main</a>
         </Link>
       </li>

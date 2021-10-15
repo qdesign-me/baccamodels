@@ -1,6 +1,6 @@
 import Footer from 'components/Footer';
 import Nav from 'components/Nav';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ModelThumb from 'components/ModelThumb';
 
 function FilterByName({ models }) {
@@ -17,6 +17,24 @@ function FilterByName({ models }) {
   const [active, setActive] = useState(`${letters[0]}•${letters[letters.length - 1]}`);
 
   const toggle = () => setOpened(!opened);
+
+  const hadnleScroll = () => {
+    const y = window.scrollY;
+    let breakpoint = 150;
+
+    if (y > breakpoint) {
+      document.querySelector('.name-filter').classList.add('on');
+    } else {
+      document.querySelector('.name-filter').classList.remove('on');
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener('scroll', hadnleScroll);
+    return () => {
+      window.removeEventListener('scroll', hadnleScroll);
+    };
+  }, []);
 
   const scroll2element = (e) => {
     e.preventDefault();
