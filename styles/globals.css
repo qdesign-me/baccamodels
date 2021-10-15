@@ -94,7 +94,7 @@
     color: #000;
   }
   .name-filter {
-    @apply fixed flex select-none bg-black text-white left-28 bottom-8 transition;
+    @apply fixed flex select-none bg-black text-white left-28 bottom-10 transition;
     transform: translateY(200px);
   }
   .name-filter.on {
@@ -527,6 +527,9 @@
     .container {
       @apply px-10 max-w-full;
     }
+    .name-filter {
+      @apply left-10;
+    }
 
     .icon-search {
       @apply ml-auto;
@@ -536,6 +539,12 @@
     }
   }
   @media (max-width: 1200px) {
+    h1 {
+      font-size: 40px;
+    }
+    h2 {
+      @apply text-xl mb-12;
+    }
     nav .logo-wrap {
       @apply px-10;
     }
@@ -557,6 +566,9 @@
     }
     .container {
       @apply px-4;
+    }
+    .name-filter {
+      @apply left-4 bottom-4;
     }
     footer ul:first-child {
       margin-right: 0;
