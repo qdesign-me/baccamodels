@@ -27,7 +27,7 @@ export default function modelsAPI(req, res) {
           const model = [...country.models.women, ...country.models.development, ...country.models.talent].find((model) => model.id === latest.model);
           if (!model) return {};
           latest.name = model.name;
-          latest.slug = `/${countrySlug}/${model.slug}`;
+          latest.slug = model.slug;
         });
         return res.status(200).json({
           status: 'ok',
