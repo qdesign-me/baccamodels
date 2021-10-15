@@ -141,6 +141,10 @@
     @apply top-14;
   }
 
+  nav.relative + .content {
+    @apply mt-32;
+  }
+
   nav.relative .icon-button {
     @apply text-black;
   }
@@ -150,14 +154,14 @@
     border-bottom: 1px solid hsla(0, 0%, 7%, 0.1);
     background: rgba(255, 255, 255, 0.9);
   }
-  nav.stick .links-block1 {
-    opacity: 1;
-    visibility: visible;
-    pointer-events: initial;
-  }
+
   nav.stick .links-block,
   nav.stick .icon-button {
     @apply text-black;
+  }
+  nav.stick .logo-wrap {
+    opacity: 1;
+    visibility: visible;
   }
   nav .logo-wrap {
     position: absolute;
@@ -172,10 +176,6 @@
   }
   nav .logo-wrap img {
     @apply w-36;
-  }
-  nav.stick .logo-wrap {
-    opacity: 1;
-    visibility: visible;
   }
 
   .text ol + p,
@@ -553,7 +553,9 @@
     nav {
       @apply top-4;
     }
-
+    .box {
+      @apply py-16;
+    }
     .box-sm,
     footer {
       @apply py-8;
@@ -577,6 +579,20 @@
   @media (max-width: 768px) {
     body {
       font-size: 12px;
+    }
+    nav.relative {
+      @apply !fixed  !top-0 py-3;
+      border-bottom: 1px solid hsla(0, 0%, 7%, 0.1);
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    nav.relative .links-block,
+    nav.relative .icon-button {
+      @apply text-black;
+    }
+    nav.relative .logo-wrap {
+      opacity: 1;
+      visibility: visible;
     }
     .text-lg,
     .legend {

@@ -16,16 +16,16 @@ function FilterByName({ models }) {
 
   const [active, setActive] = useState(`${letters[0]}•${letters[letters.length - 1]}`);
 
-  const toggle = () => setOpened(!opened);
+  const toggle = () => setOpened(true);
 
   const hadnleScroll = () => {
     const y = window.scrollY;
-    let breakpoint = 150;
+    let breakpoint = 0;
 
     if (y > breakpoint) {
       document.querySelector('.name-filter').classList.add('on');
     } else {
-      document.querySelector('.name-filter').classList.remove('on');
+      // document.querySelector('.name-filter').classList.remove('on');
     }
   };
 
@@ -63,7 +63,7 @@ function Development({ data }) {
   return (
     <>
       <Nav className="relative" />
-      <div className="content mt-[200px]">
+      <div className="content">
         <main>
           <div className="container">
             <div className="text-center">
