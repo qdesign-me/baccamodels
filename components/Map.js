@@ -11,7 +11,7 @@ function Map({ className }) {
     <div className={className}>
       {MapGL && (
         <MapGL
-          style="mapbox://styles/mapbox/light-v10"
+          style="mapbox://styles/mapbox/dark-v10"
           containerStyle={{
             height: '100%',
             width: '100%',

@@ -8,19 +8,21 @@ import React from 'react';
 function Contacts({ data }) {
   return (
     <>
-      <Nav className="relative theme-white" data={data.info} />
+      <Nav className="relative theme-map" data={data.info} />
       <Header className="static">
         <>
           <Map className="pull-right map" />
           <div className="absolute left-0 right-0  bottom-[75px]">
-            <div className="wrap text">
-              <div className="max-w-[600px] box-contacts">
-                <h4>Contacts</h4>
-                <a href="mailto:${data.contacts.email}">{data.contacts.email}</a>
-                <a href={`tel:${data.contacts.phone}`}>{data.contacts.phone}</a>
-                <h4> Address</h4>
-                <div dangerouslySetInnerHTML={{ __html: data.contacts.address }}></div>
-                <Social data={data.info.social} />
+            <div className="container">
+              <div className="wrap text">
+                <div className="max-w-[600px] box-contacts">
+                  <h4>Contacts</h4>
+                  <a href="mailto:${data.contacts.email}">{data.contacts.email}</a>
+                  <a href={`tel:${data.contacts.phone}`}>{data.contacts.phone}</a>
+                  <h4> Address</h4>
+                  <div dangerouslySetInnerHTML={{ __html: data.contacts.address }}></div>
+                  <Social data={data.info.social} />
+                </div>
               </div>
             </div>
           </div>

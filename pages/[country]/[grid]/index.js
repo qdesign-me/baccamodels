@@ -13,18 +13,14 @@ function FilterByName({ models }) {
   ];
 
   const [opened, setOpened] = useState(false);
+  const [visible, setVisible] = useState(false);
 
   const [active, setActive] = useState(`${letters[0]}•${letters[letters.length - 1]}`);
 
-  const toggle = () => setOpened(true);
+  const toggle = () => setOpened(!opened);
 
   const handleScroll = () => {
-    const y = window.scrollY;
-    let breakpoint = 0;
-
-    if (y > breakpoint) {
-      document.querySelector('.name-filter').classList.add('on');
-    }
+    setVisible(true);
   };
 
   useEffect(() => {
@@ -44,7 +40,7 @@ function FilterByName({ models }) {
   };
 
   return (
-    <div className={`name-filter ${opened ? 'opened' : ''}`}>
+    <div className={`name-filter ${opened ? 'opened' : ''} ${visible ? 'on' : ''}`}>
       <div className="active" onClick={toggle}>
         {active}
       </div>

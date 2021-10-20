@@ -9,12 +9,14 @@ function Header({ video, img, scroll, children, className = 'cover full-bg' }) {
       {img && <img src={img} alt="" className="pull-right" />}
       {video && <video autoPlay muted={muted} loop playsInline src={video} />}
       {children}
-      <div className="icons-nav">
-        <div className="container  flex justify-between">
-          {scroll ? <Scroll className="scroll-down can-hide" /> : <div />}
-          {video && <Volume muted={muted} setMuted={setMuted} />}
+      {(scroll || video) && (
+        <div className="icons-nav">
+          <div className="container  flex justify-between">
+            {scroll && <Scroll className="scroll-down can-hide" />}
+            {video && <Volume muted={muted} setMuted={setMuted} />}
+          </div>
         </div>
-      </div>
+      )}
     </header>
   );
 }

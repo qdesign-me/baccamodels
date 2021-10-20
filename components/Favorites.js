@@ -1,10 +1,13 @@
 import React from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import useLocalStorage from 'hooks/useLocalStorage';
 function Favorites() {
+  const router = useRouter();
+  const country = router.query.country;
   const [favorites] = useLocalStorage('favorites', []);
   return (
-    <Link href="/favorites">
+    <Link href={`/${country}/favorites`}>
       <a className="icon-favorites">
         {favorites.length > 0 && <span>{favorites.length}</span>}
         <svg xmlns="http://www.w3.org/2000/svg" className="icon-button" fill="none" viewBox="0 0 24 24" stroke="currentColor">

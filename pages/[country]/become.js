@@ -92,7 +92,7 @@ function Become({ data }) {
   }
   return (
     <>
-      <Nav className="relative theme-compact theme-white" data={data.info} />
+      <Nav className="relative theme-become" data={data.info} />
       <Header img={data.img} className="static">
         <>
           <div className="relative z-10">
@@ -101,167 +101,169 @@ function Become({ data }) {
               Model
             </h1>
           </div>
-          <div className="absolute left-0 right-0  bottom-[75px]">
-            <div className="wrap text">
-              <div className="max-w-[600px]">
-                <div className="content" dangerouslySetInnerHTML={{ __html: data.text }}></div>
-              </div>
-            </div>
-          </div>
         </>
       </Header>
       <div className="content">
         <main>
-          <div className="wrap py-20 text-lg text">
-            <div className="max-w-[600px]">
-              <form action="#" className="text-gray-500" onSubmit={handleSubmit(onSubmit)}>
-                <div className="mb-4">
-                  <div className="flex space-x-10">
-                    <label>
-                      <input type="radio" name="genreOption" value="Male" {...register('gender')} /> <span>Male</span>
-                    </label>
-                    <label>
-                      <input type="radio" name="genreOption" value="Female" {...register('gender')} /> <span>Female</span>
-                    </label>
-                  </div>
+          <div className="container">
+            <div className="about-text">
+              <div className="wrap text">
+                <div className="max-w-[600px]">
+                  <div className="content" dangerouslySetInnerHTML={{ __html: data.text }}></div>
                 </div>
-                <div className="mb-4">
-                  <div className="ir">
-                    <input type="text" placeholder="First name" {...register('firstName', { required: true })} />
-                    {errors.firstName && <div className="error">First name is required</div>}
+              </div>
+            </div>
+            <div className="wrap py-20 text-lg text">
+              <div className="max-w-[600px]">
+                <form action="#" className="text-gray-500" onSubmit={handleSubmit(onSubmit)}>
+                  <div className="mb-4">
+                    <div className="flex space-x-10">
+                      <label>
+                        <input type="radio" name="genreOption" value="Male" {...register('gender')} /> <span>Male</span>
+                      </label>
+                      <label>
+                        <input type="radio" name="genreOption" value="Female" {...register('gender')} /> <span>Female</span>
+                      </label>
+                    </div>
                   </div>
-                </div>
-                <div className="mb-4">
-                  <div className="ir">
-                    <input type="text" placeholder="Last name" {...register('lastName', { required: true })} />
-                    {errors.lastName && <div className="error">Last name is required</div>}
+                  <div className="mb-4">
+                    <div className="ir">
+                      <input type="text" placeholder="First name" {...register('firstName', { required: true })} />
+                      {errors.firstName && <div className="error">First name is required</div>}
+                    </div>
                   </div>
-                </div>
+                  <div className="mb-4">
+                    <div className="ir">
+                      <input type="text" placeholder="Last name" {...register('lastName', { required: true })} />
+                      {errors.lastName && <div className="error">Last name is required</div>}
+                    </div>
+                  </div>
 
-                <div className="mb-4 flex space-x-10">
-                  <div className="flex-1">
-                    <div className="ir">
-                      <input type="tel" placeholder="Phone" {...register('phone', { required: true })} />
-                      {errors.lastName && <div className="error">Phone is required</div>}
+                  <div className="mb-4 flex space-x-10">
+                    <div className="flex-1">
+                      <div className="ir">
+                        <input type="tel" placeholder="Phone" {...register('phone', { required: true })} />
+                        {errors.lastName && <div className="error">Phone is required</div>}
+                      </div>
+                    </div>
+                    <div className="flex-1">
+                      <div className="ir">
+                        <input type="email" placeholder="Email" {...register('email', { required: true })} />
+                        {errors.lastName && <div className="error">Email is required</div>}
+                      </div>
                     </div>
                   </div>
-                  <div className="flex-1">
-                    <div className="ir">
-                      <input type="email" placeholder="Email" {...register('email', { required: true })} />
-                      {errors.lastName && <div className="error">Email is required</div>}
+                  <div className="mb-4 flex space-x-10">
+                    <div className="flex-1">
+                      <input type="text" placeholder="City" {...register('city')} />
+                    </div>
+                    <div className="flex-1">
+                      <input type="text" placeholder="Country" {...register('country')} />
                     </div>
                   </div>
-                </div>
-                <div className="mb-4 flex space-x-10">
-                  <div className="flex-1">
-                    <input type="text" placeholder="City" {...register('city')} />
-                  </div>
-                  <div className="flex-1">
-                    <input type="text" placeholder="Country" {...register('country')} />
-                  </div>
-                </div>
-                <div className="mb-4 flex space-x-10">
-                  <div className="flex-1">
-                    <input type="text" placeholder="Agency (if already modeling)" {...register('agency')} />
-                  </div>
-                  <div className="flex-1">
-                    <select placeholder="Height" {...register('height')}>
-                      {(function (rows, i, len) {
-                        rows.push(
-                          <option disabled value selected>
-                            Height
-                          </option>
-                        );
-                        while (++i <= len) {
-                          const value = `${i} cm - ${toFeet(i)}`;
+                  <div className="mb-4 flex space-x-10">
+                    <div className="flex-1">
+                      <input type="text" placeholder="Agency (if already modeling)" {...register('agency')} />
+                    </div>
+                    <div className="flex-1">
+                      <select placeholder="Height" {...register('height')}>
+                        {(function (rows, i, len) {
                           rows.push(
-                            <option key={i} value={value}>
-                              {value}
+                            <option disabled value selected>
+                              Height
                             </option>
                           );
-                        }
-                        return rows;
-                      })([], 149, 200)}
-                    </select>
+                          while (++i <= len) {
+                            const value = `${i} cm - ${toFeet(i)}`;
+                            rows.push(
+                              <option key={i} value={value}>
+                                {value}
+                              </option>
+                            );
+                          }
+                          return rows;
+                        })([], 149, 200)}
+                      </select>
+                    </div>
                   </div>
-                </div>
-                <div className="mb-4 flex space-x-10">
-                  <div className="flex-1">
-                    <input type="text" placeholder="Waist" {...register('waist')} />
+                  <div className="mb-4 flex space-x-10">
+                    <div className="flex-1">
+                      <input type="text" placeholder="Waist" {...register('waist')} />
+                    </div>
+                    <div className="flex-1">
+                      <input type="text" placeholder="Bust/Chest" {...register('bustAndChest')} />
+                    </div>
                   </div>
-                  <div className="flex-1">
-                    <input type="text" placeholder="Bust/Chest" {...register('bustAndChest')} />
+                  <div className="mb-4 flex space-x-10">
+                    <div className="flex-1">
+                      <input type="text" placeholder="Hips" {...register('hips')} />
+                    </div>
+                    <div className="flex-1">
+                      <input type="text" placeholder="Shoe size" {...register('shoeSize')} />
+                    </div>
                   </div>
-                </div>
-                <div className="mb-4 flex space-x-10">
-                  <div className="flex-1">
-                    <input type="text" placeholder="Hips" {...register('hips')} />
+                  <div className="mb-4 flex space-x-10">
+                    <div className="flex-1">
+                      <input type="text" placeholder="Hair color" {...register('hairColor')} />
+                    </div>
+                    <div className="flex-1">
+                      <input type="text" placeholder="Eye color" {...register('eyeColor')} />
+                    </div>
                   </div>
-                  <div className="flex-1">
-                    <input type="text" placeholder="Shoe size" {...register('shoeSize')} />
-                  </div>
-                </div>
-                <div className="mb-4 flex space-x-10">
-                  <div className="flex-1">
-                    <input type="text" placeholder="Hair color" {...register('hairColor')} />
-                  </div>
-                  <div className="flex-1">
-                    <input type="text" placeholder="Eye color" {...register('eyeColor')} />
-                  </div>
-                </div>
 
-                <div className="mb-4">
-                  <input type="date" placeholder="Date of birth" {...register('dob')} />
-                </div>
-                <div className="mt-14 mb-3">3 files, up to 5mb each</div>
-
-                <div className="mb-14">
-                  <div {...getRootProps({ className: 'dropzone' })}>
-                    <input {...getInputProps()} />
-                    <p>Drag 'n' drop some files here, or click to select files</p>
+                  <div className="mb-4">
+                    <input type="date" placeholder="Date of birth" {...register('dob')} />
                   </div>
-                  <aside style={thumbsContainer}>{thumbs}</aside>
-                </div>
+                  <div className="mt-14 mb-3">3 files, up to 5mb each</div>
 
-                <div className="mb-4 flex">
-                  <label className="mr-3">
-                    <input type="checkbox" value="On" {...register('terms')} />
-                  </label>
-                  <div>
-                    I have read and I accept the Terms & Conditions.
-                    <br />
-                    Information to the applicant
+                  <div className="mb-14">
+                    <div {...getRootProps({ className: 'dropzone' })}>
+                      <input {...getInputProps()} />
+                      <p>Drag 'n' drop some files here, or click to select files</p>
+                    </div>
+                    <aside style={thumbsContainer}>{thumbs}</aside>
                   </div>
-                </div>
 
-                <div className="mb-4 flex">
-                  <label className="mr-3">
-                    <input type="checkbox" value="On" {...register('sms')} />
-                  </label>
-                  <div>
-                    I understand and agree that, upon my acceptance (that is not compulsory) you will also send me information by email and/or SMS about existing and new services
-                    and special offers.
+                  <div className="mb-4 flex">
+                    <label className="mr-3">
+                      <input type="checkbox" value="On" {...register('terms')} />
+                    </label>
+                    <div>
+                      I have read and I accept the Terms & Conditions.
+                      <br />
+                      Information to the applicant
+                    </div>
                   </div>
-                </div>
 
-                <div className="mb-4 flex">
-                  <label className="mr-3">
-                    <input type="checkbox" value="On" {...register('offer')} />
-                  </label>
-                  <div>
-                    I understand and agree that upon my acceptance (that is not compulsory) you will be entitled to transfer my data to third parties with whom you have a
-                    contractual relationship (partners, sponsors, etc.) so that I may receive special offers or other information from them.
+                  <div className="mb-4 flex">
+                    <label className="mr-3">
+                      <input type="checkbox" value="On" {...register('sms')} />
+                    </label>
+                    <div>
+                      I understand and agree that, upon my acceptance (that is not compulsory) you will also send me information by email and/or SMS about existing and new services
+                      and special offers.
+                    </div>
                   </div>
-                </div>
-                <div className="mt-20">
-                  <button className="link-follow">
-                    Submit application{' '}
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 ml-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                  </button>
-                </div>
-              </form>
+
+                  <div className="mb-4 flex">
+                    <label className="mr-3">
+                      <input type="checkbox" value="On" {...register('offer')} />
+                    </label>
+                    <div>
+                      I understand and agree that upon my acceptance (that is not compulsory) you will be entitled to transfer my data to third parties with whom you have a
+                      contractual relationship (partners, sponsors, etc.) so that I may receive special offers or other information from them.
+                    </div>
+                  </div>
+                  <div className="mt-20">
+                    <button className="link-follow">
+                      Submit application{' '}
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 ml-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </button>
+                  </div>
+                </form>
+              </div>
             </div>
           </div>
         </main>
