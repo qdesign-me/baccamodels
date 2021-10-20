@@ -17,11 +17,11 @@ function Latest({ slides }) {
       items: 4,
     },
     tablet: {
-      breakpoint: { max: 1024, min: 464 },
-      items: 2,
+      breakpoint: { max: 1024, min: 640 },
+      items: 3,
     },
     mobile: {
-      breakpoint: { max: 464, min: 0 },
+      breakpoint: { max: 640, min: 0 },
       items: 2,
     },
   };
@@ -30,7 +30,7 @@ function Latest({ slides }) {
     <div>
       <h2 className="text-center">The Latest</h2>
       <div className="carousel">
-        <Carousel responsive={responsive} swipeable={true} draggable={false} infinite={true} autoPlaySpeed={1000} autoPlay={true}>
+        <Carousel responsive={responsive} swipeable={true} draggable={false} infinite={true} autoPlaySpeed={1000}>
           {slides.map((slide, index) => (
             <div key={index} className="img-slide">
               <img src={slide.img} alt="" />

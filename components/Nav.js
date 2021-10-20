@@ -4,7 +4,7 @@ import Favorites from 'components/Favorites';
 import Search from 'components/Search';
 import Link from 'next/link';
 
-function Nav({ className }) {
+function Nav({ data, className }) {
   const hadnleScroll = () => {
     const y = window.scrollY;
     let breakpoint = 50;
@@ -36,14 +36,14 @@ function Nav({ className }) {
             <div className="wrap logo-wrap">
               <Link href="/">
                 <a>
-                  <img className="invert-color" src="/images/logo.svg" alt="" />
+                  <img src="/images/logo.svg" alt="" />
                 </a>
               </Link>
             </div>
 
             <div className="flex justify-between">
               <div className="flex space-x-4 md:space-x-10 items-center links-block">
-                <Link href="/">
+                <Link href={data.social.instagram}>
                   <a className="icon-button icon-instagram">
                     <svg aria-hidden="true" focusable="false" data-prefix="fab" data-icon="instagram" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
                       <path
@@ -55,7 +55,7 @@ function Nav({ className }) {
                 </Link>
                 <Favorites />
               </div>
-              <Menu />
+              <Menu data={data} />
             </div>
           </div>
         </div>

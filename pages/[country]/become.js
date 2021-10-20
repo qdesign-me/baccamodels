@@ -36,7 +36,7 @@ const img = {
   height: '100%',
 };
 
-function Become() {
+function Become({ data }) {
   const {
     register,
     handleSubmit,
@@ -92,8 +92,8 @@ function Become() {
   }
   return (
     <>
-      <Nav className="relative" />
-      <Header img="/images/become.jpg" className="static">
+      <Nav className="relative theme-compact theme-white" data={data.info} />
+      <Header img={data.img} className="static">
         <>
           <div className="relative z-10">
             <h1 className="text-center">
@@ -104,8 +104,7 @@ function Become() {
           <div className="absolute left-0 right-0  bottom-[75px]">
             <div className="wrap text">
               <div className="max-w-[600px]">
-                Women Management is constantly looking for new faces. Our expectations are as varied as the number of models we represent. You are in the right place if you want to
-                give you this adventure a try and maybe become our future tops !
+                <div className="content" dangerouslySetInnerHTML={{ __html: data.text }}></div>
               </div>
             </div>
           </div>
@@ -271,5 +270,12 @@ function Become() {
     </>
   );
 }
+export async function getServerSideProps(context) {
+  const { country } = context.params;
 
+  const response = await fetch(`${process.env.HOSTNAME}/api/country/${country}/become`).then((res) => res.json());
+  return {
+    props: { data: response.data },
+  };
+}
 export default Become;

@@ -18,21 +18,19 @@ function FilterByName({ models }) {
 
   const toggle = () => setOpened(true);
 
-  const hadnleScroll = () => {
+  const handleScroll = () => {
     const y = window.scrollY;
     let breakpoint = 0;
 
     if (y > breakpoint) {
       document.querySelector('.name-filter').classList.add('on');
-    } else {
-      // document.querySelector('.name-filter').classList.remove('on');
     }
   };
 
   useEffect(() => {
-    window.addEventListener('scroll', hadnleScroll);
+    window.addEventListener('scroll', handleScroll);
     return () => {
-      window.removeEventListener('scroll', hadnleScroll);
+      window.removeEventListener('scroll', handleScroll);
     };
   }, []);
 
@@ -62,7 +60,7 @@ function FilterByName({ models }) {
 function Development({ data }) {
   return (
     <>
-      <Nav className="relative" />
+      <Nav className="relative" data={data.info} />
       <div className="content">
         <main>
           <div className="container">

@@ -9,8 +9,8 @@ export default function modelsAPI(req, res) {
         const { country, grid, profile } = req.body;
 
         const model = data[country].models[grid].find((m) => m.slug === `/${country}/${grid}/${profile}`);
-
-        return res.status(200).json({ status: 'ok', data: { model } });
+        const info = data[country].info;
+        return res.status(200).json({ status: 'ok', data: { model, info } });
       }
       case 'byids': {
         const { ids, country } = req.body;

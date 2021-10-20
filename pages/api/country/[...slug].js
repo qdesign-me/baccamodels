@@ -12,6 +12,30 @@ export default function modelsAPI(req, res) {
             info: country.info,
           },
         });
+      case 'become':
+        return res.status(200).json({
+          status: 'ok',
+          data: {
+            info: country.info,
+            ...country.become,
+          },
+        });
+      case 'about':
+        return res.status(200).json({
+          status: 'ok',
+          data: {
+            info: country.info,
+            text: country.texts.about,
+          },
+        });
+      case 'contacts':
+        return res.status(200).json({
+          status: 'ok',
+          data: {
+            info: country.info,
+            contacts: country.contacts,
+          },
+        });
       case 'women':
       case 'development':
       case 'talent':
@@ -34,7 +58,7 @@ export default function modelsAPI(req, res) {
           data: {
             info: country.info,
             latest: country.latest,
-            introtext: country.introtext,
+            text: country.texts.intro,
           },
         });
     }

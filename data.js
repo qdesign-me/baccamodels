@@ -2,20 +2,35 @@ export default {
   all: {
     info: {
       video: '/video/russia/home.mp4',
-      instagram: 'https://www.instagram.com/baccamodels/',
     },
   },
   russia: {
-    introtext: `<p>
-    Women Management, one of the most influential and trusted fashion talent agencies in the world, was founded in New York in 1988. Celebrating inclusivity, diversity
-    and empowerment, our teams constantly strive to provide exceptional management to our talents and outstanding service to our clients. Our approach always combines
-    creativity, technology and business development aligned with respect, trust, humanity, ethics and social responsibility. Women is a forward looking organization
-    always searching for new and innovative ways to adapt to and take advantage of the ever-changing landscape of the modeling industry while balancing an elevated
-    image with financial success.
-  </p>`,
+    contacts: {
+      phone: '+1 212 334 7480',
+      email: 'info@womenmanagement.com',
+      address: ` 55 Hudson Yards
+      <br />
+      3rd Floor
+      <br /> New York NY 10001
+      <br />
+      United States`,
+    },
+    texts: {
+      intro: `<p> Women Management, one of the most influential and trusted fashion talent agencies in the world, was founded in New York in 1988. Celebrating inclusivity, diversity and empowerment, our teams constantly strive to provide exceptional management to our talents and outstanding service to our clients. Our approach always combines creativity, technology and business development aligned with respect, trust, humanity, ethics and social responsibility. Women is a forward looking organization always searching for new and innovative ways to adapt to and take advantage of the ever-changing landscape of the modeling industry while balancing an elevated image with financial success.</p>`,
+      about: `<p>Women Management, one of the most influential and trusted fashion talent agencies in the world, was founded in New York in 1988. Celebrating inclusivity, diversity and empowerment, our teams constantly strive to provide exceptional management to our talents and outstanding service to our clients. Our approach always combines creativity, technology and business development aligned with respect, trust, humanity, ethics and social responsibility. Women is a forward looking organization always searching for new and innovative ways to adapt to and take advantage of the ever-changing landscape of the modeling industry while balancing an elevated image with financial success.</p><p>Women represents some of the world’s most renowned fashion talents including Mariacarla Boscono, Isabeli Fontana, Hanne Gaby, Josephine Le Tutour, Lais Ribeiro, Coco Rocha and Iris Strubegger among others. Focusing on the future, Women is consistently developing the next generation of modeling superstars including Valerie Scherzinger, Sacha Quenby, Madeleine Fisher, Penelope Ternes, Maike Inga, Mathilde Henning and Maryel Uchida to name a few.</p><p>Women is part of Elite World Group, the world’s foremost talent media agency. Our global footprint includes offices in New York, Los Angeles, Paris and Milan.</p>`,
+    },
     info: {
       video: '/video/russia/home.mp4',
-      instagram: 'https://www.instagram.com/baccamodels/',
+      social: {
+        instagram: 'https:/instagram.com/baccamodels/',
+        facebook: 'https://facebook.com/baccamodels/',
+        vkontakte: 'https://vkontakte.com/baccamodels/',
+      },
+    },
+    become: {
+      img: '/images/become.jpg',
+      text: `Women Management is constantly looking for new faces. Our expectations are as varied as the number of models we represent. You are in the right place if you want to
+      give you this adventure a try and maybe become our future tops !`,
     },
     latest: [
       {

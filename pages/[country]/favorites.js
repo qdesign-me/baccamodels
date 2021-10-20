@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import useLocalStorage from 'hooks/useLocalStorage';
 import ModelThumb from 'components/ModelThumb';
 
-function Favorites() {
+function Favorites({ data }) {
   const [models, setModels] = useState(null);
 
   const [favorites] = useLocalStorage('favorites', []);
@@ -24,7 +24,7 @@ function Favorites() {
   }, []);
   return (
     <>
-      <Nav className="relative" />
+      <Nav className="relative" data={data.info} />
       <div className="content mt-[200px]">
         <main>
           <div className="container">
@@ -52,5 +52,12 @@ function Favorites() {
     </>
   );
 }
+export async function getServerSideProps(context) {
+  const { country } = context.params;
 
+  const response = await fetch(`${process.env.HOSTNAME}/api/country/${country}/home`).then((res) => res.json());
+  return {
+    props: { data: response.data },
+  };
+}
 export default Favorites;

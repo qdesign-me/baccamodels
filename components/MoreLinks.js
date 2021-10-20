@@ -1,29 +1,24 @@
 import React from 'react';
 import Link from 'next/link';
-
+import { useRouter } from 'next/router';
 function MoreLinks() {
+  const router = useRouter();
+  const country = router.query.country;
+
+  const pages = { about: 'Our Philosophy', contacts: 'Contact us', become: 'Become a model', favorites: 'Favorites' };
   return (
     <ul>
-      <li>
-        <Link href="/about">
-          <a>Our Philosophy</a>
-        </Link>
-      </li>
-      <li>
-        <Link href="/contacts">
-          <a>Contact us</a>
-        </Link>
-      </li>
-      <li>
-        <Link href="/become">
-          <a>Become a model</a>
-        </Link>
-      </li>
-      <li>
-        <Link href="/favorites">
-          <a>Favorites</a>
-        </Link>
-      </li>
+      {Object.keys(pages).map((page) => {
+        const slug = `/${country}/${page}`;
+        const className = slug === router.asPath ? 'active' : '';
+        return (
+          <li key={page} className={className}>
+            <Link href={slug}>
+              <a>{pages[page]}</a>
+            </Link>
+          </li>
+        );
+      })}
     </ul>
   );
 }

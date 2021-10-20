@@ -6,7 +6,7 @@ import Carousel from 'react-multi-carousel';
 import useLocalStorage from 'hooks/useLocalStorage';
 import 'react-multi-carousel/lib/styles.css';
 
-function Profile({ model }) {
+function Profile({ data }) {
   const [favorites, setFavorites] = useLocalStorage('favorites', []);
   const [video, setVideo] = useState('');
   const videoRef = useRef(null);
@@ -53,8 +53,8 @@ function Profile({ model }) {
   };
   return (
     <>
-      <Nav className="relative" />
-      <Header img={model.profile?.img} className="static">
+      <Nav className="relative" data={data.info} />
+      <Header img={data.model.profile?.img} className="static">
         <>
           <div className="model-menu">
             <ul>
@@ -75,7 +75,7 @@ function Profile({ model }) {
             </ul>
           </div>
           <div className="relative z-10">
-            <h1 className="text-center">{model.name}</h1>
+            <h1 className="text-center">{data.model.name}</h1>
           </div>
         </>
       </Header>
@@ -87,12 +87,12 @@ function Profile({ model }) {
           </div>
         </div>
         <div className="add-favorites">
-          {favorites.includes(model.id) ? (
-            <svg onClick={(e) => removeFavorites(model.id)} xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
+          {favorites.includes(data.model.id) ? (
+            <svg onClick={(e) => removeFavorites(data.model.id)} xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
               <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
             </svg>
           ) : (
-            <svg onClick={(e) => addFavorites(model.id)} xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg onClick={(e) => addFavorites(data.model.id)} xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -103,13 +103,13 @@ function Profile({ model }) {
           )}
         </div>
         <main className="box-profile">
-          {model.profile?.params && (
+          {data.model.profile?.params && (
             <div className="container">
               <div className="params">
-                {Object.keys(model.profile.params).map((key) => (
+                {Object.keys(data.model.profile.params).map((key) => (
                   <div>
                     <div className="title">{key}</div>
-                    <div>{model.profile.params[key]}</div>
+                    <div>{data.model.profile.params[key]}</div>
                   </div>
                 ))}
               </div>
@@ -118,10 +118,10 @@ function Profile({ model }) {
               </div>
             </div>
           )}
-          {model.profile?.book && (
+          {data.model.profile?.book && (
             <div>
               <Carousel responsive={responsive} swipeable={true} draggable={false} infinite={true} autoPlaySpeed={1000} autoPlay={true}>
-                {model.profile.book.map((img) => (
+                {data.model.profile.book.map((img) => (
                   <div>
                     <img src={img} />
                   </div>
@@ -129,13 +129,13 @@ function Profile({ model }) {
               </Carousel>
             </div>
           )}
-          {model.profile?.videos && (
+          {data.model.profile?.videos && (
             <>
               <div className="container box-videos">
                 <h2>Videos</h2>
               </div>
               <Carousel responsive={responsive} swipeable={true} draggable={false} infinite={true} autoPlaySpeed={1000} autoPlay={true}>
-                {model.profile.videos.map((video) => (
+                {data.model.profile.videos.map((video) => (
                   <div className="video-thumb" onClick={(e) => playVideo(video.url)}>
                     <img src={video.img} />
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 inset-center" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -152,14 +152,14 @@ function Profile({ model }) {
               </Carousel>
             </>
           )}
-          {model.profile?.polaroids && (
+          {data.model.profile?.polaroids && (
             <>
               <div className="container box-polaroids">
                 <h2>Polaroids</h2>
               </div>
               <div>
                 <Carousel responsive={responsive} swipeable={true} draggable={false} infinite={true} autoPlaySpeed={1000} autoPlay={true}>
-                  {model.profile.polaroids?.map((img) => (
+                  {data.model.profile.polaroids?.map((img) => (
                     <div>
                       <img src={img} />
                     </div>
@@ -187,6 +187,6 @@ export async function getServerSideProps(context) {
   }).then((res) => res.json());
 
   return {
-    props: { model: response.data.model },
+    props: { data: response.data },
   };
 }

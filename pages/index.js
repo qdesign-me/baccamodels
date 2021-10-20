@@ -16,7 +16,7 @@ export default function Home({ data }) {
       <Header video={data.info.video}>
         <div className="container">
           <main className="home-links">
-            <img className="h-[120px] invert-color" src="/images/logo.svg" alt="" />
+            <img className="h-[120px]" src="/images/logo.svg" alt="" />
             <RegionLinks />
           </main>
         </div>

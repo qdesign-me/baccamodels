@@ -4,7 +4,7 @@ import Social from './Social';
 import MainLinks from './MainLinks';
 import MoreLinks from './MoreLinks';
 
-function Menu() {
+function Menu({ data }) {
   const [open, setOpen] = useState(false);
   return (
     <>
@@ -31,7 +31,7 @@ function Menu() {
           </div>
         </div>
 
-        <Social />
+        <Social data={data?.social} />
       </div>
 
       <div className="menu-bg" onClick={(e) => setOpen(false)} />

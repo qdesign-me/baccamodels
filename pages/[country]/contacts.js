@@ -5,10 +5,10 @@ import Nav from 'components/Nav';
 import Social from 'components/Social';
 import React from 'react';
 
-function Contacts() {
+function Contacts({ data }) {
   return (
     <>
-      <Nav className="relative" />
+      <Nav className="relative theme-white" data={data.info} />
       <Header className="static">
         <>
           <Map className="pull-right map" />
@@ -16,16 +16,11 @@ function Contacts() {
             <div className="wrap text">
               <div className="max-w-[600px] box-contacts">
                 <h4>Contacts</h4>
-                <a href="mailto:info@womenmanagement.com">info@womenmanagement.com</a>
-                <a href="tel:+1 212 334 7480">+1 212 334 7480</a>
+                <a href="mailto:${data.contacts.email}">{data.contacts.email}</a>
+                <a href={`tel:${data.contacts.phone}`}>{data.contacts.phone}</a>
                 <h4> Address</h4>
-                55 Hudson Yards
-                <br />
-                3rd Floor
-                <br /> New York NY 10001
-                <br />
-                United States
-                <Social />
+                <div dangerouslySetInnerHTML={{ __html: data.contacts.address }}></div>
+                <Social data={data.info.social} />
               </div>
             </div>
           </div>
@@ -35,5 +30,12 @@ function Contacts() {
     </>
   );
 }
+export async function getServerSideProps(context) {
+  const { country } = context.params;
 
+  const response = await fetch(`${process.env.HOSTNAME}/api/country/${country}/contacts`).then((res) => res.json());
+  return {
+    props: { data: response.data },
+  };
+}
 export default Contacts;

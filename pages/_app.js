@@ -1,10 +1,10 @@
 import App from 'next/app';
-import { createContext } from 'react';
 import dynamic from 'next/dynamic';
-import cookie, { serialize } from 'cookie';
 import 'styles/globals.css';
 import 'nprogress/nprogress.css';
-
+/*
+import { createContext } from 'react';
+import cookie, { serialize } from 'cookie';
 function parseCookies(req) {
   return cookie.parse(req ? req.headers.cookie || '' : document.cookie);
 }
@@ -19,16 +19,6 @@ function setCookie(res, key, value) {
     document.cookie = `country=${country}; path=/; expires=Tue, 19 Jan 2038 03:14:07 GMT`;
   }
 }
-
-export const GlobalContext = createContext({});
-
-const ProgressBar = dynamic(
-  () => {
-    return import('components/ProgressBar');
-  },
-  { ssr: false }
-);
-
 const detectCountry = (path) => {
   const allow = ['russia', 'kazakhstan', 'kids'];
   const base = path.split('/')[1];
@@ -36,17 +26,12 @@ const detectCountry = (path) => {
   return null;
 };
 
-function MyApp({ Component, pageProps }) {
-  const { global } = pageProps;
-  return (
-    <>
-      <ProgressBar />
-      <GlobalContext.Provider value={global}>
-        <Component {...pageProps} />
-      </GlobalContext.Provider>
-    </>
-  );
-}
+export const GlobalContext = createContext({});
+
+<GlobalContext.Provider value={global}>
+  <Component {...pageProps} />
+</GlobalContext.Provider>;
+
 MyApp.getInitialProps = async (ctx) => {
   const appProps = await App.getInitialProps(ctx);
   const cookies = parseCookies(ctx.ctx.req);
@@ -61,7 +46,33 @@ MyApp.getInitialProps = async (ctx) => {
     setCookie(ctx.ctx.res, 'country', country);
   }
 
-  return { ...appProps, pageProps: { global } };
+  global.info = (await fetch(`${process.env.HOSTNAME}/api/country/${global.country}/info`).then((res) => res.json())).data;
+
+  return {
+    ...appProps,
+    pageProps: {
+      global,
+    },
+  };
 };
+
+*/
+
+const ProgressBar = dynamic(
+  () => {
+    return import('components/ProgressBar');
+  },
+  { ssr: false }
+);
+
+function MyApp({ Component, pageProps }) {
+  const { global } = pageProps;
+  return (
+    <>
+      <ProgressBar />
+      <Component {...pageProps} />
+    </>
+  );
+}
 
 export default MyApp;

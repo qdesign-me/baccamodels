@@ -35,7 +35,7 @@
   }
   .container {
     @apply mx-auto w-full;
-    max-width: calc(100% - 14rem);
+    max-width: calc(100% - 10rem);
   }
   .wrap {
     @apply max-w-6xl mx-auto;
@@ -94,8 +94,9 @@
     color: #000;
   }
   .name-filter {
-    @apply fixed flex select-none bg-black text-white left-28 bottom-10 transition;
+    @apply fixed flex select-none bg-black text-white left-20 bottom-10 transition;
     transform: translateY(200px);
+    z-index: 11;
   }
   .name-filter.on {
     transform: translateY(0);
@@ -122,7 +123,7 @@
     border-right: 2px solid #000;
   }
   .icons-nav {
-    @apply absolute w-full top-auto bottom-28 z-10;
+    @apply absolute w-full top-auto bottom-20 z-10;
   }
   h1 {
     font-size: 80px;
@@ -134,11 +135,18 @@
   h4 {
     @apply text-black mb-2 font-bold;
   }
+  .is-logo {
+    @apply relative z-10 hidden sm:block;
+  }
+  .is-logo img {
+    @apply h-[100px];
+    filter: brightness(0) invert(1);
+  }
   nav {
-    @apply fixed w-full left-0 z-[1000] top-28 text-white;
+    @apply fixed w-full left-0 z-[1000] top-20 text-white;
   }
   nav.relative {
-    @apply top-14;
+    @apply top-20 text-black;
   }
 
   nav.relative + .content {
@@ -159,23 +167,27 @@
   nav.stick .icon-button {
     @apply text-black;
   }
-  nav.stick .logo-wrap {
+  nav.stick .logo-wrap,
+  nav.relative .logo-wrap {
     opacity: 1;
     visibility: visible;
   }
+
   nav .logo-wrap {
     position: absolute;
-    top: 12px;
     left: 50%;
     transform: translateX(-50%);
     width: 100%;
     opacity: 0;
     visibility: hidden;
-    cursor: pointer;
+    z-index: 0;
     @apply max-w-6xl mx-auto;
   }
   nav .logo-wrap img {
     @apply w-36;
+  }
+  nav .logo-wrap a {
+    display: inline-block;
   }
 
   .text ol + p,
@@ -196,16 +208,14 @@
     @apply absolute right-0 text-xs;
   }
   .icon-button {
-    @apply transition cursor-pointer p-2 h-10 w-10;
+    @apply transition cursor-pointer p-2 h-10 w-10 relative;
   }
   .icon-button:hover {
     opacity: 0.75;
   }
-  .invert-color {
-    filter: grayscale(1) invert(1);
-  }
+
   .menu {
-    width: 500px;
+    width: 600px;
     position: fixed;
     top: 0;
     bottom: 0;
@@ -213,9 +223,9 @@
     left: auto;
     color: #111;
     z-index: 1001;
-    padding: 75px;
+    padding: 5rem;
     background: #fff;
-    transform: translateX(500px);
+    transform: translateX(600px);
     transition: transform 0.5s;
     display: flex;
     align-items: flex-start;
@@ -229,7 +239,10 @@
   }
 
   .menu .close {
-    @apply text-gray-400 transition hover:text-black cursor-pointer absolute z-[1000] p-5 top-[50px] right-[55px];
+    @apply text-gray-400 transition hover:text-black cursor-pointer absolute z-[1000];
+    top: 5rem;
+    right: 5rem;
+    padding: 0.5rem;
   }
   .menu.open + .menu-bg {
     opacity: 0.4;
@@ -248,25 +261,26 @@
     visibility: hidden;
   }
   .links-top {
-    @apply -ml-5;
+    @apply -ml-5 mb-5;
   }
   .links-top ul {
     @apply flex;
   }
   .links-top a {
-    @apply px-5 py-4 text-gray-400;
+    @apply px-5  text-gray-400;
+    line-height: 45px;
   }
   .links-top a + a {
     @apply ml-3;
   }
   .links-main {
-    @apply -ml-5 mb-10;
+    @apply -ml-5 mb-5;
   }
   .links-main a {
     @apply text-2xl px-5 py-1 block;
   }
   .links-bottom {
-    @apply -ml-5;
+    @apply -ml-5 mb-5;
   }
   .links-bottom a {
     @apply text-xl px-5 py-1 block font-thin;
@@ -277,7 +291,8 @@
   .links-group:hover a {
     @apply text-gray-400;
   }
-  .links-group:hover a:hover {
+  .links-group:hover a:hover,
+  .active > a {
     @apply !text-black;
   }
   .link-follow {
@@ -291,7 +306,7 @@
   }
 
   footer {
-    @apply py-20;
+    @apply py-20 text-gray-500;
   }
   footer ul + ul {
     @apply ml-24;
@@ -303,7 +318,7 @@
     line-height: 1.8rem;
   }
   .search-results {
-    @apply pt-28;
+    @apply pt-20;
     width: 100%;
     min-height: 100vh;
     position: fixed;
@@ -521,19 +536,34 @@
     nav {
       @apply top-10;
     }
+    .menu {
+      padding: 2.5rem;
+      width: 500px;
+      transform: translateX(500px);
+    }
+    .menu .close {
+      top: 2.5rem;
+      right: 2.5rem;
+    }
+
     .icons-nav {
       @apply bottom-10;
     }
     .container {
       @apply px-10 max-w-full;
     }
+    nav.relative {
+      top: 2.5rem;
+    }
     .name-filter {
       @apply left-10;
     }
 
     .icon-search {
-      @apply ml-auto;
+      @apply ml-auto relative cursor-pointer;
+      z-index: 1;
     }
+
     .icon-instagram {
       @apply hidden;
     }
@@ -566,17 +596,31 @@
     nav .logo-wrap {
       @apply px-4;
     }
+
     .container {
       @apply px-4;
     }
+    .menu {
+      padding: 1rem;
+      width: 500px;
+      transform: translateX(500px);
+    }
+    .menu .close {
+      top: 1rem;
+      right: 1rem;
+    }
+
     .name-filter {
       @apply left-4 bottom-4;
     }
     footer ul:first-child {
       margin-right: 0;
     }
+    .name-filter {
+      transform: translateY(0);
+    }
   }
-  @media (max-width: 768px) {
+  @media (max-width: 640px) {
     body {
       font-size: 12px;
     }
@@ -590,13 +634,23 @@
     nav.relative .icon-button {
       @apply text-black;
     }
-    nav.relative .logo-wrap {
-      opacity: 1;
-      visibility: visible;
+
+    nav .logo-wrap {
+      visibility: visible !important;
+      opacity: 1 !important;
     }
+
+    nav:not(.stick) .logo-wrap img {
+      filter: brightness(0) invert(1);
+    }
+    nav.relative .logo-wrap img {
+      filter: none;
+    }
+
     .text-lg,
     .legend {
-      font-size: 1rem !important;
+      font-size: 12px !important;
+      line-height: 1.5 !important;
     }
     .home-links {
       padding: 20px 30px 40px;
@@ -612,6 +666,21 @@
     }
     footer ul a {
       @apply p-1;
+    }
+  }
+  @media (min-width: 641px) {
+    nav.theme-white:not(.stick) .logo-wrap + div svg,
+    nav.theme-white:not(.stick) span,
+    nav.theme-white:not(.stick) .icon-search {
+      @apply !text-white;
+    }
+  }
+  @media (min-width: 1537px) {
+    nav.theme-white:not(.stick) .icon-search {
+      @apply !text-black;
+    }
+    nav.theme-compact:not(.stick) .links-block {
+      @apply !hidden;
     }
   }
 }

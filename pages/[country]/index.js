@@ -8,10 +8,10 @@ import Footer from 'components/Footer';
 function Index({ data }) {
   return (
     <>
-      <Nav />
+      <Nav data={data.info} />
       <Header video={data.info.video} scroll={true}>
-        <div className="relative z-10">
-          <img className="h-[100px]" src="/images/logo.svg" alt="" />
+        <div className="is-logo">
+          <img src="/images/logo.svg" alt="" />
         </div>
       </Header>
       <div className="content">
@@ -19,18 +19,12 @@ function Index({ data }) {
           <div className="container">
             <div className="wrap box text-lg text">
               <div className="max-w-[600px]">
-                <div className="content" dangerouslySetInnerHTML={{ __html: data.introtext }}></div>
+                <div className="content" dangerouslySetInnerHTML={{ __html: data.text }}></div>
               </div>
             </div>
           </div>
           <Latest slides={data.latest} />
-          <div className="container">
-            <div className="wrap box">
-              <div className="max-w-[600px]">
-                <Follow url={data.info.instagram} />
-              </div>
-            </div>
-          </div>
+          <Follow url={data.info.social.instagram} />
         </main>
         <Footer />
       </div>
@@ -42,7 +36,6 @@ export default Index;
 
 export async function getServerSideProps(context) {
   const country = context.params.country;
-  console.log(`${process.env.HOSTNAME}/api/country/${country}/info`);
   const response = await fetch(`${process.env.HOSTNAME}/api/country/${country}/info`).then((res) => res.json());
 
   return {
