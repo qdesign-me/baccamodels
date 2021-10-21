@@ -1,6 +1,6 @@
 function VolumeControl({ muted, setMuted }) {
   return (
-    <div className="text-white icon-button can-hide flex items-center" onClick={(e) => setMuted(!muted)}>
+    <div className="text-white icon-button can-hide flex items-center ml-auto" onClick={(e) => setMuted(!muted)}>
       {!!muted && (
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path

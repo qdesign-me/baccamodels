@@ -432,7 +432,6 @@
     padding: 0 80px;
     width: calc(100vw - 150px);
     transform: translateX(100%);
-
     @apply transition;
   }
 
@@ -537,7 +536,7 @@
   .about-text {
     @apply pt-20;
   }
-  nav.theme-map:not(.stick) .logo-wrap + div svg,
+  nav.theme-map:not(.stick) .logo-wrap + div .icon-button,
   nav.theme-map:not(.stick) span {
     @apply !text-white;
   }
@@ -739,6 +738,17 @@
       bottom: 0;
       right: 0;
       z-index: 1;
+    }
+    .name-filter {
+      left: auto;
+      right: 1rem;
+      flex-direction: row-reverse;
+    }
+    .name-filter .all > div:last-child {
+      border-right: 0;
+    }
+    .name-filter .all > div:first-child {
+      border-left: 2px solid #000;
     }
   }
   @media (min-width: 641px) {
