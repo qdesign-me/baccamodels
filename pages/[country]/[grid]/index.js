@@ -34,8 +34,8 @@ function FilterByName({ models }) {
     e.preventDefault();
     e.stopPropagation();
     const letter = e.target.innerText;
-    const section = document.querySelector(`[data-name="${letter}"]`);
-    section.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    scrollTo('[data-name="${letter}"]', 'end');
+
     setOpened(false);
   };
 

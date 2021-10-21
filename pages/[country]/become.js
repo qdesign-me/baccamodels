@@ -4,6 +4,7 @@ import Header from 'components/Header';
 import Nav from 'components/Nav';
 import { useDropzone } from 'react-dropzone';
 import { useForm } from 'react-hook-form';
+import { toFeet } from 'hooks/utils';
 
 const thumbsContainer = {
   display: 'flex',
@@ -74,25 +75,9 @@ function Become({ data }) {
 
   const onSubmit = (data) => console.log(data);
 
-  function toFeet(n) {
-    const realFeet = (n * 0.3937) / 12;
-
-    const feet = Math.floor(realFeet);
-    const inches = (realFeet - feet) * 12;
-    let add = '';
-    let realInches = Math.floor(inches);
-    const fraction = inches - realInches;
-    if (fraction > 0.25 && fraction < 0.75) {
-      add = ' 1/2';
-    }
-    if (fraction >= 0.75) {
-      realInches++;
-    }
-    return `${feet}′ ${realInches ? `${realInches}″` : ''} ${add}`;
-  }
   return (
     <>
-      <Nav className="relative theme-become" data={data.info} />
+      <Nav className="relative theme-img" data={data.info} />
       <Header img={data.img} className="static">
         <>
           <div className="relative z-10">

@@ -73,12 +73,14 @@ export default {
           img: '/images/russia/models/1.jpg',
           profile: {
             img: '/images/russia/models/1/book/1.jpg',
+            social: {
+              instagram: 'https://instagram.com/link',
+            },
             book: [
               '/images/russia/models/1/book/1.jpg',
               '/images/russia/models/1/book/2.jpg',
               '/images/russia/models/1/book/3.jpg',
               '/images/russia/models/1/book/4.jpg',
-              '/images/russia/models/1/book/5.jpg',
               '/images/russia/models/1/book/6.jpg',
               '/images/russia/models/1/book/1.jpg',
               '/images/russia/models/1/book/2.jpg',
@@ -91,8 +93,8 @@ export default {
               '/images/russia/models/1/polaroids/4.jpg',
             ],
             videos: [
-              { img: '/images/russia/models/1/videos/1.jpg', url: '/video/home.mp4' },
-              { img: '/images/russia/models/1/videos/2.jpg', url: '/video/home.mp4' },
+              { img: '/images/russia/models/1/videos/1.jpg', url: '/video/russia/2.mp4' },
+              { img: '/images/russia/models/1/videos/2.jpg', url: '/video/russia/2.mp4' },
             ],
             params: {
               Height: '180',
