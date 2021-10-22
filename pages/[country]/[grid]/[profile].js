@@ -192,7 +192,7 @@ function Profile({ data }) {
                       <img src={video.img} />
 
                       <svg viewBox="0 0 27 32" xmlns="http://www.w3.org/2000/svg" className="h-10  inset-center">
-                        <path d="M25 16L1 30V2z" stroke="#FFF" stroke-width="2" fill="none" />
+                        <path d="M25 16L1 30V2z" stroke="#FFF" strokeWidth="2" fill="none" />
                       </svg>
                     </div>
                   ))}

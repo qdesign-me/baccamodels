@@ -1,9 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import SearchItem from './SearchItem';
+import { useRouter } from 'next/router';
 
 function Search() {
+  const router = useRouter();
   const [models, setModels] = useState([]);
   const [search, setSearch] = useState('');
+
+  useEffect(() => {
+    return () => {
+      document.body.classList.remove('search-open', 'has-overflow');
+    };
+  }, []);
+  useEffect(() => {
+    document.body.classList.remove('search-open', 'has-overflow');
+  }, [router]);
 
   const showSearch = () => {
     document.body.classList.add('search-open', 'has-overflow');
@@ -13,7 +24,6 @@ function Search() {
   };
   const doSearch = async (e) => {
     const term = e.target.value;
-
     setSearch(term);
     if (term.length < 2) {
       setModels([]);
@@ -44,7 +54,7 @@ function Search() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
             <div className="w-full">
-              <input type="text" placeholder="Type to search" className="py-1 w-full outline-none" value={search} onChange={() => doSearch} />
+              <input type="text" placeholder="Type to search" className="py-1 w-full outline-none" value={search} onChange={doSearch} />
               <div className="search-grid">
                 {models.length === 0 && search.length > 2 && <div>Nothing found.</div>}
                 {models.map((model) => (

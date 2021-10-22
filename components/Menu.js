@@ -7,7 +7,9 @@ import MoreLinks from './MoreLinks';
 function Menu({ data }) {
   const [open, setOpen] = useState(false);
   const try2close = (e) => {
-    if (['svg', 'a'].includes(e.target.tagName.toLowerCase())) setOpen(false);
+    if (['svg', 'a'].includes(e.target.tagName.toLowerCase())) {
+      setOpen(false);
+    }
   };
   return (
     <>
