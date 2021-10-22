@@ -19,3 +19,12 @@ export const scrollTo = (target, block = 'center') => {
   const section = document.querySelector(target);
   if (section) section.scrollIntoView({ behavior: 'smooth', block, inline: 'nearest' });
 };
+export const debounce = (func, timeout = 1500) => {
+  let timer;
+  return (...args) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      func.apply(this, args);
+    }, timeout);
+  };
+};

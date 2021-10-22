@@ -32,7 +32,7 @@ function Nav({ data, className, showSearch = true, showBack = false }) {
     <>
       <nav className={`${className ? className : ''}`}>
         <div className="container">
-          <div className="flex justify-between">
+          <div className="flex justify-between items-start">
             {showSearch && <Search />}
             {showBack && <Back />}
             <div className="wrap logo-wrap">

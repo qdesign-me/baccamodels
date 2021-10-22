@@ -30,7 +30,7 @@ function Latest({ slides }) {
     <div>
       <h2 className="text-center">The Latest</h2>
       <div className="carousel">
-        <Carousel responsive={responsive} swipeable={true} draggable={false} infinite={true} autoPlaySpeed={1000}>
+        <Carousel responsive={responsive} swipeable={true} draggable={false} infinite={true} autoPlaySpeed={1000} showDots={true}>
           {slides.map((slide, index) => (
             <div key={index} className="img-slide">
               <img src={slide.img} alt="" />

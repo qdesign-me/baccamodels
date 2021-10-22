@@ -66,9 +66,13 @@ function Profile({ data }) {
     },
   };
   const responsiveVideo = {
-    superLargeDesktop: {
-      breakpoint: { max: 8000, min: 0 },
+    tablet: {
+      breakpoint: { max: 10000, min: 640 },
       items: 2,
+    },
+    mobile: {
+      breakpoint: { max: 640, min: 0 },
+      items: 1,
     },
   };
   return (
@@ -154,7 +158,7 @@ function Profile({ data }) {
                 </div>
               </div>
               <div className="carousel  box-book">
-                <Carousel responsive={responsive} swipeable={true} draggable={false} infinite={true} autoPlaySpeed={1000}>
+                <Carousel responsive={responsive} swipeable={true} draggable={false} infinite={true} autoPlaySpeed={1000} showDots={true}>
                   {data.model.profile.book.map((img, index) => (
                     <div className="img-slide" key={index}>
                       <img src={img} />
@@ -182,7 +186,7 @@ function Profile({ data }) {
                 </div>
               </div>
               <div className="carousel  box-videos">
-                <Carousel responsive={responsiveVideo} swipeable={true} draggable={false} infinite={true} autoPlaySpeed={1000}>
+                <Carousel responsive={responsiveVideo} swipeable={true} draggable={false} infinite={true} autoPlaySpeed={1000} showDots={true}>
                   {data.model.profile.videos.map((video, index) => (
                     <div className={`video-slide`} key={index} onClick={(e) => playVideo(video.url)}>
                       <img src={video.img} />
@@ -204,7 +208,7 @@ function Profile({ data }) {
                 </div>
               </div>
               <div className="carousel  box-polaroids">
-                <Carousel responsive={responsive} swipeable={true} draggable={false} infinite={true} autoPlaySpeed={1000}>
+                <Carousel responsive={responsive} swipeable={true} draggable={false} infinite={true} autoPlaySpeed={1000} showDots={true}>
                   {data.model.profile.polaroids.map((img, index) => (
                     <div className="img-slide" key={index}>
                       <img src={img} />
