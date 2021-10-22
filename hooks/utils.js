@@ -17,5 +17,5 @@ export const toFeet = (n) => {
 
 export const scrollTo = (target, block = 'center') => {
   const section = document.querySelector(target);
-  if (section) section.scrollIntoView({ behavior: 'smooth', block });
+  if (section) section.scrollIntoView({ behavior: 'smooth', block, inline: 'nearest' });
 };

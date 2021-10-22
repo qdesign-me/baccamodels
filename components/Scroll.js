@@ -1,11 +1,8 @@
 import React from 'react';
-
+import { scrollTo } from 'hooks/utils.js';
 function Scroll({ className }) {
   const scroll = () => {
-    console.log('scroll');
-    document.querySelector('.cover + div').scrollIntoView({
-      behavior: 'smooth',
-    });
+    scrollTo('.cover + div', 'start');
   };
   return (
     <svg onClick={scroll} xmlns="http://www.w3.org/2000/svg" className={`icon-button text-white ${className ? '' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">

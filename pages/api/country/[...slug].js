@@ -4,6 +4,7 @@ export default function modelsAPI(req, res) {
   try {
     const [countrySlug, requestType] = req.query.slug;
     const country = data[countrySlug];
+    if (!country) return res.status(404).json({ status: 'error' });
     switch (requestType) {
       case 'home':
         return res.status(200).json({

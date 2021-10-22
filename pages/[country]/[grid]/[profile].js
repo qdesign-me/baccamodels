@@ -14,8 +14,8 @@ function Profile({ data }) {
   const videoRef = useRef(null);
 
   const playVideo = (url) => {
-    setVideo(url);
     document.body.classList.add('video-open', 'has-overflow');
+    videoRef.current.src = url;
     videoRef.current.play();
   };
 
@@ -25,16 +25,15 @@ function Profile({ data }) {
   };
 
   const stopVideo = () => {
+    videoRef.current.pause();
     document.body.classList.remove('video-open', 'has-overflow');
-    videoRef.current.stop();
   };
 
-  const addFavorites = (id) => {
+  const toggleFavorites = (id) => {
+    if (favorites.includes(id)) return setFavorites(favorites.filter((favorite) => favorite != id));
     setFavorites([...favorites, id]);
   };
-  const removeFavorites = (id) => {
-    setFavorites(favorites.filter((favorite) => favorite != id));
-  };
+
   const handleScroll = () => {
     setVisible(true);
   };
@@ -74,7 +73,7 @@ function Profile({ data }) {
   };
   return (
     <>
-      <Nav className="relative theme-img" data={data.info} />
+      <Nav className="relative theme-img" data={data.info} showSearch={false} showBack={true} />
       <Header img={data.model.profile?.img} className="static">
         <>
           <div className="container flex-full">
@@ -115,28 +114,30 @@ function Profile({ data }) {
       </Header>
       <div className="content">
         <div className={`add2favorites ${visible ? 'on' : ''}`}>
-          {favorites.includes(data.model.id) ? (
-            <svg onClick={(e) => removeFavorites(data.model.id)} xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
-              <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
-            </svg>
-          ) : (
-            <svg onClick={(e) => addFavorites(data.model.id)} xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-              />
-            </svg>
-          )}
+          <div className="active" onClick={(e) => toggleFavorites(data.model.id)}>
+            {favorites.includes(data.model.id) ? (
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 pulse" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
+              </svg>
+            ) : (
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                />
+              </svg>
+            )}
+          </div>
         </div>
         <main className="box-profile">
           {data.model.profile?.params && (
             <div className="container countable">
               <div className="wrap box">
                 <div className="params">
-                  {Object.keys(data.model.profile.params).map((key) => (
-                    <div key={key}>
+                  {Object.keys(data.model.profile.params).map((key, index) => (
+                    <div key={index}>
                       <div className="title">{key}</div>
                       <div>{formatParam(key, data.model.profile.params[key])}</div>
                     </div>
@@ -182,30 +183,13 @@ function Profile({ data }) {
               </div>
               <div className="carousel  box-videos">
                 <Carousel responsive={responsiveVideo} swipeable={true} draggable={false} infinite={true} autoPlaySpeed={1000}>
-                  {data.model.profile.videos.map((video) => (
-                    <div className="video-slide">
+                  {data.model.profile.videos.map((video, index) => (
+                    <div className={`video-slide`} key={index} onClick={(e) => playVideo(video.url)}>
                       <img src={video.img} />
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 inset-center" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
-                        />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+
+                      <svg viewBox="0 0 27 32" xmlns="http://www.w3.org/2000/svg" className="h-10  inset-center">
+                        <path d="M25 16L1 30V2z" stroke="#FFF" stroke-width="2" fill="none" />
                       </svg>
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 inset-center" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path
-                          fill="currentColor"
-                          d="M371.7 238l-176-107c-15.8-8.8-35.7 2.5-35.7 21v208c0 18.4 19.8 29.8 35.7 21l176-101c16.4-9.1 16.4-32.8 0-42zM504 256C504 119 393 8 256 8S8 119 8 256s111 248 248 248 248-111 248-248zm-448 0c0-110.5 89.5-200 200-200s200 89.5 200 200-89.5 200-200 200S56 366.5 56 256z"
-                        ></path>
-                      </svg>
-                      <div className="video-player">
-                        <div className="overlay"></div>
-                        <div className="content">
-                          <video src={video.url} playsinline muted data-object-fit="contain" />
-                        </div>
-                      </div>
                     </div>
                   ))}
                 </Carousel>
@@ -230,6 +214,17 @@ function Profile({ data }) {
               </div>
             </div>
           )}
+          <div className="video-player">
+            <div className="overlay" onClick={stopVideo}></div>
+            <div className="content">
+              <video ref={videoRef} src={''} playsInline muted dataObjectFit="contain" />
+              <div className="close" onClick={stopVideo}>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 " fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </div>
+            </div>
+          </div>
         </main>
         <Footer />
       </div>

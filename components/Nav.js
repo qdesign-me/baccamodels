@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import Menu from 'components/Menu';
+import Back from 'components/Back';
 import Favorites from 'components/Favorites';
 import Search from 'components/Search';
 import Link from 'next/link';
 
-function Nav({ data, className }) {
+function Nav({ data, className, showSearch = true, showBack = false }) {
   const hadnleScroll = () => {
     const y = window.scrollY;
     let breakpoint = 50;
@@ -14,9 +15,9 @@ function Nav({ data, className }) {
       }
     }
     if (y > breakpoint) {
-      document.querySelector('nav').classList.add('stick');
+      document.querySelector('nav')?.classList.add('stick');
     } else {
-      document.querySelector('nav').classList.remove('stick');
+      document.querySelector('nav')?.classList.remove('stick');
     }
   };
 
@@ -32,7 +33,8 @@ function Nav({ data, className }) {
       <nav className={`${className ? className : ''}`}>
         <div className="container">
           <div className="flex justify-between">
-            <Search />
+            {showSearch && <Search />}
+            {showBack && <Back />}
             <div className="wrap logo-wrap">
               <Link href="/">
                 <a>
