@@ -1,8 +1,7 @@
-import Footer from 'components/Footer';
-import Nav from 'components/Nav';
+import Nav from 'components/frontend/Nav';
 import React, { useState, useEffect } from 'react';
 import useLocalStorage from 'hooks/useLocalStorage';
-import ModelThumb from 'components/ModelThumb';
+import ModelThumb from 'components/frontend/ModelThumb';
 
 function Favorites({ data }) {
   const [models, setModels] = useState(null);
@@ -47,11 +46,11 @@ function Favorites({ data }) {
             </div>
           </div>
         </main>
-        <Footer />
       </div>
     </>
   );
 }
+Favorites.layout = 'default';
 export async function getServerSideProps(context) {
   const { country } = context.params;
 

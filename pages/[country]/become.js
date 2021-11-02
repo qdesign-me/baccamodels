@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import Footer from 'components/Footer';
-import Header from 'components/Header';
-import Nav from 'components/Nav';
+import Header from 'components/frontend/Header';
+import Nav from 'components/frontend/Nav';
 import { useDropzone } from 'react-dropzone';
 import { useForm } from 'react-hook-form';
-import { toFeet } from 'hooks/utils';
+import { convertMetric } from 'hooks/utils';
 
 const thumbsContainer = {
   display: 'flex',
@@ -78,7 +77,7 @@ function Become({ data }) {
   return (
     <>
       <Nav className="relative theme-img" data={data.info} />
-      <Header img={data.img} className="static">
+      <Header img={data.pages.become.cover} className="static">
         <>
           <div className="relative z-10">
             <h1 className="text-center">
@@ -94,7 +93,7 @@ function Become({ data }) {
             <div className="about-text">
               <div className="wrap text">
                 <div className="max-w-[600px]">
-                  <div className="content" dangerouslySetInnerHTML={{ __html: data.text }}></div>
+                  <div className="content" dangerouslySetInnerHTML={{ __html: data.pages.become.text }}></div>
                 </div>
               </div>
             </div>
@@ -159,7 +158,7 @@ function Become({ data }) {
                             </option>
                           );
                           while (++i <= len) {
-                            const value = `${i} cm - ${toFeet(i)}`;
+                            const value = `${i} cm - ${convertMetric(i)}`;
                             rows.push(
                               <option key={i} value={value}>
                                 {value}
@@ -252,11 +251,11 @@ function Become({ data }) {
             </div>
           </div>
         </main>
-        <Footer />
       </div>
     </>
   );
 }
+Become.layout = 'default';
 export async function getServerSideProps(context) {
   const { country } = context.params;
 

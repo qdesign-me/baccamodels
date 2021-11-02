@@ -8,7 +8,7 @@ function Follow({ className, url }) {
         <div className={`container box ${className ?? ''}`}>
           <div className="wrap">
             <div className="max-w-[600px]">
-              <Link href={url}>
+              <Link href={`https://${url}`}>
                 <a target="_blank" className="link-follow">
                   <div className="mr-4">Follow Bacca Models</div>
                   <svg

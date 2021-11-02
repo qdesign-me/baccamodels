@@ -1,6 +1,6 @@
 import React from 'react';
-import Volume from 'components/Volume';
-import Scroll from 'components/Scroll';
+import Volume from 'components/frontend/Volume';
+import Scroll from 'components/frontend/Scroll';
 import useLocalStorage from 'hooks/useLocalStorage';
 function Header({ video, img, scroll, children, className = 'cover full-bg' }) {
   const [muted, setMuted] = useLocalStorage('muted', true);

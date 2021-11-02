@@ -1,9 +1,8 @@
-import Footer from 'components/Footer';
-import Nav from 'components/Nav';
-import Header from 'components/Header';
+import Nav from 'components/frontend/Nav';
+import Header from 'components/frontend/Header';
 import React, { useState, useEffect, useRef } from 'react';
 import Carousel from 'react-multi-carousel';
-import { toFeet, scrollTo } from 'hooks/utils';
+import { convertParam, scrollTo } from 'hooks/utils';
 import useLocalStorage from 'hooks/useLocalStorage';
 import 'react-multi-carousel/lib/styles.css';
 
@@ -20,7 +19,8 @@ function Profile({ data }) {
   };
 
   const formatParam = (key, value) => {
-    if (['Height', 'Bust', 'Waist', 'Hips', 'Shoes'].includes(key)) return `${value} / ${toFeet(value)}`;
+    if (['Height', 'Bust', 'Waist', 'Hips'].includes(key)) return `${value} / ${convertMetric(value, 'feet')}`;
+    if (['Shoes'].includes(key)) return `${value} / ${convertMetric(value, 'shoes')}`;
     return value;
   };
 
@@ -230,12 +230,11 @@ function Profile({ data }) {
             </div>
           </div>
         </main>
-        <Footer />
       </div>
     </>
   );
 }
-
+Profile.layout = 'default';
 export default Profile;
 
 export async function getServerSideProps(context) {
@@ -246,7 +245,7 @@ export async function getServerSideProps(context) {
     },
     body: JSON.stringify(context.params),
   }).then((res) => res.json());
-
+  console.log(response);
   return {
     props: { data: response.data },
   };

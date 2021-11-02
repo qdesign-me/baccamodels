@@ -1,7 +1,5 @@
-import Button from 'components/Button';
-import Follow from 'components/Follow';
-import Footer from 'components/Footer';
-import Nav from 'components/Nav';
+import Follow from 'components/frontend/Follow';
+import Nav from 'components/frontend/Nav';
 import React from 'react';
 
 function About({ data }) {
@@ -21,18 +19,18 @@ function About({ data }) {
             <div className="box">
               <div className="wrap text">
                 <div className="max-w-[600px]">
-                  <div className="content" dangerouslySetInnerHTML={{ __html: data.text }}></div>
+                  <div className="content" dangerouslySetInnerHTML={{ __html: data.pages?.about?.text }}></div>
                 </div>
               </div>
             </div>
           </div>
           <Follow url={data.info.social.instagram} className="!pt-0" />
         </main>
-        <Footer />
       </div>
     </>
   );
 }
+About.layout = 'default';
 export async function getServerSideProps(context) {
   const { country } = context.params;
 

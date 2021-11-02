@@ -5,7 +5,7 @@ function Social({ data }) {
   return (
     <div className="text-black flex space-x-6 links-group social">
       {data?.instagram && (
-        <Link href={data.instagram}>
+        <Link href={`https://${data.instagram}`}>
           <a target="_blank">
             <svg className="h-5" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="instagram" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
               <path
@@ -17,7 +17,7 @@ function Social({ data }) {
         </Link>
       )}
       {data?.facebook && (
-        <Link href={data.facebook}>
+        <Link href={`https://${data.facebook}`}>
           <a target="_blank">
             <svg
               className="h-5"
@@ -38,8 +38,8 @@ function Social({ data }) {
         </Link>
       )}
 
-      {data?.vkontakte && (
-        <Link href={data.vkontakte}>
+      {data?.vk && (
+        <Link href={`https://${data.vk}`}>
           <a target="_blank">
             <svg className="h-5" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="vk" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
               <path

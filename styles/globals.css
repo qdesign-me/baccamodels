@@ -96,7 +96,9 @@
   header .map {
     width: 40%;
   }
-
+  header.is-404 {
+    justify-content: flex-start !important;
+  }
   .home-links {
     @apply bg-white relative z-10 flex flex-col justify-center items-center max-w-3xl mx-auto;
     padding: 80px 100px 70px;
@@ -623,6 +625,63 @@
   nav.theme-img:not(.stick) span {
     @apply !text-white;
   }
+  .indicator {
+  }
+  .has-error label {
+    @apply text-red-700;
+  }
+  .has-error input,
+  .has-error textarea,
+  .has-error .indicator {
+    @apply !border-red-600;
+  }
+  td .social {
+    @apply justify-center;
+  }
+  th {
+    white-space: nowrap;
+  }
+  .input {
+    @apply rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700;
+  }
+  .cell-long {
+    max-width: 150px;
+    width: 150px;
+  }
+  .cell-default {
+    text-align: center !important;
+    max-width: 110px;
+    width: 110px;
+  }
+  .cell-flag {
+    max-width: 110px;
+    width: 110px;
+  }
+  .cell-flag > div {
+    display: flex;
+    justify-content: center;
+  }
+  .manager-btn {
+    @apply items-center mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0  sm:w-auto sm:text-sm;
+  }
+  .manager-btn-success {
+    @apply bg-green-500 text-white hover:bg-green-600 hover:text-white;
+  }
+  .manager-btn-danger {
+    @apply bg-red-500 text-white hover:bg-red-600 hover:text-white;
+  }
+  .manager-btn-info {
+    @apply bg-blue-500 text-white hover:bg-blue-600 hover:text-white;
+  }
+  .manager-btn + .manager-btn {
+    @apply ml-3;
+  }
+  button[disabled] {
+    opacity: 0.5;
+    cursor: default;
+    pointer-events: none;
+  }
+
   @media (max-width: 1536px) {
     h1 {
       font-size: 60px;
@@ -744,6 +803,7 @@
     header .pull-right {
       object-position: top;
     }
+
     .theme-img + header .relative {
       position: static;
     }

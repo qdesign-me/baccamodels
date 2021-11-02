@@ -1,15 +1,23 @@
-import data from '../../../data';
+import { connectToDatabase, buildQuery } from 'hooks/useMongodb';
 
-export default function modelsAPI(req, res) {
+export default async function modelsAPI(req, res) {
   try {
+    const { db } = await connectToDatabase();
     const requestType = req.query.slug;
 
     switch (requestType) {
+      case 'all': {
+        const data = await buildQuery(db, 'models', req.body, ['name', 'region', 'category']);
+
+        return res.status(200).json({ status: 'ok', data });
+      }
       case 'profile': {
         const { country, grid, profile } = req.body;
+        const slug = `/${country}/${grid}/${profile}`;
+        const model = await db.collection('models').findOne({ slug });
 
-        const model = data[country].models[grid].find((m) => m.slug === `/${country}/${grid}/${profile}`);
-        const info = data[country].info;
+        const info = (await db.collection('regions').findOne({ _id: country }, { projection: { info: true } })).info;
+
         return res.status(200).json({ status: 'ok', data: { model, info } });
       }
       case 'byids': {
@@ -36,6 +44,7 @@ export default function modelsAPI(req, res) {
       }
     }
   } catch (error) {
+    console.log('error', error);
     res.status(404).json({ status: 'error' });
   }
 }

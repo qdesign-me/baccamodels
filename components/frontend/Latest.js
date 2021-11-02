@@ -25,7 +25,7 @@ function Latest({ slides }) {
       items: 2,
     },
   };
-
+  if (!slides) return '';
   return (
     <div>
       <h2 className="text-center">The Latest</h2>
@@ -35,7 +35,7 @@ function Latest({ slides }) {
             <div key={index} className="img-slide">
               <img src={slide.img} alt="" />
               <div className="legend">
-                <Link href={slide.slug}>
+                <Link href={'aa'}>
                   <a>{slide.name}</a>
                 </Link>{' '}
                 {slide.text}

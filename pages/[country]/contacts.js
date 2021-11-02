@@ -1,8 +1,7 @@
-import Footer from 'components/Footer';
-import Header from 'components/Header';
-import Map from 'components/Map';
-import Nav from 'components/Nav';
-import Social from 'components/Social';
+import Header from 'components/frontend/Header';
+import Map from 'components/frontend/Map';
+import Nav from 'components/frontend/Nav';
+import Social from 'components/frontend/Social';
 import React from 'react';
 
 function Contacts({ data }) {
@@ -17,10 +16,10 @@ function Contacts({ data }) {
               <div className="wrap text">
                 <div className="max-w-[600px] box-contacts">
                   <h4>Contacts</h4>
-                  <a href="mailto:${data.contacts.email}">{data.contacts.email}</a>
-                  <a href={`tel:${data.contacts.phone}`}>{data.contacts.phone}</a>
+                  <a href={`mailto:${data.pages.contacts.email}`}>{data.pages.contacts.email}</a>
+                  <a href={`tel:${data.pages.contacts.phone}`}>{data.pages.contacts.phone}</a>
                   <h4> Address</h4>
-                  <div dangerouslySetInnerHTML={{ __html: data.contacts.address }}></div>
+                  <div dangerouslySetInnerHTML={{ __html: data.pages.contacts.address }}></div>
                   <Social data={data.info.social} />
                 </div>
               </div>
@@ -28,10 +27,10 @@ function Contacts({ data }) {
           </div>
         </>
       </Header>
-      <Footer />
     </>
   );
 }
+Contacts.layout = 'default';
 export async function getServerSideProps(context) {
   const { country } = context.params;
 

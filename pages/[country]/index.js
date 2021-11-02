@@ -1,9 +1,8 @@
 import React from 'react';
-import Header from 'components/Header';
-import Nav from 'components/Nav';
-import Follow from 'components/Follow';
-import Latest from 'components/Latest';
-import Footer from 'components/Footer';
+import Header from 'components/frontend/Header';
+import Nav from 'components/frontend/Nav';
+import Follow from 'components/frontend/Follow';
+import Latest from 'components/frontend/Latest';
 
 function Index({ data }) {
   return (
@@ -19,18 +18,18 @@ function Index({ data }) {
           <div className="container">
             <div className="wrap box text-lg text">
               <div className="max-w-[600px]">
-                <div className="content" dangerouslySetInnerHTML={{ __html: data.text }}></div>
+                <div className="content" dangerouslySetInnerHTML={{ __html: data.pages.home.text }}></div>
               </div>
             </div>
           </div>
-          <Latest slides={data.latest} />
+          <Latest slides={data.pages.home.latest} />
           <Follow url={data.info.social.instagram} />
         </main>
-        <Footer />
       </div>
     </>
   );
 }
+Index.layout = 'default';
 
 export default Index;
 

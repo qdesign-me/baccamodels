@@ -1,6 +1,6 @@
-import Header from 'components/Header';
+import Header from 'components/frontend/Header';
 import Head from 'next/head';
-import RegionLinks from 'components/RegionLinks';
+import RegionLinks from 'components/frontend/RegionLinks';
 export default function Home({ data }) {
   return (
     <>
@@ -24,6 +24,8 @@ export default function Home({ data }) {
     </>
   );
 }
+
+Home.layout = 'default';
 
 export async function getServerSideProps(context) {
   const response = await fetch(`${process.env.HOSTNAME}/api/country/all/home`).then((res) => res.json());

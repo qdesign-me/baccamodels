@@ -1,7 +1,6 @@
-import Footer from 'components/Footer';
-import Nav from 'components/Nav';
+import Nav from 'components/frontend/Nav';
 import React, { useState, useEffect } from 'react';
-import ModelThumb from 'components/ModelThumb';
+import ModelThumb from 'components/frontend/ModelThumb';
 
 function FilterByName({ models }) {
   const letters = [
@@ -53,7 +52,7 @@ function FilterByName({ models }) {
   );
 }
 
-function Development({ data }) {
+function Grid({ data }) {
   return (
     <>
       <Nav className="relative" data={data.info} />
@@ -65,7 +64,7 @@ function Development({ data }) {
             </div>
             <div className="box">
               <div className="grid-thumbs">
-                {data.models.map((model) => (
+                {data.models?.map((model) => (
                   <ModelThumb key={model.id} model={model} />
                 ))}
               </div>
@@ -73,13 +72,12 @@ function Development({ data }) {
           </div>
           <FilterByName models={data.models} />
         </main>
-        <Footer />
       </div>
     </>
   );
 }
-
-export default Development;
+Grid.layout = 'default';
+export default Grid;
 
 export async function getServerSideProps(context) {
   const { country, grid } = context.params;

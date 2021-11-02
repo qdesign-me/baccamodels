@@ -15,6 +15,8 @@
 .env
 # production
 /build
+/public/images/russia
+/public/video/russia
 
 # misc
 .DS_Store
