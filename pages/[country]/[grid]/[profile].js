@@ -2,7 +2,7 @@ import Nav from 'components/frontend/Nav';
 import Header from 'components/frontend/Header';
 import React, { useState, useEffect, useRef } from 'react';
 import Carousel from 'react-multi-carousel';
-import { convertParam, scrollTo } from 'hooks/utils';
+import { convertMetric, scrollTo } from 'hooks/utils';
 import useLocalStorage from 'hooks/useLocalStorage';
 import 'react-multi-carousel/lib/styles.css';
 

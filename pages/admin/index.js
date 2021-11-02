@@ -1,10 +1,5 @@
-import Table from '/components/admin/Table';
 function Index() {
-  return (
-    <>
-      <Table />
-    </>
-  );
+  return <>hello</>;
 }
 
 Index.layout = 'admin';
