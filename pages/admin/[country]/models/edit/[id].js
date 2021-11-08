@@ -1,57 +1,57 @@
 import React from 'react';
 import Form from 'components/admin/Form';
-
+import FormWrap from 'components/admin/FormWrap';
 function ModelEdit({ data }) {
   const chunks = {
     'Public Information': {
       data: {
-        instagram: data.profile.social.instagram,
-        facebook: data.profile.social.facebook,
-        vk: data.profile.social.vk,
-        img: data.img,
-        name: data.name,
-        height: data.profile.params.Height,
-        hair: data.profile.params.Hair,
-        eyes: data.profile.params.Eyes,
-        bust: data.profile.params.Bust,
-        waist: data.profile.params.Waist,
-        hips: data.profile.params.Hips,
-        shoes: data.profile.params.Shoes,
+        instagram: data.profile?.social?.instagram ?? '',
+        facebook: data.profile?.social?.facebook ?? '',
+        vk: data.profile?.social?.vk ?? '',
+        img: data.img ?? '',
+        name: data.name ?? '',
+        height: data.profile?.params?.Height ?? '',
+        hair: data.profile?.params?.Hair ?? '',
+        eyes: data.profile?.params?.Eyes ?? '',
+        bust: data.profile?.params?.Bust ?? '',
+        waist: data.profile?.params?.Waist ?? '',
+        hips: data.profile?.params?.Hips ?? '',
+        shoes: data.profile?.params?.Shoes ?? '',
       },
     },
     'Private Information': {
       data: {
-        city: data.private.city,
-        country: data.private.country,
-        agency: data.private.agency,
-        dob: data.private.dob,
-        phone: data.private.phone,
-        email: data.private.email,
+        city: data.private?.city ?? '',
+        country: data.private?.country ?? '',
+        agency: data.private?.agency ?? '',
+        dob: data.private?.dob ?? '',
+        phone: data.private?.phone ?? '',
+        email: data.private?.email ?? '',
       },
     },
     'Show on Page': {
       data: {
-        category: data.category,
+        category: data.category ?? '',
       },
     },
     Book: {
       data: {
-        media: data.profile.book,
+        media: data.profile?.book || [],
       },
     },
     Polaroids: {
       data: {
-        media: data.profile.polaroids,
+        media: data.profile?.polaroids || [],
       },
     },
     Videos: {
       data: {
-        media: data.profile.videos,
+        media: data.profile?.videos || [],
       },
     },
   };
   return (
-    <div>
+    <FormWrap>
       <Form
         title="Public Information"
         data={chunks['Public Information']}
@@ -77,12 +77,12 @@ function ModelEdit({ data }) {
             className: 'grid grid-cols-12 gap-6',
             fields: [
               { field: 'height', title: 'Height (cm)', type: 'text', span: 3 },
-              { field: 'hair', title: 'Hair', type: 'select', span: 3, variants: ['Black', 'Brown ', 'Auburn ', 'Red', 'Blond', 'Gray / White', 'Blue'] },
-              { field: 'eyes', title: 'Eyes', type: 'select', span: 3, variants: ['Black', 'Blue', 'Blue / Green', 'Brown', 'Green', 'Gray'] },
+              { field: 'hair', title: 'Hair', type: 'select', span: 3, variants: ['', 'Black', 'Brown ', 'Auburn ', 'Red', 'Blond', 'Gray / White', 'Blue'] },
+              { field: 'eyes', title: 'Eyes', type: 'select', span: 3, variants: ['', 'Black', 'Blue', 'Blue / Green', 'Brown', 'Green', 'Gray'] },
               { field: 'bust', title: 'Bust (cm)', type: 'text', span: 3 },
               { field: 'waist', title: 'Waist (cm)', type: 'text', span: 3 },
               { field: 'hips', title: 'Hips (cm)', type: 'text', span: 3 },
-              { field: 'shoes', title: 'Shoes (size)', type: 'select', span: 3, variants: ['34', '35', '36', '37', '38', '39', '40', '41', '42'] },
+              { field: 'shoes', title: 'Shoes (size)', type: 'select', span: 3, variants: ['', '34', '35', '36', '37', '38', '39', '40', '41', '42'] },
             ],
           },
         ]}
@@ -105,7 +105,7 @@ function ModelEdit({ data }) {
               { field: 'email', title: 'Email', type: 'text', span: 6, input: 'email' },
               { field: 'phone', title: 'Phone', type: 'text', span: 6, input: 'tel' },
               { field: 'city', title: 'City', type: 'text', span: 6 },
-              { field: 'country', title: 'Country', type: 'text', span: 6 },
+              { field: 'country', title: 'Country', type: 'select', span: 6, variants: ['', 'Russia', 'Belarus', 'Kazakhstan'] },
               { field: 'agency', title: 'Agency (if already moeling)', type: 'text', span: 6 },
               { field: 'dob', title: 'Date of Birth', type: 'text', span: 6, input: 'date' },
             ],
@@ -216,8 +216,7 @@ function ModelEdit({ data }) {
           },
         ]}
       />
-      <pre>{JSON.stringify(data, null, 2)}</pre>
-    </div>
+    </FormWrap>
   );
 }
 ModelEdit.layout = 'admin';

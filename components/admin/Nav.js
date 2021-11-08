@@ -8,7 +8,7 @@ function classNames(...classes) {
 
 function Nav() {
   return (
-    <div className="flex items-center justify-end py-4 sm:px-6 lg:px-8">
+    <div className="flex items-center justify-end py-4 ">
       <div>
         <Menu as="div" className="ml-3 relative">
           <div>

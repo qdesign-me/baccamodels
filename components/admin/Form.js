@@ -1,8 +1,16 @@
 import { useState, useRef, useEffect } from 'react';
-function MediaInput({ field, errors, data }) {
+
+function checkDepend(field, data) {
+  if (!field.showOnly) return true;
+  const temp = field.showOnly.split('===');
+  if (temp.length === 2) {
+    return data[temp[0]] === temp[1];
+  }
+  return true;
+}
+
+function MediaInput({ field, errors, data, setData }) {
   const inputFileRef = useRef();
-  const [preview, setPreview] = useState(data);
-  const [val, setVal] = useState(data);
 
   const [selectedFile, setSelectedFile] = useState();
 
@@ -12,36 +20,27 @@ function MediaInput({ field, errors, data }) {
 
   const onFileSelect = (e) => {
     if (!e.target.files || e.target.files.length === 0) {
-      //  setSelectedFile(undefined);
       return;
     }
     setSelectedFile(e.target.files[0]);
   };
 
   useEffect(() => {
-    setVal(data);
-    setPreview(data);
-  }, [data]);
-
-  useEffect(() => {
     if (!selectedFile) {
       return;
     }
-
     const objectUrl = URL.createObjectURL(selectedFile);
-    setPreview(objectUrl);
-
+    setData({ ...data, [field.field]: objectUrl });
     return () => URL.revokeObjectURL(objectUrl);
   }, [selectedFile]);
   return (
-    <div className={`${errors.includes(field.field) && 'has-error'}`}>
-      preview=={preview}===val=={val}
+    <div className={`col-span-3 ${errors?.includes(field.field) && 'has-error'}`}>
       <div className="mt-1 flex items-center">
         <span className="h-12 w-12 rounded-full overflow-hidden bg-gray-100 indicator inline-flex items-center justify-center" onClick={onBtnClick}>
-          {preview ? (
+          {data[field.field] ? (
             <>
-              {field.allow === 'image' && <img src={preview} className="w-12 h-12 object-cover" />}
-              {field.allow === 'video' && <video autoPlay={true} muted={true} loop playsInline src={preview} className="w-12 h-12 object-cover" />}
+              {field.allow === 'image' && <img src={data[field.field]} className="w-12 h-12 object-cover" />}
+              {field.allow === 'video' && <video autoPlay={true} muted={true} loop playsInline src={data[field.field]} className="w-12 h-12 object-cover" />}
             </>
           ) : (
             <>
@@ -75,8 +74,8 @@ function MediaInput({ field, errors, data }) {
         >
           Change
         </button>
-        <input name="newfile" type="file" className="sr-only" ref={inputFileRef} accept={field.accept} onChange={onFileSelect} />
-        <input type="text" name={field.field} value={val} />
+        <input name={field.newname} type="file" className="sr-only" ref={inputFileRef} accept={field.accept} onChange={onFileSelect} />
+        <input type="hidden" name={field.field} value={data[field.field]} />
 
         {field.allow === 'image' && <p className="ml-auto text-xs text-gray-500">PNG, JPG up to 10MB</p>}
         {field.allow === 'video' && <p className="ml-auto text-xs text-gray-500">MP4</p>}
@@ -85,10 +84,10 @@ function MediaInput({ field, errors, data }) {
   );
 }
 function SelectInput({ field, errors, data }) {
-  const [val, setVal] = useState(data);
+  const [val, setVal] = useState(data[field.field]);
   const spans = { 6: 'col-span-6', 3: 'col-span-6 sm:col-span-3' };
   return (
-    <div className={`${spans[field.span]} ${errors.includes(field.field) && 'has-error'}`}>
+    <div className={`${spans[field.span]} ${errors?.includes(field.field) && 'has-error'}`}>
       <label htmlFor={field.field} className="block text-sm font-medium text-gray-700">
         {field.title}
       </label>
@@ -105,28 +104,32 @@ function SelectInput({ field, errors, data }) {
     </div>
   );
 }
-function TextInput({ field, errors, data }) {
-  const [val, setVal] = useState(data);
-  const spans = { 6: 'col-span-6', 3: 'col-span-6 sm:col-span-3' };
+function TextInput({ field, errors, data, setData }) {
+  const handleChange = (e) => {
+    setData({ ...data, [field.field]: e.target.value });
+  };
+  const spans = { 12: 'col-span-12', 6: 'col-span-6', 3: 'col-span-6 sm:col-span-3' };
   return (
-    <div className={`${spans[field.span]} ${errors.includes(field.field) && 'has-error'}`}>
+    <div className={`${spans[field.span]} ${errors?.includes(field.field) && 'has-error'}`}>
       <label htmlFor={field.field} className="block text-sm font-medium text-gray-700">
         {field.title}
       </label>
       <input
         type={field.input ?? 'text'}
         name={field.field}
-        value={val}
-        onChange={(e) => setVal(e.target.value)}
+        value={data[field.field]}
+        onChange={handleChange}
         className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
       />
     </div>
   );
 }
-function SocialInput({ field, errors, data }) {
-  const [val, setVal] = useState(data);
+function SocialInput({ field, errors, data, setData }) {
+  const handleChange = (e) => {
+    setData({ ...data, [field.field]: e.target.value });
+  };
   return (
-    <div className={`col-span-3 ${errors.includes(field.field) && 'has-error'}`}>
+    <div className={`col-span-3 ${errors?.includes(field.field) && 'has-error'}`}>
       <label htmlFor="company-website" className="block text-sm font-medium text-gray-700">
         {field.title}
       </label>
@@ -135,8 +138,8 @@ function SocialInput({ field, errors, data }) {
         <input
           type="text"
           name={field.field}
-          value={val}
-          onChange={(e) => setVal(e.target.value)}
+          value={data[field.field]}
+          onChange={handleChange}
           className="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300"
           placeholder={field.placeholder}
         />
@@ -144,15 +147,29 @@ function SocialInput({ field, errors, data }) {
     </div>
   );
 }
-function CheckboxesInput({ field, errors, data }) {
+
+function CheckboxesInput({ field, errors, data, setData }) {
+  const getRealValue = (val) => {
+    if (val) return field.values[0];
+    return field.values[1];
+  };
+  const handleChange = (e) => {
+    setData({ ...data, [field.field]: getRealValue(e.target.checked) });
+  };
   return (
     <fieldset>
       <legend className="text-base font-medium text-gray-900">{field.title}</legend>
       <div className="mt-4 space-y-4">
+        <input type="hidden" value={data[field.field]} name={field.field} />
         {field.variants.map((variant) => (
-          <div className="flex items-start">
+          <div className="flex items-start" key={variant.value}>
             <div className="flex items-center h-5">
-              <input name={field.field} type="checkbox" className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded" />
+              <input
+                type="checkbox"
+                defaultChecked={data[field.field] === field.values[0]}
+                onChange={handleChange}
+                className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
+              />
             </div>
             <div className="ml-3 text-sm">
               <label htmlFor="comments" className="font-medium text-gray-700">
@@ -166,15 +183,26 @@ function CheckboxesInput({ field, errors, data }) {
     </fieldset>
   );
 }
-function RadiobuttonsInput({ field, errors, data }) {
+function RadiobuttonsInput({ field, errors, data, setData }) {
+  const handleChange = (e) => {
+    setData({ ...data, [field.field]: e.target.value });
+  };
+
   return (
     <fieldset>
       <legend className="text-base font-medium text-gray-900">{field.title}</legend>
       <div className="mt-4 space-y-4">
         {field.variants.map((variant) => (
-          <div className="flex items-start">
+          <div className="flex items-start" key={variant.value}>
             <div className="flex items-center h-5">
-              <input name={field.field} type="radio" className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded" />
+              <input
+                name={field.field}
+                type="radio"
+                onChange={handleChange}
+                value={variant.value}
+                checked={data[field.field] === variant.value}
+                className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
+              />
             </div>
             <div className="ml-3 text-sm">
               <label htmlFor="comments" className="font-medium text-gray-700">
@@ -189,10 +217,9 @@ function RadiobuttonsInput({ field, errors, data }) {
   );
 }
 function TextareaInput({ field, errors, data }) {
-  const [val, setVal] = useState(data);
+  const [val, setVal] = useState(data[field.field]);
   return (
-    <div className={`${errors.includes(field.field) && 'has-error'}`}>
-      =={JSON.stringify(data, null, 2)}==
+    <div className={`${errors?.includes(field.field) && 'has-error'}`}>
       <label htmlFor="about" className="block text-sm font-medium text-gray-700">
         {field.title}
       </label>
@@ -281,31 +308,8 @@ function PasswordInput({ field, errors, data }) {
     </div>
   );
 }
-export default function Form({ title, subtitle, groups, data, validators, onSubmit }) {
-  const [errors, setErrors] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const submit = async (event) => {
-    event.preventDefault();
-    setLoading(true);
-    setErrors([]);
-    let errorCount = 0;
-    const data = new FormData(event.target);
-    if (validators) {
-      validators?.required?.map((field) => {
-        const value = data.get(field);
-
-        if (!value)
-          setErrors((old) => {
-            return old.concat(field);
-          });
-        errorCount++;
-      });
-    }
-    //if (errorCount) return false;
-
-    await onSubmit(title, data);
-    setLoading(false);
-  };
+export default function Form({ title, subtitle, groups, data, errors }) {
+  const [userData, setUserData] = useState(data.data);
   return (
     <>
       <div>
@@ -317,49 +321,45 @@ export default function Form({ title, subtitle, groups, data, validators, onSubm
             </div>
           </div>
           <div className="mt-5 md:mt-0 col-span-3">
-            <form action="#" method="POST" onSubmit={submit}>
-              <div className="shadow sm:rounded-md sm:overflow-hidden">
-                <div className="px-4 py-5 bg-white space-y-6 sm:p-6">
-                  {groups?.map((group) => (
-                    <div className={group.className}>
-                      {group.fields.map((field) => (
-                        <>
-                          {field.type === 'social' && <SocialInput field={field} errors={errors} data={data.data[field.field]} />}
-                          {field.type === 'text' && <TextInput field={field} errors={errors} data={data.data[field.field]} />}
-                          {field.type === 'select' && <SelectInput field={field} errors={errors} data={data.data[field.field]} />}
-                          {field.type === 'password' && <PasswordInput field={field} errors={errors} data={data.data[field.field]} />}
-                          {field.type === 'textarea' && <TextareaInput field={field} errors={errors} data={data?.data[field.field]} />}
-                          {field.type === 'checkboxes' && <CheckboxesInput field={field} errors={errors} data={data.data[field.field]} />}
-                          {field.type === 'radiobuttons' && <RadiobuttonsInput field={field} errors={errors} data={data.data[field.field]} />}
-                          {field.type === 'upload' && <UploadInput field={field} errors={errors} data={data.data[field.field]} />}
-                          {field.type === 'media' && <MediaInput field={field} errors={errors} data={data.data[field.field]} />}
-                        </>
-                      ))}
-                    </div>
-                  ))}
-                </div>
-
-                <div className="px-4 py-3 bg-gray-50 text-right sm:px-6 hidden">
-                  <button
-                    disabled={loading}
-                    type="submit"
-                    className="w-24 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                  >
-                    {loading && (
-                      <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        ></path>
-                      </svg>
-                    )}
-                    {!loading && 'Save'}
-                  </button>
-                </div>
+            <div className="shadow sm:rounded-md sm:overflow-hidden">
+              <div className="px-4 py-5 bg-white space-y-6 sm:p-6">
+                {groups?.map((group) => (
+                  <div className={group.className}>
+                    {group.fields.map((field) => (
+                      <>
+                        {field.type === 'social' && checkDepend(field, userData) && (
+                          <SocialInput key={field.field} field={field} errors={errors} data={userData} setData={setUserData} />
+                        )}
+                        {field.type === 'text' && checkDepend(field, userData) && (
+                          <TextInput key={field.field} field={field} errors={errors} data={userData} setData={setUserData} />
+                        )}
+                        {field.type === 'select' && checkDepend(field, userData) && (
+                          <SelectInput key={field.field} field={field} errors={errors} data={userData} setData={setUserData} />
+                        )}
+                        {field.type === 'password' && checkDepend(field, userData) && (
+                          <PasswordInput key={field.field} field={field} errors={errors} data={userData} setData={setUserData} />
+                        )}
+                        {field.type === 'textarea' && checkDepend(field, userData) && (
+                          <TextareaInput key={field.field} field={field} errors={errors} data={userData} setData={setUserData} />
+                        )}
+                        {field.type === 'checkboxes' && checkDepend(field, userData) && (
+                          <CheckboxesInput key={field.field} field={field} errors={errors} data={userData} setData={setUserData} />
+                        )}
+                        {field.type === 'radiobuttons' && checkDepend(field, userData) && (
+                          <RadiobuttonsInput key={field.field} field={field} errors={errors} data={userData} setData={setUserData} />
+                        )}
+                        {field.type === 'upload' && checkDepend(field, userData) && (
+                          <UploadInput key={field.field} field={field} errors={errors} data={userData} setData={setUserData} />
+                        )}
+                        {field.type === 'media' && checkDepend(field, userData) && (
+                          <MediaInput key={field.field} field={field} errors={errors} data={userData} setData={setUserData} />
+                        )}
+                      </>
+                    ))}
+                  </div>
+                ))}
               </div>
-            </form>
+            </div>
           </div>
         </div>
       </div>

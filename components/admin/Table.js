@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { convertMetric } from 'hooks/utils';
 import Social from 'components/frontend/Social';
 import Tag from 'components/admin/Tag';
+import Avatar from 'components/admin/Avatar';
 import Confirm from 'components/admin/Confirm';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -26,7 +27,7 @@ function SortControl({ tableParams, header }) {
   );
 }
 
-export default function Table({ headers, data, apiUrl }) {
+export default function Table({ headers, data }) {
   const router = useRouter();
   const baseUrl = router.asPath.split('?')[0];
   const [deleteRow, setDeleteRow] = useState(null);
@@ -119,7 +120,7 @@ export default function Table({ headers, data, apiUrl }) {
         return (
           <div className="flex items-center">
             <div className="flex-shrink-0 h-10 w-10">
-              <img className="h-10 w-10 rounded-full" src={row.img} alt="" />
+              <Avatar img={row.img} />
             </div>
             <div className="ml-4">
               <div className="text-sm font-medium text-gray-900">{row.name}</div>
@@ -131,11 +132,13 @@ export default function Table({ headers, data, apiUrl }) {
         );
       }
       if (header.render === 'status') {
-        return <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">{value}</span>;
+        const statuses = { Active: 'bg-green-100 text-green-800', Disabled: 'bg-red-100 text-red-800' };
+        return <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${statuses[value]}`}>{value}</span>;
       }
       if (header.render === 'phone') {
         return <a href={`tel:${value}`}>{value}</a>;
       }
+
       if (header.render === 'region') {
         const regions = { Russia: '/images/flags/rus.png' };
         const src = regions[value];
@@ -206,7 +209,7 @@ export default function Table({ headers, data, apiUrl }) {
                   </Link>
                 )}
                 {typeof action === 'string' && action === 'delete' && (
-                  <a className="cursor-pointer" onClick={(e) => askDelete(row._id, `/${apiUrl}/delete`)}>
+                  <a className="cursor-pointer" onClick={(e) => askDelete(row._id, `/api${baseUrl}/delete`)}>
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path
                         strokeLinecap="round"

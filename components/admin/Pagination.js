@@ -39,7 +39,7 @@ function Pagination({ dataLength, pageLimit, dataLimit, onPageChange, current })
     return new Array(pageLimit).fill().map((_, idx) => start + idx + 1);
   };
 
-  if (pages < 1) return null;
+  if (pages <= 1) return null;
 
   return (
     <div className="bg-white px-4 py-3 flex items-center border-t border-gray-200 sm:px-6">

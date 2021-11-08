@@ -1,8 +1,12 @@
 import React from 'react';
 import Table from 'components/admin/Table';
+import Head from 'next/head';
 function Users({ data }) {
   return (
-    <div>
+    <>
+      <Head>
+        <title>Users | Bacca Model Management</title>
+      </Head>
       <Table
         headers={[
           {
@@ -45,7 +49,7 @@ function Users({ data }) {
         ]}
         data={data}
       />
-    </div>
+    </>
   );
 }
 Users.layout = 'admin';

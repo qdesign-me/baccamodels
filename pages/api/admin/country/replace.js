@@ -14,7 +14,7 @@ export default async function modelsAPI(req, res) {
 
     await form.parse(req, async (err, fields, files) => {
       console.log(fields, files);
-
+      return res.status(200).json({ status: 'ok', data: { message: 'Successfully Updated!' } });
       const action = fields.action;
       const id = fields.id;
       if (action === 'Become a Model') {

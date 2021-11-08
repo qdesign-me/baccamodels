@@ -1,13 +1,19 @@
 import React from 'react';
 
-function Avatar() {
-  return (
-    <img
-      className="h-10 w-10 rounded-full"
-      src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=facearea&amp;facepad=4&amp;w=256&amp;h=256&amp;q=60"
-      alt=""
-    />
-  );
+function Avatar({ img }) {
+  if (!img) {
+    return (
+      <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 rounded-full" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+        />
+      </svg>
+    );
+  }
+  return <img className="h-10 w-10 rounded-full" src={img} alt="" />;
 }
 
 export default Avatar;
