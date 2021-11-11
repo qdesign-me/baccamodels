@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Table from 'components/admin/Table';
+import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Flag from 'components/admin/Flag';
@@ -18,7 +19,10 @@ function Models({ data }) {
     return value;
   };
   return (
-    <div>
+    <>
+      <Head>
+        <title>Models | Bacca Model Management</title>
+      </Head>
       <Table
         headers={[
           {
@@ -100,12 +104,11 @@ function Models({ data }) {
             fieldType: 'number',
           },
           {
-            title: 'Active',
-            field: 'active',
-            render: 'active',
+            title: 'Status',
+            field: 'status',
+            render: 'status',
             className: 'cell-default',
             sort: true,
-            fieldType: 'boolean',
           },
           {
             title: 'Action',
@@ -231,7 +234,7 @@ function Models({ data }) {
           </div>
         </>
       )}
-    </div>
+    </>
   );
 }
 Models.layout = 'admin';

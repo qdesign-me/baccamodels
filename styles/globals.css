@@ -542,7 +542,7 @@
     @apply -translate-y-3;
   }
   .error {
-    @apply text-xs text-red-400 absolute;
+    @apply text-xs text-red-400 absolute pt-1 whitespace-nowrap;
   }
   .carousel {
     @apply px-2 overflow-hidden;
@@ -632,6 +632,7 @@
   }
   .has-error input,
   .has-error textarea,
+  .has-error select,
   .has-error .indicator {
     @apply !border-red-600;
   }
@@ -684,7 +685,31 @@
     cursor: default;
     pointer-events: none;
   }
+  .mapMarkerStyle {
+    background-color: blue;
+    width: 1.5rem;
+    height: 1.5rem;
+    display: block;
+    left: -0.5rem;
+    top: -0.5rem;
+    position: relative;
+    border-radius: 1.5rem 1.5rem 0;
+    transform: rotate(45deg);
+    border: 1px solid #ffffff;
+  }
 
+  .mapMarkerStyle::after {
+    position: 'absolute';
+    content: '';
+    width: 0.4rem;
+    height: 0.4rem;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    margin-left: -4px;
+    margin-top: -4px;
+    background-color: #fff;
+  }
   @media (max-width: 1536px) {
     h1 {
       font-size: 60px;

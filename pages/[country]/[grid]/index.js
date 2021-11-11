@@ -1,6 +1,7 @@
 import Nav from 'components/frontend/Nav';
 import React, { useState, useEffect } from 'react';
 import ModelThumb from 'components/frontend/ModelThumb';
+import Meta from 'components/frontend/Meta';
 
 function FilterByName({ models }) {
   const letters = [
@@ -55,6 +56,10 @@ function FilterByName({ models }) {
 function Grid({ data }) {
   return (
     <>
+      <Meta>
+        <title>{data.page.metatitle}</title>
+        <meta name="description" content={data.page.metadescription} />
+      </Meta>
       <Nav className="relative" data={data.info} />
       <div className="content">
         <main>
@@ -65,7 +70,7 @@ function Grid({ data }) {
             <div className="box">
               <div className="grid-thumbs">
                 {data.models?.map((model) => (
-                  <ModelThumb key={model.id} model={model} />
+                  <ModelThumb key={model._id} model={model} />
                 ))}
               </div>
             </div>

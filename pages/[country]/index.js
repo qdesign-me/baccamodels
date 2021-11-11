@@ -3,12 +3,16 @@ import Header from 'components/frontend/Header';
 import Nav from 'components/frontend/Nav';
 import Follow from 'components/frontend/Follow';
 import Latest from 'components/frontend/Latest';
-
+import Meta from 'components/frontend/Meta';
 function Index({ data }) {
   return (
     <>
+      <Meta>
+        <title>{data.pages.home.metatitle}</title>
+        <meta name="description" content={data.pages.home.metadescription} />
+      </Meta>
       <Nav data={data.info} />
-      <Header video={data.info.video} scroll={true}>
+      <Header video={data.info.cover} scroll={true}>
         <div className="is-logo">
           <img src="/images/logo.svg" alt="" />
         </div>

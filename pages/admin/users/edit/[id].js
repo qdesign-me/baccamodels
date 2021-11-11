@@ -3,7 +3,10 @@ import Form from 'components/admin/Form';
 import FormWrap from 'components/admin/FormWrap';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-function UserEdit({ data, mode, pageTitle }) {
+
+import { getSession } from 'next-auth/react';
+
+function UserEdit({ data, mode, pageTitle, id }) {
   const router = useRouter();
   if (!data) data = {};
   useEffect(() => {
@@ -32,7 +35,7 @@ function UserEdit({ data, mode, pageTitle }) {
     },
   };
   const onSubmit = async (body) => {
-    if (mode === 'edit') body.append('id', router.query.id);
+    if (mode === 'edit') body.append('id', id);
     body.append('mode', mode);
     const res = await fetch('/api/admin/users/replace', {
       method: 'POST',
@@ -62,7 +65,7 @@ function UserEdit({ data, mode, pageTitle }) {
           <div className="border-t border-gray-200" />
         </div>
       </div>
-      <FormWrap onSubmit={onSubmit} validators={{ required: ['name', 'phone', 'email'] }}>
+      <FormWrap onSubmit={onSubmit} validators={{ required: ['img', 'name', 'phone', 'email'], email: ['email'] }}>
         <Form
           title="General Information"
           data={chunks['General Information']}
@@ -165,23 +168,31 @@ function UserEdit({ data, mode, pageTitle }) {
 UserEdit.layout = 'admin';
 export default UserEdit;
 export async function getServerSideProps(context) {
-  if (context.query.id === 'new') {
+  let id = context.query.id;
+  if (id === 'new') {
     return {
-      props: { data: {}, mode: 'create', pageTitle: 'Create User' },
+      props: { data: {}, mode: 'create', pageTitle: 'Create User', id: null },
     };
   }
+  let pageTitle = 'Edit User';
+  if (id === 'profile') {
+    const session = await getSession(context);
+    id = session.user.id;
+    pageTitle = 'Edit Profile';
+  }
+
   const response = await fetch(`${process.env.HOSTNAME}/api/admin/users/get`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      id: context.query.id,
+      id,
       requestType: 'one',
     }),
   }).then((res) => res.json());
 
   return {
-    props: { data: response.data, mode: 'edit', pageTitle: 'Edit User' },
+    props: { data: response.data, mode: 'edit', pageTitle, id },
   };
 }

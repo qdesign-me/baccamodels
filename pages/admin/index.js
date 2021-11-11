@@ -1,5 +1,5 @@
 function Index() {
-  return <>hello</>;
+  return <></>;
 }
 
 Index.layout = 'admin';

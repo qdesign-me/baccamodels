@@ -1,10 +1,15 @@
 import Follow from 'components/frontend/Follow';
 import Nav from 'components/frontend/Nav';
+import Meta from 'components/frontend/Meta';
 import React from 'react';
 
 function About({ data }) {
   return (
     <>
+      <Meta>
+        <title>{data.pages.about.metatitle}</title>
+        <meta name="description" content={data.pages.about.metadescription} />
+      </Meta>
       <Nav className="relative" data={data.info} />
       <div className="content mt-[200px]">
         <main>

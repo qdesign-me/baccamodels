@@ -14,7 +14,7 @@ export default async function modelsAPI(req, res) {
       case 'profile': {
         const { country, grid, profile } = req.body;
         const slug = `/${country}/${grid}/${profile}`;
-        const model = await db.collection('models').findOne({ slug });
+        const model = await db.collection('models').findOne({ slug, status: 'Active' });
 
         const info = (await db.collection('regions').findOne({ _id: country }, { projection: { info: true } })).info;
 

@@ -58,38 +58,13 @@ export default function Table({ headers, data }) {
     setTableParams({ ...tableParams, sort: header.field, asc: asc });
   };
 
-  //useEffect(() => {
-  // if (tableParams.sort) {
-  //   setTableData({
-  //     count: tableData.count,
-  //     results: tableData.results.slice().sort((a, b) => {
-  //       const parts = tableParams.sort.split('.');
-  //       let valA = a[tableParams.sort];
-  //       let valB = b[tableParams.sort];
-  //       if (parts.length === 2) {
-  //         valA = a[parts[0]] === undefined ? null : a[parts[0]][parts[1]];
-  //         valB = b[parts[0]] === undefined ? null : b[parts[0]][parts[1]];
-  //       }
-  //       if (parts.length === 3) {
-  //         valA = a[parts[0]] === undefined || a[parts[0]][parts[1]] === undefined ? null : a[parts[0]][parts[1]][parts[2]];
-  //         valB = b[parts[0]] === undefined || b[parts[0]][parts[1]] === undefined ? null : b[parts[0]][parts[1]][parts[2]];
-  //       }
-  //       if (tableParams.sortType === 'number') {
-  //         if (tableParams.asc) return Number(valA) - Number(valB);
-  //         if (!tableParams.asc) return Number(valB) - Number(valA);
-  //       }
-  //       if (tableParams.asc) return ('' + valA).localeCompare(valB);
-  //       if (!tableParams.asc) return ('' + valB).localeCompare(valA);
-  //     }),
-  //   });
-  // }
-  //}, [tableParams]);
-
   const askDelete = (id, url) => {
     setDeleteRow({ id, url });
   };
 
   const doDelete = async ({ id, url }) => {
+    if (url.includes('/models/delete')) url = '/api/admin/models/delete';
+
     await fetch(`${process.env.HOSTNAME}${url}`, {
       method: 'POST',
       headers: {
@@ -246,6 +221,7 @@ export default function Table({ headers, data }) {
           </a>
         </Link>
       </div>
+
       <table className="divide-y divide-gray-200 w-full">
         <thead className="bg-gray-50">
           <tr>

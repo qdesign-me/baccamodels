@@ -1,32 +1,37 @@
 import React from 'react';
 import Form from 'components/admin/Form';
 import FormWrap from 'components/admin/FormWrap';
-function ModelEdit({ data }) {
+import Head from 'next/head';
+import { useRouter } from 'next/router';
+function ModelEdit({ data, mode, pageTitle, id }) {
+  const router = useRouter();
   const chunks = {
     'Public Information': {
       data: {
-        instagram: data.profile?.social?.instagram ?? '',
-        facebook: data.profile?.social?.facebook ?? '',
-        vk: data.profile?.social?.vk ?? '',
+        'profile.social.instagram': data.profile?.social?.instagram ?? '',
+        'profile.social.facebook': data.profile?.social?.facebook ?? '',
+        'profile.social.vk': data.profile?.social?.vk ?? '',
         img: data.img ?? '',
         name: data.name ?? '',
-        height: data.profile?.params?.Height ?? '',
-        hair: data.profile?.params?.Hair ?? '',
-        eyes: data.profile?.params?.Eyes ?? '',
-        bust: data.profile?.params?.Bust ?? '',
-        waist: data.profile?.params?.Waist ?? '',
-        hips: data.profile?.params?.Hips ?? '',
-        shoes: data.profile?.params?.Shoes ?? '',
+        'profile.params.height': data.profile?.params?.Height ?? '',
+        'profile.params.hair': data.profile?.params?.Hair ?? '',
+        'profile.params.eyes': data.profile?.params?.Eyes ?? '',
+        'profile.params.bust': data.profile?.params?.Bust ?? '',
+        'profile.params.waist': data.profile?.params?.Waist ?? '',
+        'profile.params.hips': data.profile?.params?.Hips ?? '',
+        'profile.params.shoes': data.profile?.params?.Shoes ?? '',
+        status: data.status ?? 'Active',
+        country: data.country ?? '',
       },
     },
     'Private Information': {
       data: {
-        city: data.private?.city ?? '',
-        country: data.private?.country ?? '',
-        agency: data.private?.agency ?? '',
-        dob: data.private?.dob ?? '',
-        phone: data.private?.phone ?? '',
-        email: data.private?.email ?? '',
+        'private.city': data.private?.city ?? '',
+        'private.country': data.private?.country ?? '',
+        'private.agency': data.private?.agency ?? '',
+        'private.dob': data.private?.dob ?? '',
+        'private.phone': data.private?.phone ?? '',
+        'private.email': data.private?.email ?? '',
       },
     },
     'Show on Page': {
@@ -50,173 +55,243 @@ function ModelEdit({ data }) {
       },
     },
   };
+
+  const onSubmit = async (body) => {
+    if (mode === 'edit') body.append('id', id);
+    body.append('mode', mode);
+    body.append('region', router.query.country);
+    const res = await fetch('/api/admin/models/replace', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+      },
+      body,
+    }).then((res) => res.json());
+
+    if (res.status === 'ok') {
+      const customEvent = new CustomEvent('notify', { detail: { text: res.data.message } });
+      document.dispatchEvent(customEvent);
+    }
+
+    if (res.redirect) {
+      router.push(res.redirect);
+    }
+    return Promise.resolve();
+  };
+
   return (
-    <FormWrap>
-      <Form
-        title="Public Information"
-        data={chunks['Public Information']}
-        subtitle="This information will be displayed publicly so be careful what you share."
-        groups={[
-          {
-            className: 'grid grid-cols-3 gap-6',
-            fields: [{ field: 'img', title: 'Photo', type: 'image' }],
-          },
-          {
-            className: '',
-            fields: [{ field: 'name', title: 'Full Name', type: 'text', input: 'text' }],
-          },
-          {
-            className: 'grid grid-cols-3 gap-6',
-            fields: [
-              { field: 'instagram', title: 'Instagram', type: 'social', placeholder: 'instagram.com' },
-              { field: 'facebook', title: 'Facebook', type: 'social', placeholder: 'facebook.com' },
-              { field: 'vk', title: 'Vkontakte', type: 'social', placeholder: 'vk.com' },
-            ],
-          },
-          {
-            className: 'grid grid-cols-12 gap-6',
-            fields: [
-              { field: 'height', title: 'Height (cm)', type: 'text', span: 3 },
-              { field: 'hair', title: 'Hair', type: 'select', span: 3, variants: ['', 'Black', 'Brown ', 'Auburn ', 'Red', 'Blond', 'Gray / White', 'Blue'] },
-              { field: 'eyes', title: 'Eyes', type: 'select', span: 3, variants: ['', 'Black', 'Blue', 'Blue / Green', 'Brown', 'Green', 'Gray'] },
-              { field: 'bust', title: 'Bust (cm)', type: 'text', span: 3 },
-              { field: 'waist', title: 'Waist (cm)', type: 'text', span: 3 },
-              { field: 'hips', title: 'Hips (cm)', type: 'text', span: 3 },
-              { field: 'shoes', title: 'Shoes (size)', type: 'select', span: 3, variants: ['', '34', '35', '36', '37', '38', '39', '40', '41', '42'] },
-            ],
-          },
-        ]}
-      />
+    <>
+      <Head>
+        <title>{pageTitle} | Bacca Model Management</title>
+      </Head>
+      <FormWrap
+        onSubmit={onSubmit}
+        validators={{
+          required: [
+            'name',
+            'profile.social.instagram',
 
-      <div className="hidden sm:block" aria-hidden="true">
-        <div className="py-5">
-          <div className="border-t border-gray-200" />
+            'profile.params.height',
+            'profile.params.hair',
+            'profile.params.eyes',
+            'profile.params.bust',
+            'profile.params.waist',
+            'profile.params.hips',
+            'profile.params.shoes',
+            'country',
+            'category',
+          ],
+        }}
+      >
+        <div className="hidden sm:block" aria-hidden="true">
+          <div className="pb-5">
+            <div className="border-t border-gray-200" />
+          </div>
         </div>
-      </div>
+        <Form
+          title="Public Information"
+          data={chunks['Public Information']}
+          subtitle="This information will be displayed publicly so be careful what you share."
+          groups={[
+            {
+              className: 'grid grid-cols-3 gap-6',
+              fields: [{ field: 'img', title: 'Photo', type: 'image' }],
+            },
+            {
+              className: '',
+              fields: [{ field: 'name', title: 'Full Name', type: 'text', input: 'text' }],
+            },
+            {
+              className: 'grid grid-cols-3 gap-6',
+              fields: [
+                { field: 'profile.social.instagram', title: 'Instagram', type: 'social' },
+                { field: 'profile.social.facebook', title: 'Facebook', type: 'social' },
+                { field: 'profile.social.vk', title: 'Vkontakte', type: 'social' },
+              ],
+            },
+            {
+              className: 'grid grid-cols-12 gap-6',
+              fields: [
+                { field: 'profile.params.height', title: 'Height (cm)', type: 'text', span: 3 },
+                { field: 'profile.params.hair', title: 'Hair', type: 'select', span: 3, variants: ['', 'Black', 'Brown ', 'Auburn ', 'Red', 'Blond', 'Gray / White', 'Blue'] },
+                { field: 'profile.params.eyes', title: 'Eyes', type: 'select', span: 3, variants: ['', 'Black', 'Blue', 'Blue / Green', 'Brown', 'Green', 'Gray'] },
+                { field: 'profile.params.bust', title: 'Bust (cm)', type: 'text', span: 3 },
+                { field: 'profile.params.waist', title: 'Waist (cm)', type: 'text', span: 3 },
+                { field: 'profile.params.hips', title: 'Hips (cm)', type: 'text', span: 3 },
+                { field: 'profile.params.shoes', title: 'Shoes (size)', type: 'select', span: 3, variants: ['', '34', '35', '36', '37', '38', '39', '40', '41', '42'] },
+              ],
+            },
 
-      <Form
-        title="Private Information"
-        data={chunks['Private Information']}
-        subtitle="For internal usage only"
-        groups={[
-          {
-            className: 'grid grid-cols-12 gap-6',
-            fields: [
-              { field: 'email', title: 'Email', type: 'text', span: 6, input: 'email' },
-              { field: 'phone', title: 'Phone', type: 'text', span: 6, input: 'tel' },
-              { field: 'city', title: 'City', type: 'text', span: 6 },
-              { field: 'country', title: 'Country', type: 'select', span: 6, variants: ['', 'Russia', 'Belarus', 'Kazakhstan'] },
-              { field: 'agency', title: 'Agency (if already moeling)', type: 'text', span: 6 },
-              { field: 'dob', title: 'Date of Birth', type: 'text', span: 6, input: 'date' },
-            ],
-          },
-        ]}
-      />
+            {
+              className: 'grid gap-6 grid-cols-12',
+              fields: [{ field: 'country', title: 'Now in Country', type: 'select', span: 6, variants: ['', 'Russia', 'Belarus', 'Kazakhstan'] }],
+            },
+            {
+              className: 'grid gap-6 grid-cols-12',
+              fields: [
+                {
+                  field: 'status',
+                  title: 'Active',
+                  type: 'checkboxes',
+                  span: 6,
+                  values: ['Active', 'Disabled'],
+                  variants: [{ subtitle: 'Only active models are shown on website' }],
+                },
+              ],
+            },
+          ]}
+        />
 
-      <div className="hidden sm:block" aria-hidden="true">
-        <div className="py-5">
-          <div className="border-t border-gray-200" />
+        <div className="hidden sm:block" aria-hidden="true">
+          <div className="py-5">
+            <div className="border-t border-gray-200" />
+          </div>
         </div>
-      </div>
 
-      <Form
-        title="Show on Page"
-        data={chunks['Show on Page']}
-        subtitle="Decide where to show current profile"
-        groups={[
-          {
-            className: 'grid grid-cols-3 gap-6',
-            fields: [
-              {
-                field: 'category',
-                title: 'Page Type',
-                type: 'radiobuttons',
-                variants: [
-                  { title: 'Women', subtitle: 'Profile will show on Women page' },
-                  { title: 'Development', subtitle: 'Profile will show on Development page' },
-                  { title: 'Talent', subtitle: 'Profile will show on Talent page' },
-                ],
-              },
-            ],
-          },
-        ]}
-      />
+        <Form
+          title="Private Information"
+          data={chunks['Private Information']}
+          subtitle="For internal usage only"
+          groups={[
+            {
+              className: 'grid grid-cols-12 gap-6',
+              fields: [
+                { field: 'private.email', title: 'Email', type: 'text', span: 6, input: 'email' },
+                { field: 'private.phone', title: 'Phone', type: 'text', span: 6, input: 'tel' },
+                { field: 'private.city', title: 'From City', type: 'text', span: 6 },
+                { field: 'private.country', title: 'From Country', type: 'select', span: 6, variants: ['', 'Russia', 'Belarus', 'Kazakhstan'] },
+                { field: 'private.agency', title: 'Agency (if already moeling)', type: 'text', span: 6 },
+                { field: 'private.dob', title: 'Date of Birth', type: 'text', span: 6, input: 'date' },
+              ],
+            },
+          ]}
+        />
 
-      <div className="hidden sm:block" aria-hidden="true">
-        <div className="py-5">
-          <div className="border-t border-gray-200" />
+        <div className="hidden sm:block" aria-hidden="true">
+          <div className="py-5">
+            <div className="border-t border-gray-200" />
+          </div>
         </div>
-      </div>
 
-      <Form
-        title="Book"
-        subtitle="Images for Book"
-        data={chunks['Book']}
-        groups={[
-          {
-            className: '',
-            fields: [
-              {
-                field: 'instagram',
-                title: 'Book',
-                type: 'upload',
-                media: 'images',
-              },
-            ],
-          },
-        ]}
-      />
+        <Form
+          title="Show on Page"
+          data={chunks['Show on Page']}
+          subtitle="Decide where to show current profile"
+          groups={[
+            {
+              className: 'grid grid-cols-3 gap-6',
+              fields: [
+                {
+                  field: 'category',
+                  title: 'Page Type',
+                  type: 'radiobuttons',
+                  variants: [
+                    { title: 'Women', subtitle: 'Profile will show on Women page', value: 'women' },
+                    { title: 'Development', subtitle: 'Profile will show on Development page', value: 'development' },
+                    { title: 'Talent', subtitle: 'Profile will show on Talent page', value: 'talent' },
+                  ],
+                },
+              ],
+            },
+          ]}
+        />
 
-      <div className="hidden sm:block" aria-hidden="true">
-        <div className="py-5">
-          <div className="border-t border-gray-200" />
+        <div className="hidden sm:block" aria-hidden="true">
+          <div className="py-5">
+            <div className="border-t border-gray-200" />
+          </div>
         </div>
-      </div>
 
-      <Form
-        title="Polaroids"
-        data={chunks['Polaroids']}
-        subtitle="Polaroids"
-        groups={[
-          {
-            className: '',
-            fields: [
-              {
-                field: 'instagram',
-                title: 'Polaroids',
-                type: 'upload',
-                media: 'images',
-              },
-            ],
-          },
-        ]}
-      />
+        <Form
+          title="Book"
+          subtitle="Images for Book"
+          data={chunks['Book']}
+          groups={[
+            {
+              className: '',
+              fields: [
+                {
+                  field: 'instagram',
+                  title: 'Book',
+                  type: 'upload',
+                  media: 'images',
+                },
+              ],
+            },
+          ]}
+        />
 
-      <div className="hidden sm:block" aria-hidden="true">
-        <div className="py-5">
-          <div className="border-t border-gray-200" />
+        <div className="hidden sm:block" aria-hidden="true">
+          <div className="py-5">
+            <div className="border-t border-gray-200" />
+          </div>
         </div>
-      </div>
 
-      <Form
-        title="Videos"
-        data={chunks['Videos']}
-        subtitle="Videos"
-        groups={[
-          {
-            className: '',
-            fields: [
-              {
-                field: 'instagram',
-                title: 'Videos',
-                type: 'upload',
-                media: 'videos',
-              },
-            ],
-          },
-        ]}
-      />
-    </FormWrap>
+        <Form
+          title="Polaroids"
+          data={chunks['Polaroids']}
+          subtitle="Polaroids"
+          groups={[
+            {
+              className: '',
+              fields: [
+                {
+                  field: 'instagram',
+                  title: 'Polaroids',
+                  type: 'upload',
+                  media: 'images',
+                },
+              ],
+            },
+          ]}
+        />
+
+        <div className="hidden sm:block" aria-hidden="true">
+          <div className="py-5">
+            <div className="border-t border-gray-200" />
+          </div>
+        </div>
+
+        <Form
+          title="Videos"
+          data={chunks['Videos']}
+          subtitle="Videos"
+          groups={[
+            {
+              className: '',
+              fields: [
+                {
+                  field: 'instagram',
+                  title: 'Videos',
+                  type: 'upload',
+                  media: 'videos',
+                },
+              ],
+            },
+          ]}
+        />
+      </FormWrap>
+    </>
   );
 }
 ModelEdit.layout = 'admin';
@@ -224,15 +299,21 @@ ModelEdit.layout = 'admin';
 export default ModelEdit;
 
 export async function getServerSideProps(context) {
+  let id = context.query.id;
+  if (id === 'new') {
+    return {
+      props: { data: {}, mode: 'create', pageTitle: 'Create User', id: null },
+    };
+  }
   const response = await fetch(`${process.env.HOSTNAME}/api/admin/models/get`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ id: context.query.id, requestType: 'one' }),
+    body: JSON.stringify({ id, requestType: 'one' }),
   }).then((res) => res.json());
 
   return {
-    props: { data: response.data },
+    props: { data: response.data, mode: 'edit', pageTitle: 'Edit Model', id },
   };
 }

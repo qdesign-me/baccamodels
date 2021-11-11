@@ -1,10 +1,8 @@
 import { connectToDatabase, buildQuery } from 'hooks/useMongodb';
 import { ObjectId } from 'mongodb';
 import formidable from 'formidable';
-import fs from 'fs';
-import im from 'imagemagick';
 import sharp from 'sharp';
-
+import fs from 'fs';
 export const config = {
   api: {
     bodyParser: false,
@@ -16,22 +14,26 @@ export default async function modelsAPI(req, res) {
     const { db } = await connectToDatabase();
 
     await form.parse(req, async (err, fields, files) => {
-      console.log(fields);
+      const id = fields.id;
       const mode = fields.mode;
       const name = fields.name;
       const phone = fields.phone;
       const email = fields.email;
       const status = fields.status;
       const role = fields.role;
-
       const region = role === 'Admin' ? 'all' : fields.region;
       const file = files.newimg;
       let img = fields.img;
+      const clean = await db.collection('users').findOne({ _id: ObjectId(id) });
       if (file && file.originalFilename) {
+        if (clean.img) {
+          const oldFile = `${process.cwd()}/public${clean.img}`;
+          if (fs.existsSync(oldFile)) {
+            fs.unlinkSync(oldFile);
+          }
+        }
         img = `/images/admin/users/${file.newFilename}_${file.originalFilename}`;
-
         const target = `${process.cwd()}/public${img}`;
-
         await sharp(file.filepath)
           .rotate()
           .resize(200)
@@ -41,13 +43,10 @@ export default async function modelsAPI(req, res) {
           });
       }
       if (mode === 'edit') {
-        console.log({ name, phone, email, status, role, region, img });
-        const id = fields.id;
         await db.collection('users').updateOne({ _id: ObjectId(id) }, { $set: { name, phone, email, status, role, region, img } });
         return res.status(200).json({ status: 'ok', data: { message: 'Successfully Updated!' }, redirect: `/admin/users` });
       }
       if (mode === 'create') {
-        console.log({ name, phone, email, status, role, region, img });
         const item = await db.collection('users').insertOne({ name, phone, email, status, role, region, img });
         const id = item.insertedId.toString();
         return res.status(200).json({ status: 'ok', data: { message: 'Successfully Created!' }, redirect: `/admin/users` });

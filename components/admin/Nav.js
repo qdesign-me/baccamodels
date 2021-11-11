@@ -2,19 +2,23 @@ import { Fragment } from 'react';
 import { Menu, Transition } from '@headlessui/react';
 import Avatar from './Avatar';
 import Link from 'next/link';
+import { useSession, signOut } from 'next-auth/react';
+
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
 }
 
 function Nav() {
+  const { data: session } = useSession();
   return (
     <div className="flex items-center justify-end py-4 ">
+      {JSON.stringify(session)}
       <div>
         <Menu as="div" className="ml-3 relative">
           <div>
-            <Menu.Button className="bg-gray-800 flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
+            <Menu.Button className="flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
               <span className="sr-only">Open user menu</span>
-              <Avatar />
+              <Avatar img={session?.user.img} />
             </Menu.Button>
           </div>
           <Transition
@@ -29,7 +33,7 @@ function Nav() {
             <Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
               <Menu.Item>
                 {({ active }) => (
-                  <Link href={`/admin/users/`}>
+                  <Link href={`/admin/users/edit/profile`}>
                     <a className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}>Your Profile</a>
                   </Link>
                 )}
@@ -37,7 +41,7 @@ function Nav() {
 
               <Menu.Item>
                 {({ active }) => (
-                  <a href="#" className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}>
+                  <a onClick={() => signOut()} className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}>
                     Sign out
                   </a>
                 )}

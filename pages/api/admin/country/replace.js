@@ -1,7 +1,7 @@
-import { connectToDatabase, buildQuery } from 'hooks/useMongodb';
+import { connectToDatabase } from 'hooks/useMongodb';
 import formidable from 'formidable';
 import fs from 'fs';
-
+import sharp from 'sharp';
 export const config = {
   api: {
     bodyParser: false,
@@ -13,65 +13,97 @@ export default async function modelsAPI(req, res) {
     const { db } = await connectToDatabase();
 
     await form.parse(req, async (err, fields, files) => {
-      console.log(fields, files);
-      return res.status(200).json({ status: 'ok', data: { message: 'Successfully Updated!' } });
-      const action = fields.action;
+      const unid = Date.now();
       const id = fields.id;
-      if (action === 'Become a Model') {
-        const text = fields.text;
-        const file = files.newfile;
-        let cover = fields.cover;
-        if (file) {
-          cover = `/images/${id}/${file.newFilename}_${file.originalFilename}`;
-          const target = `${process.cwd()}/public${cover}`;
-          await fs.rename(file.filepath, target, function (err) {
-            if (err) console.log('error uploading', err);
-          });
-        }
-        await db.collection('regions').update({ _id: id }, { $set: { 'pages.become': { text, cover } } });
-      }
-      if (action === 'General Information') {
-        const instagram = fields.instagram.replace('https://', '');
-        const facebook = fields.facebook.replace('https://', '');
-        const vk = fields.vk.replace('https://', '');
-        const file = files.newfile;
-        let cover = fields.cover;
-        if (file) {
-          cover = `/video/${id}/${file.newFilename}_${file.originalFilename}`;
-          const target = `${process.cwd()}/public${cover}`;
-          await fs.rename(file.filepath, target, function (err) {
-            if (err) console.log('error uploading', err);
-          });
-        }
-        await db.collection('regions').update(
-          { _id: id },
-          {
-            $set: {
-              info: {
-                social: {
-                  instagram,
-                  facebook,
-                  vk,
-                },
-                cover: cover,
-              },
-            },
-          }
-        );
-      }
-      if (action === 'About Us') {
-        const text = fields.text;
-        await db.collection('regions').update({ _id: id }, { $set: { 'pages.about': { text } } });
-      }
-      if (action === 'Contact Information') {
-        const email = fields.email;
-        const phone = fields.phone;
-        const address = fields.address;
-        const pin = fields.pin;
-        await db.collection('regions').update({ _id: id }, { $set: { 'pages.contacts': { email, phone, address, pin } } });
-      }
+      const clean = await db.collection('regions').findOne({ _id: id });
 
-      return res.status(200).json({ status: 'ok' });
+      fields['info.social.instagram'] = fields['info.social.instagram'].replace('https://', '');
+      fields['info.social.facebook'] = fields['info.social.facebook'].replace('https://', '');
+      fields['info.social.vk'] = fields['info.social.vk'].replace('https://', '');
+      if (files.newbecomecover && files.newbecomecover.originalFilename) {
+        fields['pages.become.cover'] = `/images/${id}/${unid}_become.jpg`;
+        const target = `${process.cwd()}/public${fields['pages.become.cover']}`;
+        if (clean?.pages?.become?.cover) {
+          const oldFile = `${process.cwd()}/public${clean.pages.become.cover}`;
+          if (fs.existsSync(oldFile)) {
+            fs.unlinkSync(oldFile);
+          }
+        }
+
+        await sharp(files.newbecomecover.filepath)
+          .rotate()
+          .resize({ height: 2600, width: 1950, fit: 'contain', background: { r: 255, g: 255, b: 255, alpha: 1 }, position: 'right top' })
+          .jpeg({ mozjpeg: true })
+          .toFile(target, (error, info) => {
+            if (error) console.log('error uploading', err);
+          });
+      }
+      if (files.newinfocover && files.newinfocover.originalFilename) {
+        fields['info.cover'] = `/video/${id}/${unid}_cover.mp4`;
+        const target = `${process.cwd()}/public${fields['info.cover']}`;
+        if (clean?.info?.cover) {
+          const oldFile = `${process.cwd()}/public${clean.info.cover}`;
+          if (fs.existsSync(oldFile)) {
+            fs.unlinkSync(oldFile);
+          }
+        }
+
+        await fs.rename(files.newinfocover.filepath, target, function (error) {
+          if (error) console.log('error uploading', err);
+        });
+      }
+      const newData = {
+        pages: {
+          women: {
+            metatitle: fields['pages.women.metatitle'],
+            metadescription: fields['pages.women.metadescription'],
+          },
+          development: {
+            metatitle: fields['pages.development.metatitle'],
+            metadescription: fields['pages.development.metadescription'],
+          },
+          talent: {
+            metatitle: fields['pages.talent.metatitle'],
+            metadescription: fields['pages.talent.metadescription'],
+          },
+          become: {
+            metatitle: fields['pages.become.metatitle'],
+            metadescription: fields['pages.become.metadescription'],
+            text: fields['pages.become.text'],
+            cover: fields['pages.become.cover'],
+          },
+          about: {
+            metatitle: fields['pages.about.metatitle'],
+            metadescription: fields['pages.about.metadescription'],
+            text: fields['pages.about.text'],
+          },
+          contacts: {
+            metatitle: fields['pages.contacts.metatitle'],
+            metadescription: fields['pages.contacts.metadescription'],
+            email: fields['pages.contacts.email'],
+            phone: fields['pages.contacts.phone'],
+            address: fields['pages.contacts.address'],
+            pin: fields['pages.contacts.pin'],
+          },
+          home: {
+            metatitle: fields['pages.home.metatitle'],
+            metadescription: fields['pages.home.metadescription'],
+            text: fields['pages.home.text'],
+          },
+        },
+        info: {
+          social: {
+            instagram: fields['info.social.instagram'],
+            facebook: fields['info.social.facebook'],
+            vk: fields['info.social.vk'],
+          },
+          cover: fields['info.cover'],
+        },
+      };
+
+      await db.collection('regions').updateOne({ _id: id }, { $set: newData });
+
+      return res.status(200).json({ status: 'ok', data: { message: 'Successfully Updated!' } });
     });
   } catch (error) {
     console.log(error);

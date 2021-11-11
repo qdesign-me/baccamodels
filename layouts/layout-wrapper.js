@@ -1,9 +1,11 @@
 import DefaultLayout from './default';
 import AdminLayout from './admin';
+import EmptyLayout from './empty';
 
 const layouts = {
   default: DefaultLayout,
   admin: AdminLayout,
+  empty: EmptyLayout,
 };
 
 const LayoutWrapper = (props) => {

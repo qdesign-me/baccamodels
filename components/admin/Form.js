@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 function checkDepend(field, data) {
   if (!field.showOnly) return true;
@@ -33,8 +33,9 @@ function MediaInput({ field, errors, data, setData }) {
     setData({ ...data, [field.field]: objectUrl });
     return () => URL.revokeObjectURL(objectUrl);
   }, [selectedFile]);
+
   return (
-    <div className={`col-span-3 ${errors?.includes(field.field) && 'has-error'}`}>
+    <div className={`col-span-3 ${errors[field.field] && 'has-error'}`}>
       <div className="mt-1 flex items-center">
         <span className="h-12 w-12 rounded-full overflow-hidden bg-gray-100 indicator inline-flex items-center justify-center" onClick={onBtnClick}>
           {data[field.field] ? (
@@ -80,6 +81,7 @@ function MediaInput({ field, errors, data, setData }) {
         {field.allow === 'image' && <p className="ml-auto text-xs text-gray-500">PNG, JPG up to 10MB</p>}
         {field.allow === 'video' && <p className="ml-auto text-xs text-gray-500">MP4</p>}
       </div>
+      {errors[field.field] && <div className="error">{errors[field.field]}</div>}
     </div>
   );
 }
@@ -87,7 +89,7 @@ function SelectInput({ field, errors, data }) {
   const [val, setVal] = useState(data[field.field]);
   const spans = { 6: 'col-span-6', 3: 'col-span-6 sm:col-span-3' };
   return (
-    <div className={`${spans[field.span]} ${errors?.includes(field.field) && 'has-error'}`}>
+    <div className={`${spans[field.span]} ${errors[field.field] && 'has-error'}`}>
       <label htmlFor={field.field} className="block text-sm font-medium text-gray-700">
         {field.title}
       </label>
@@ -98,9 +100,10 @@ function SelectInput({ field, errors, data }) {
         className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
       >
         {field.variants.map((variant) => (
-          <option>{variant}</option>
+          <option key={variant}>{variant}</option>
         ))}
       </select>
+      {errors[field.field] && <div className="error">{errors[field.field]}</div>}
     </div>
   );
 }
@@ -110,7 +113,7 @@ function TextInput({ field, errors, data, setData }) {
   };
   const spans = { 12: 'col-span-12', 6: 'col-span-6', 3: 'col-span-6 sm:col-span-3' };
   return (
-    <div className={`${spans[field.span]} ${errors?.includes(field.field) && 'has-error'}`}>
+    <div className={`${spans[field.span]} ${errors[field.field] && 'has-error'}`}>
       <label htmlFor={field.field} className="block text-sm font-medium text-gray-700">
         {field.title}
       </label>
@@ -121,6 +124,7 @@ function TextInput({ field, errors, data, setData }) {
         onChange={handleChange}
         className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
       />
+      {errors[field.field] && <div className="error">{errors[field.field]}</div>}
     </div>
   );
 }
@@ -129,7 +133,7 @@ function SocialInput({ field, errors, data, setData }) {
     setData({ ...data, [field.field]: e.target.value });
   };
   return (
-    <div className={`col-span-3 ${errors?.includes(field.field) && 'has-error'}`}>
+    <div className={`col-span-3 ${errors[field.field] && 'has-error'}`}>
       <label htmlFor="company-website" className="block text-sm font-medium text-gray-700">
         {field.title}
       </label>
@@ -144,11 +148,13 @@ function SocialInput({ field, errors, data, setData }) {
           placeholder={field.placeholder}
         />
       </div>
+      {errors[field.field] && <div className="error">{errors[field.field]}</div>}
     </div>
   );
 }
 
 function CheckboxesInput({ field, errors, data, setData }) {
+  const spans = { 12: 'col-span-12', 6: 'col-span-6', 3: 'col-span-6 sm:col-span-3' };
   const getRealValue = (val) => {
     if (val) return field.values[0];
     return field.values[1];
@@ -157,7 +163,7 @@ function CheckboxesInput({ field, errors, data, setData }) {
     setData({ ...data, [field.field]: getRealValue(e.target.checked) });
   };
   return (
-    <fieldset>
+    <fieldset className={`${spans[field.span]} ${errors[field.field] && 'has-error'}`}>
       <legend className="text-base font-medium text-gray-900">{field.title}</legend>
       <div className="mt-4 space-y-4">
         <input type="hidden" value={data[field.field]} name={field.field} />
@@ -179,6 +185,7 @@ function CheckboxesInput({ field, errors, data, setData }) {
             </div>
           </div>
         ))}
+        {errors[field.field] && <div className="error">{errors[field.field]}</div>}
       </div>
     </fieldset>
   );
@@ -189,7 +196,7 @@ function RadiobuttonsInput({ field, errors, data, setData }) {
   };
 
   return (
-    <fieldset>
+    <fieldset className={`${errors[field.field] && 'has-error'}`}>
       <legend className="text-base font-medium text-gray-900">{field.title}</legend>
       <div className="mt-4 space-y-4">
         {field.variants.map((variant) => (
@@ -213,20 +220,23 @@ function RadiobuttonsInput({ field, errors, data, setData }) {
           </div>
         ))}
       </div>
+      {errors[field.field] && <div className="error">{errors[field.field]}</div>}
     </fieldset>
   );
 }
 function TextareaInput({ field, errors, data }) {
+  const spans = { 12: 'col-span-12', 6: 'col-span-6', 3: 'col-span-6 sm:col-span-3' };
+
   const [val, setVal] = useState(data[field.field]);
   return (
-    <div className={`${errors?.includes(field.field) && 'has-error'}`}>
+    <div className={`${spans[field.span] ?? ''} ${errors[field.field] && 'has-error'}`}>
       <label htmlFor="about" className="block text-sm font-medium text-gray-700">
         {field.title}
       </label>
       <div className="mt-1">
         <textarea
           name={field.field}
-          rows="8"
+          rows={field.rows ?? 8}
           value={val}
           onChange={(e) => setVal(e.target.value)}
           className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border border-gray-300 rounded-md"
@@ -234,6 +244,7 @@ function TextareaInput({ field, errors, data }) {
         ></textarea>
       </div>
       {field.description && <p className="mt-2 text-sm text-gray-500">{field.description}</p>}
+      {errors[field.field] && <div className="error">{errors[field.field]}</div>}
     </div>
   );
 }
@@ -265,6 +276,7 @@ function UploadInput({ field, errors, data }) {
           {field.media === 'videos' && <p className="text-xs text-gray-500">MP4</p>}
         </div>
       </div>
+      {errors[field.field] && <div className="error">{errors[field.field]}</div>}
     </div>
   );
 }
@@ -323,38 +335,20 @@ export default function Form({ title, subtitle, groups, data, errors }) {
           <div className="mt-5 md:mt-0 col-span-3">
             <div className="shadow sm:rounded-md sm:overflow-hidden">
               <div className="px-4 py-5 bg-white space-y-6 sm:p-6">
-                {groups?.map((group) => (
-                  <div className={group.className}>
+                {groups?.map((group, groupIndex) => (
+                  <div className={group.className} key={groupIndex}>
                     {group.fields.map((field) => (
-                      <>
-                        {field.type === 'social' && checkDepend(field, userData) && (
-                          <SocialInput key={field.field} field={field} errors={errors} data={userData} setData={setUserData} />
-                        )}
-                        {field.type === 'text' && checkDepend(field, userData) && (
-                          <TextInput key={field.field} field={field} errors={errors} data={userData} setData={setUserData} />
-                        )}
-                        {field.type === 'select' && checkDepend(field, userData) && (
-                          <SelectInput key={field.field} field={field} errors={errors} data={userData} setData={setUserData} />
-                        )}
-                        {field.type === 'password' && checkDepend(field, userData) && (
-                          <PasswordInput key={field.field} field={field} errors={errors} data={userData} setData={setUserData} />
-                        )}
-                        {field.type === 'textarea' && checkDepend(field, userData) && (
-                          <TextareaInput key={field.field} field={field} errors={errors} data={userData} setData={setUserData} />
-                        )}
-                        {field.type === 'checkboxes' && checkDepend(field, userData) && (
-                          <CheckboxesInput key={field.field} field={field} errors={errors} data={userData} setData={setUserData} />
-                        )}
-                        {field.type === 'radiobuttons' && checkDepend(field, userData) && (
-                          <RadiobuttonsInput key={field.field} field={field} errors={errors} data={userData} setData={setUserData} />
-                        )}
-                        {field.type === 'upload' && checkDepend(field, userData) && (
-                          <UploadInput key={field.field} field={field} errors={errors} data={userData} setData={setUserData} />
-                        )}
-                        {field.type === 'media' && checkDepend(field, userData) && (
-                          <MediaInput key={field.field} field={field} errors={errors} data={userData} setData={setUserData} />
-                        )}
-                      </>
+                      <React.Fragment key={field.field}>
+                        {field.type === 'social' && checkDepend(field, userData) && <SocialInput field={field} errors={errors} data={userData} setData={setUserData} />}
+                        {field.type === 'text' && checkDepend(field, userData) && <TextInput field={field} errors={errors} data={userData} setData={setUserData} />}
+                        {field.type === 'select' && checkDepend(field, userData) && <SelectInput field={field} errors={errors} data={userData} setData={setUserData} />}
+                        {field.type === 'password' && checkDepend(field, userData) && <PasswordInput field={field} errors={errors} data={userData} setData={setUserData} />}
+                        {field.type === 'textarea' && checkDepend(field, userData) && <TextareaInput field={field} errors={errors} data={userData} setData={setUserData} />}
+                        {field.type === 'checkboxes' && checkDepend(field, userData) && <CheckboxesInput field={field} errors={errors} data={userData} setData={setUserData} />}
+                        {field.type === 'radiobuttons' && checkDepend(field, userData) && <RadiobuttonsInput field={field} errors={errors} data={userData} setData={setUserData} />}
+                        {field.type === 'upload' && checkDepend(field, userData) && <UploadInput field={field} errors={errors} data={userData} setData={setUserData} />}
+                        {field.type === 'media' && checkDepend(field, userData) && <MediaInput field={field} errors={errors} data={userData} setData={setUserData} />}
+                      </React.Fragment>
                     ))}
                   </div>
                 ))}
