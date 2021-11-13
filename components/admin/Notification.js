@@ -2,7 +2,7 @@ import React from 'react';
 
 function Notfication({ title, subtitle = '' }) {
   return (
-    <div className="inline-block fixed bottom-6 right-6">
+    <div className="inline-block fixed bottom-6 right-6 z-200">
       <div className="bg-white rounded-lg border-gray-300 border p-3 shadow-lg">
         <div className="flex flex-row">
           <div className="px-2">

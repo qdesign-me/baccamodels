@@ -113,6 +113,7 @@ function CountryEdit({ data }) {
             'pages.become.metatitle',
             'pages.become.metadescription',
             'pages.become.text',
+            'pages.become.information',
             'pages.contacts.metatitle',
             'pages.contacts.metadescription',
             'pages.contacts.phone',
@@ -121,6 +122,7 @@ function CountryEdit({ data }) {
             'pages.contacts.pin',
           ],
           email: ['pages.contacts.email'],
+          domain: ['info.social.instagram', 'info.social.facebook', 'info.social.vk'],
         }}
       >
         <div className="hidden sm:block" aria-hidden="true">
@@ -260,14 +262,25 @@ function CountryEdit({ data }) {
           groups={[
             {
               className: '',
-              fields: [{ field: 'pages.become.cover', title: 'Cover', newname: 'newbecomecover', type: 'media', allow: 'image', accept: 'image/png, image/gif, image/jpeg' }],
+              fields: [
+                {
+                  field: 'pages.become.cover',
+                  title: 'Cover',
+                  description: 'max height: 2600px, max width: 1950px',
+                  newname: 'newbecomecover',
+                  type: 'media',
+                  allow: 'image',
+                  accept: 'image/png, image/gif, image/jpeg',
+                },
+              ],
             },
             {
               className: 'grid grid-cols-12 gap-6',
               fields: [
                 { field: 'pages.become.metatitle', title: 'Meta Title', type: 'text', span: 12 },
                 { field: 'pages.become.metadescription', title: 'Meta Description', type: 'textarea', span: 12, rows: 2 },
-                { field: 'pages.become.text', title: 'Text', type: 'textarea', span: 12 },
+                { field: 'pages.become.text', title: 'Page Text', type: 'textarea', span: 12 },
+                { field: 'pages.become.information', title: 'Information to the Applicant', type: 'textarea', span: 12 },
               ],
             },
           ]}

@@ -72,7 +72,17 @@ function UserEdit({ data, mode, pageTitle, id }) {
           groups={[
             {
               className: 'grid grid-cols-3 gap-6',
-              fields: [{ field: 'img', title: 'Photo', type: 'media', allow: 'image', newname: 'newimg', accept: 'image/png, image/gif, image/jpeg' }],
+              fields: [
+                {
+                  field: 'img',
+                  title: 'Avatar',
+                  description: '100x100px',
+                  type: 'media',
+                  allow: 'image',
+                  newname: 'newimg',
+                  accept: 'image/png, image/gif, image/jpeg',
+                },
+              ],
             },
             {
               className: 'grid grid-cols-12 gap-6',

@@ -78,24 +78,24 @@ function Profile({ data }) {
   return (
     <>
       <Nav className="relative theme-img" data={data.info} showSearch={false} showBack={true} />
-      <Header img={data.model.profile?.img} className="static">
+      <Header img={data.model.profile?.img} video={data.model.profile?.video} className="static header-profile">
         <>
           <div className="container flex-full">
             <div className="flex-full relative">
               <div className="model-menu">
                 <ul>
-                  {data.model.profile?.book && (
+                  {data.model.profile?.book?.length > 0 && (
                     <li onClick={(e) => scrollTo('.box-book')}>
                       <span>Book</span>
                     </li>
                   )}
 
-                  {data.model.profile?.videos && (
+                  {data.model.profile?.videos?.length > 0 && (
                     <li onClick={(e) => scrollTo('.box-videos')}>
                       <span>Videos</span>
                     </li>
                   )}
-                  {data.model.profile?.polaroids && (
+                  {data.model.profile?.polaroids?.length > 0 && (
                     <li onClick={(e) => scrollTo('.box-polaroids')}>
                       <span>Polaroids</span>
                     </li>
@@ -150,7 +150,7 @@ function Profile({ data }) {
               </div>
             </div>
           )}
-          {data.model.profile?.book && (
+          {data.model.profile?.book?.length > 0 && (
             <div className="box !pt-0 countable">
               <div className="container">
                 <div className="wrap-sm">
@@ -161,7 +161,7 @@ function Profile({ data }) {
                 <Carousel responsive={responsive} swipeable={true} draggable={false} infinite={true} autoPlaySpeed={1000} showDots={true}>
                   {data.model.profile.book.map((img, index) => (
                     <div className="img-slide" key={index}>
-                      <img src={img} />
+                      <img src={img.preview} />
                     </div>
                   ))}
                 </Carousel>
@@ -178,7 +178,7 @@ function Profile({ data }) {
               </div>
             </div>
           )}
-          {data.model.profile?.videos && (
+          {data.model.profile?.videos?.length > 0 && (
             <div className="box !pt-0 countable">
               <div className="container">
                 <div className="wrap-sm">
@@ -188,8 +188,8 @@ function Profile({ data }) {
               <div className="carousel  box-videos">
                 <Carousel responsive={responsiveVideo} swipeable={true} draggable={false} infinite={true} autoPlaySpeed={1000} showDots={true}>
                   {data.model.profile.videos.map((video, index) => (
-                    <div className={`video-slide`} key={index} onClick={(e) => playVideo(video.url)}>
-                      <img src={video.img} />
+                    <div className={`video-slide`} key={index} onClick={(e) => playVideo(video.preview)}>
+                      <video src={video.preview}></video>
 
                       <svg viewBox="0 0 27 32" xmlns="http://www.w3.org/2000/svg" className="h-10  inset-center">
                         <path d="M25 16L1 30V2z" stroke="#FFF" strokeWidth="2" fill="none" />
@@ -200,7 +200,7 @@ function Profile({ data }) {
               </div>
             </div>
           )}
-          {data.model.profile?.polaroids && (
+          {data.model.profile?.polaroids?.length > 0 && (
             <div className="box !pt-0 countable">
               <div className="container">
                 <div className="wrap-sm">
@@ -211,7 +211,7 @@ function Profile({ data }) {
                 <Carousel responsive={responsive} swipeable={true} draggable={false} infinite={true} autoPlaySpeed={1000} showDots={true}>
                   {data.model.profile.polaroids.map((img, index) => (
                     <div className="img-slide" key={index}>
-                      <img src={img} />
+                      <img src={img.preview} />
                     </div>
                   ))}
                 </Carousel>
@@ -229,6 +229,7 @@ function Profile({ data }) {
               </div>
             </div>
           </div>
+          <pre>{JSON.stringify(data, null, 2)}</pre>
         </main>
       </div>
     </>

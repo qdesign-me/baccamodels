@@ -5,12 +5,14 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 function ModelEdit({ data, mode, pageTitle, id }) {
   const router = useRouter();
+  const previewUrl = mode === 'edit' ? `${data.slug}` : null;
   const chunks = {
     'Public Information': {
       data: {
         'profile.social.instagram': data.profile?.social?.instagram ?? '',
         'profile.social.facebook': data.profile?.social?.facebook ?? '',
         'profile.social.vk': data.profile?.social?.vk ?? '',
+        'profile.cover': data.profile?.cover ?? '',
         img: data.img ?? '',
         name: data.name ?? '',
         'profile.params.height': data.profile?.params?.Height ?? '',
@@ -41,17 +43,17 @@ function ModelEdit({ data, mode, pageTitle, id }) {
     },
     Book: {
       data: {
-        media: data.profile?.book || [],
+        book: data.profile?.book || [],
       },
     },
     Polaroids: {
       data: {
-        media: data.profile?.polaroids || [],
+        polaroids: data.profile?.polaroids || [],
       },
     },
     Videos: {
       data: {
-        media: data.profile?.videos || [],
+        videos: data.profile?.videos || [],
       },
     },
   };
@@ -86,10 +88,10 @@ function ModelEdit({ data, mode, pageTitle, id }) {
       </Head>
       <FormWrap
         onSubmit={onSubmit}
+        previewUrl={previewUrl}
         validators={{
           required: [
             'name',
-            'profile.social.instagram',
 
             'profile.params.height',
             'profile.params.hair',
@@ -101,6 +103,7 @@ function ModelEdit({ data, mode, pageTitle, id }) {
             'country',
             'category',
           ],
+          email: ['private.email'],
         }}
       >
         <div className="hidden sm:block" aria-hidden="true">
@@ -114,9 +117,24 @@ function ModelEdit({ data, mode, pageTitle, id }) {
           subtitle="This information will be displayed publicly so be careful what you share."
           groups={[
             {
-              className: 'grid grid-cols-3 gap-6',
-              fields: [{ field: 'img', title: 'Photo', type: 'image' }],
+              className: 'grid gap-6',
+              fields: [{ field: 'img', title: 'Thumb', description: '320x427px', type: 'media', allow: 'image', newname: 'newimg', accept: 'image/png, image/gif, image/jpeg' }],
             },
+            {
+              className: 'grid gap-6',
+              fields: [
+                {
+                  field: 'profile.cover',
+                  title: 'Profile',
+                  description: 'can be image of video',
+                  type: 'media',
+                  allow: 'all',
+                  newname: 'newcover',
+                  accept: 'image/png, image/gif, image/jpeg, video/mp4',
+                },
+              ],
+            },
+
             {
               className: '',
               fields: [{ field: 'name', title: 'Full Name', type: 'text', input: 'text' }],
@@ -231,9 +249,13 @@ function ModelEdit({ data, mode, pageTitle, id }) {
               className: '',
               fields: [
                 {
-                  field: 'instagram',
+                  field: 'book',
+                  newname: 'newbook[]',
+                  accept: 'image/*',
+                  filesLimit: 7,
                   title: 'Book',
                   type: 'upload',
+                  mediaType: 'image',
                   media: 'images',
                 },
               ],
@@ -256,7 +278,10 @@ function ModelEdit({ data, mode, pageTitle, id }) {
               className: '',
               fields: [
                 {
-                  field: 'instagram',
+                  field: 'polaroids',
+                  newname: 'newpolaroids[]',
+                  accept: 'image/*',
+                  filesLimit: 7,
                   title: 'Polaroids',
                   type: 'upload',
                   media: 'images',
@@ -281,8 +306,10 @@ function ModelEdit({ data, mode, pageTitle, id }) {
               className: '',
               fields: [
                 {
-                  field: 'instagram',
+                  field: 'videos',
+                  newname: 'newvideos[]',
                   title: 'Videos',
+                  filesLimit: 7,
                   type: 'upload',
                   media: 'videos',
                 },

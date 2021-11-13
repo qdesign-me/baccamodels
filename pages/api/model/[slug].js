@@ -17,6 +17,10 @@ export default async function modelsAPI(req, res) {
         const model = await db.collection('models').findOne({ slug, status: 'Active' });
 
         const info = (await db.collection('regions').findOne({ _id: country }, { projection: { info: true } })).info;
+        if (model.profile?.cover) {
+          if (model.profile.cover.startsWith('/images')) model.profile.img = model.profile.cover;
+          if (model.profile.cover.startsWith('/video')) model.profile.video = model.profile.cover;
+        }
 
         return res.status(200).json({ status: 'ok', data: { model, info } });
       }

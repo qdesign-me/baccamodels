@@ -36,7 +36,7 @@ export default async function modelsAPI(req, res) {
         const target = `${process.cwd()}/public${img}`;
         await sharp(file.filepath)
           .rotate()
-          .resize(200)
+          .resize(100, 100)
           .jpeg({ mozjpeg: true })
           .toFile(target, (error, info) => {
             console.log('error', error);

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-
+import { useDropzone } from 'react-dropzone';
 function checkDepend(field, data) {
   if (!field.showOnly) return true;
   const temp = field.showOnly.split('===');
@@ -13,6 +13,13 @@ function MediaInput({ field, errors, data, setData }) {
   const inputFileRef = useRef();
 
   const [selectedFile, setSelectedFile] = useState();
+  const [mediaType, setMediaType] = useState(() => {
+    const media = data[field.field];
+    if (!media) return null;
+
+    if (media.includes('.mp4')) return 'video';
+    return 'image';
+  });
 
   const onBtnClick = () => {
     inputFileRef.current.click();
@@ -29,6 +36,8 @@ function MediaInput({ field, errors, data, setData }) {
     if (!selectedFile) {
       return;
     }
+    console.log(selectedFile);
+    setMediaType(selectedFile.type.split('/')[0]);
     const objectUrl = URL.createObjectURL(selectedFile);
     setData({ ...data, [field.field]: objectUrl });
     return () => URL.revokeObjectURL(objectUrl);
@@ -36,16 +45,19 @@ function MediaInput({ field, errors, data, setData }) {
 
   return (
     <div className={`col-span-3 ${errors[field.field] && 'has-error'}`}>
+      <label htmlFor={field.field} className="block text-sm font-medium text-gray-700">
+        {field.title} <small>{field.description}</small>
+      </label>
       <div className="mt-1 flex items-center">
         <span className="h-12 w-12 rounded-full overflow-hidden bg-gray-100 indicator inline-flex items-center justify-center" onClick={onBtnClick}>
           {data[field.field] ? (
             <>
-              {field.allow === 'image' && <img src={data[field.field]} className="w-12 h-12 object-cover" />}
-              {field.allow === 'video' && <video autoPlay={true} muted={true} loop playsInline src={data[field.field]} className="w-12 h-12 object-cover" />}
+              {mediaType === 'image' && <img src={data[field.field]} className="w-12 h-12 object-cover" />}
+              {mediaType === 'video' && <video autoPlay={true} muted={true} loop playsInline src={data[field.field]} className="w-12 h-12 object-cover" />}
             </>
           ) : (
             <>
-              {field.allow === 'image' && (
+              {['image', 'all'].includes(field.allow) && (
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path
                     strokeLinecap="round"
@@ -75,18 +87,21 @@ function MediaInput({ field, errors, data, setData }) {
         >
           Change
         </button>
-        <input name={field.newname} type="file" className="sr-only" ref={inputFileRef} accept={field.accept} onChange={onFileSelect} />
+        <input type="file" className="sr-only" ref={inputFileRef} accept={field.accept} onChange={onFileSelect} />
         <input type="hidden" name={field.field} value={data[field.field]} />
 
         {field.allow === 'image' && <p className="ml-auto text-xs text-gray-500">PNG, JPG up to 10MB</p>}
         {field.allow === 'video' && <p className="ml-auto text-xs text-gray-500">MP4</p>}
+        {field.allow === 'all' && <p className="ml-auto text-xs text-gray-500">PNG, JPG or MP4 up to 10MB</p>}
       </div>
       {errors[field.field] && <div className="error">{errors[field.field]}</div>}
     </div>
   );
 }
-function SelectInput({ field, errors, data }) {
-  const [val, setVal] = useState(data[field.field]);
+function SelectInput({ field, errors, data, setData }) {
+  const handleChange = (e) => {
+    setData({ ...data, [field.field]: e.target.value });
+  };
   const spans = { 6: 'col-span-6', 3: 'col-span-6 sm:col-span-3' };
   return (
     <div className={`${spans[field.span]} ${errors[field.field] && 'has-error'}`}>
@@ -95,8 +110,8 @@ function SelectInput({ field, errors, data }) {
       </label>
       <select
         name={field.field}
-        value={val}
-        onChange={(e) => setVal(e.target.value)}
+        value={data[field.field]}
+        onChange={handleChange}
         className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
       >
         {field.variants.map((variant) => (
@@ -168,7 +183,7 @@ function CheckboxesInput({ field, errors, data, setData }) {
       <div className="mt-4 space-y-4">
         <input type="hidden" value={data[field.field]} name={field.field} />
         {field.variants.map((variant) => (
-          <div className="flex items-start" key={variant.value}>
+          <div className="flex items-start" key={variant.title}>
             <div className="flex items-center h-5">
               <input
                 type="checkbox"
@@ -224,10 +239,12 @@ function RadiobuttonsInput({ field, errors, data, setData }) {
     </fieldset>
   );
 }
-function TextareaInput({ field, errors, data }) {
+function TextareaInput({ field, errors, data, setData }) {
   const spans = { 12: 'col-span-12', 6: 'col-span-6', 3: 'col-span-6 sm:col-span-3' };
+  const handleChange = (e) => {
+    setData({ ...data, [field.field]: e.target.value });
+  };
 
-  const [val, setVal] = useState(data[field.field]);
   return (
     <div className={`${spans[field.span] ?? ''} ${errors[field.field] && 'has-error'}`}>
       <label htmlFor="about" className="block text-sm font-medium text-gray-700">
@@ -237,8 +254,8 @@ function TextareaInput({ field, errors, data }) {
         <textarea
           name={field.field}
           rows={field.rows ?? 8}
-          value={val}
-          onChange={(e) => setVal(e.target.value)}
+          value={data[field.field]}
+          onChange={handleChange}
           className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border border-gray-300 rounded-md"
           placeholder={field.placeholder ?? ''}
         ></textarea>
@@ -248,11 +265,108 @@ function TextareaInput({ field, errors, data }) {
     </div>
   );
 }
-function UploadInput({ field, errors, data }) {
+function UploadInput({ field, errors, data, setData }) {
+  const [dragId, setDragId] = useState();
+
+  const [uploadError, setUploadErrror] = useState(null);
+
+  const handleDrag = (ev) => {
+    setDragId(ev.currentTarget.id);
+  };
+
+  const handleDrop = (ev) => {
+    const dragBox = data[field.field].find((box) => box.id === dragId);
+    const dropBox = data[field.field].find((box) => box.id === ev.currentTarget.id);
+
+    const dragBoxOrder = dragBox.order;
+    const dropBoxOrder = dropBox.order;
+
+    const newFiles = data[field.field].map((box) => {
+      if (box.id === dragId) {
+        box.order = dropBoxOrder;
+        return box;
+      }
+      if (box.order >= dropBoxOrder) {
+        box.order++;
+      }
+
+      return box;
+    });
+
+    setData({ ...data, [field.field]: newFiles });
+  };
+
+  const ThumbBox = ({ handleDrag, handleDrop, data, field }) => {
+    return (
+      <div draggable={true} id={data.id} onDragOver={(ev) => ev.preventDefault()} onDragStart={handleDrag} onDrop={handleDrop}>
+        <div className="thumb">
+          <div className="thumbInner">
+            <div className="delete-thumb" onClick={(e) => deleteFile(data.id)}>
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </div>
+            {field.media === 'images' && <img src={data.preview} alt="" />}
+            {field.media === 'videos' && <video autoPlay={true} muted={true} loop playsInline src={data.preview} className="w-12 h-12 object-cover" />}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const deleteFile = (id) => {
+    const newFiles = data[field.field]
+      .filter((file) => file.id !== id)
+      .map((file, index) => {
+        return { ...file, order: index };
+      });
+    setData({ ...data, [field.field]: newFiles });
+  };
+  const { getRootProps, getInputProps } = useDropzone({
+    accept: field.accept,
+
+    onDrop: (acceptedFiles) => {
+      try {
+        setUploadErrror(null);
+        if (field.filesLimit) {
+          const canAccepth = field.filesLimit - data[field.field].length;
+          acceptedFiles = acceptedFiles.slice(0, canAccepth);
+        }
+
+        acceptedFiles.map((file) => {
+          if (+file.size > 50000000) {
+            throw new Error("File can't be larger than 5mb");
+          }
+        });
+
+        const orderBase = data[field.field].length;
+        setData({
+          ...data,
+          [field.field]: data[field.field].concat(
+            acceptedFiles.map((file, index) => {
+              file.randomParam = 1;
+              return {
+                preview: URL.createObjectURL(file),
+                order: index + orderBase,
+                id: `${Date.now()}-${index}`,
+                size: file.size,
+                name: file.name,
+              };
+            })
+          ),
+        });
+      } catch (error) {
+        setUploadErrror(error.message);
+      }
+    },
+  });
+
   return (
     <div>
       <label className="block text-sm font-medium text-gray-700">{field.title}</label>
-      <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+      <div {...getRootProps({ className: 'dropzone' })}>
+        <input {...getInputProps()} name={field.newname} />
+        <input type="hidden" name={field.field} value={JSON.stringify(data[field.field])} />
         <div className="space-y-1 text-center">
           <svg className="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
             <path
@@ -268,7 +382,6 @@ function UploadInput({ field, errors, data }) {
               className="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
             >
               <span>Upload a file</span>
-              <input name={field.field} type="file" className="sr-only" />
             </label>
             <p className="pl-1">or drag and drop</p>
           </div>
@@ -276,6 +389,19 @@ function UploadInput({ field, errors, data }) {
           {field.media === 'videos' && <p className="text-xs text-gray-500">MP4</p>}
         </div>
       </div>
+      <aside className="thumbsContainer">
+        {Object.values(data[field.field])
+          ?.sort((a, b) => a.order - b.order)
+          .map((file) => (
+            <ThumbBox key={file.id} handleDrag={handleDrag} handleDrop={handleDrop} data={file} field={field} />
+          ))}
+      </aside>
+      <pre>{JSON.stringify(data, null, 2)}</pre>
+      {uploadError && (
+        <div className="mt-4">
+          <div className="error text-lg -mt-6">{uploadError}</div>
+        </div>
+      )}
       {errors[field.field] && <div className="error">{errors[field.field]}</div>}
     </div>
   );

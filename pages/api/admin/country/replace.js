@@ -70,6 +70,7 @@ export default async function modelsAPI(req, res) {
             metatitle: fields['pages.become.metatitle'],
             metadescription: fields['pages.become.metadescription'],
             text: fields['pages.become.text'],
+            information: fields['pages.become.information'],
             cover: fields['pages.become.cover'],
           },
           about: {

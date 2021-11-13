@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 import { validateEmail } from 'hooks/utils';
-function FormWrap({ children, validators, onSubmit }) {
+function FormWrap({ children, validators, onSubmit, previewUrl }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState([]);
@@ -48,13 +49,33 @@ function FormWrap({ children, validators, onSubmit }) {
       });
       validators?.email?.map((field) => {
         const value = data.get(field);
-        if (!validateEmail(value)) {
+        if (value && !validateEmail(value)) {
           setErrors((old) => {
             return { ...old, [field]: 'Please provide valid email' };
           });
           if (!errorCount) setScrollElement(field);
           errorCount++;
         }
+      });
+      validators?.domain?.map((field) => {
+        const value = data.get(field);
+
+        if (value) {
+          console.log(value, field);
+          let message = '';
+          if (field.includes('instagram') && !value.startsWith('instagram')) message = 'Link should start with instagram.com';
+          if (field.includes('facebook') && !value.startsWith('facebook')) message = 'Link should start with facebook.com';
+          if (field.includes('vk') && !value.startsWith('vk')) message = 'Link should start with vk.com';
+          if (message) {
+            setErrors((old) => {
+              return { ...old, [field]: message };
+            });
+            if (!errorCount) setScrollElement(field);
+            errorCount++;
+          }
+        }
+
+        //
       });
     }
 
@@ -75,10 +96,17 @@ function FormWrap({ children, validators, onSubmit }) {
   return (
     <form action="#" method="POST" onSubmit={submit} noValidate onChange={change}>
       {childrenWithProps(children)}
-      <div className="py-6 bg-gray-50 text-right flex items-center justify-end">
+      <div className=" py-6 bg-gray-50 text-right flex items-center justify-end">
         <button type="button" onClick={back} className="manager-btn">
           Back
         </button>
+        {previewUrl && (
+          <Link href={previewUrl}>
+            <a className="manager-btn manage-btn-success" target="_blank">
+              Preview
+            </a>
+          </Link>
+        )}
         <button disabled={loading} type="submit" className="manager-btn manager-btn-info">
           {loading && (
             <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

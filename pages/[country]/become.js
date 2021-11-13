@@ -7,41 +7,12 @@ import { useForm } from 'react-hook-form';
 import { convertMetric } from 'hooks/utils';
 import { useRouter } from 'next/router';
 
-const thumbsContainer = {
-  display: 'flex',
-  flexDirection: 'row',
-  flexWrap: 'wrap',
-  marginTop: 16,
-};
-
-const thumb = {
-  display: 'inline-flex',
-  borderRadius: 2,
-  border: '1px solid #eaeaea',
-  marginBottom: 8,
-  marginRight: 8,
-  width: 100,
-  height: 100,
-  padding: 4,
-  boxSizing: 'border-box',
-};
-
-const thumbInner = {
-  display: 'flex',
-  minWidth: 0,
-  overflow: 'hidden',
-};
-
-const img = {
-  display: 'block',
-  width: 'auto',
-  height: '100%',
-};
-
 function Become({ data }) {
   const router = useRouter();
   const [accept, setAccept] = useState({ terms: true, sms: true, offers: true });
   const [disabled, setDisabled] = useState(false);
+  const [showInformation, setShowInformation] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
   const [loading, setLoading] = useState(false);
   const {
     register,
@@ -56,25 +27,49 @@ function Become({ data }) {
   const formRef = useRef();
 
   const [files, setFiles] = useState([]);
-  const [showInformation, setShowInformation] = useState(false);
-  const [showNotification, setShowNotification] = useState(false);
+  const [uploadError, setUploadErrror] = useState(null);
+  const deleteFile = (index) => {
+    setFiles(files.filter((file, fileIndex) => fileIndex !== index));
+  };
   const { getRootProps, getInputProps } = useDropzone({
     accept: 'image/*',
     onDrop: (acceptedFiles) => {
-      setFiles(
-        acceptedFiles.map((file) =>
-          Object.assign(file, {
-            preview: URL.createObjectURL(file),
-          })
-        )
-      );
+      try {
+        setUploadErrror(null);
+        console.log(acceptedFiles);
+        acceptedFiles = acceptedFiles.slice(0, 3);
+        acceptedFiles.map((file) => {
+          if (+file.size > 5000000) {
+            throw new Error("File can't be larger than 5mb");
+          }
+        });
+        setFiles(
+          acceptedFiles.map((file) =>
+            Object.assign(file, {
+              preview: URL.createObjectURL(file),
+            })
+          )
+        );
+      } catch (error) {
+        setUploadErrror(error.message);
+      }
     },
+    // onDropRejected: (e) => {
+    //   console.log(e);
+    //   if (e[0].errors[0].code === 'file-too-large') setUploadErrror("File can't be larger than 5mb");
+    //   if (e[0].errors[0].code === 'too-many-files') setUploadErrror('Upload up to 4 photos');
+    // },
   });
 
-  const thumbs = files.map((file) => (
-    <div style={thumb} key={file.name}>
-      <div style={thumbInner}>
-        <img src={file.preview} style={img} />
+  const thumbs = files.map((file, index) => (
+    <div className="thumb" key={file.name}>
+      <div className="thumbInner">
+        <div className="delete-thumb" onClick={(e) => deleteFile(index)}>
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </div>
+        <img src={file.preview} alt="" />
       </div>
     </div>
   ));
@@ -148,7 +143,7 @@ function Become({ data }) {
             </div>
             <div className="wrap py-20 text-lg text">
               <div className="max-w-[600px]">
-                <form action="#" className="text-gray-500" onSubmit={handleSubmit(onSubmit)} ref={formRef} method="post" enctype="multipart/form-data" noValidate>
+                <form action="#" className="text-gray-500" onSubmit={handleSubmit(onSubmit)} ref={formRef} method="post" encType="multipart/form-data" noValidate>
                   <input type="hidden" name="country" value={router.query.country} />
                   <div className="mb-6">
                     <div className="flex space-x-10">
@@ -296,9 +291,33 @@ function Become({ data }) {
                   <div className="mb-14">
                     <div {...getRootProps({ className: 'dropzone' })}>
                       <input {...getInputProps()} />
-                      <p>Drag 'n' drop some files here, or click to select files</p>
+                      <div className="space-y-1 text-center">
+                        <svg className="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                          <path
+                            d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                            strokeWidth={2}
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                        <div className="flex text-sm text-gray-600">
+                          <label
+                            htmlFor="file-upload"
+                            className="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
+                          >
+                            <span>Upload a file</span>
+                          </label>
+                          <p className="pl-1">or drag and drop</p>
+                        </div>
+                        <p className="text-xs text-gray-500">PNG, JPG files only</p>
+                      </div>
                     </div>
-                    <aside style={thumbsContainer}>{thumbs}</aside>
+                    <aside className="thumbsContainer">{thumbs}</aside>
+                    {uploadError && (
+                      <div className="mt-4">
+                        <div className="error text-lg -mt-6">{uploadError}</div>
+                      </div>
+                    )}
                   </div>
                   <div className="mb-6 flex">
                     <label className="mr-3">
@@ -319,36 +338,7 @@ function Become({ data }) {
                           </div>
                         )}
                       </div>
-                      {showInformation && (
-                        <div className="text-xs">
-                          Information to the applicant Women Model Management Inc. belongs to an important group of companies worldwide, acting in the field of model management.
-                          <br />
-                          <br />
-                          We are always looking for new faces/new looks. If you believe you have the necessary skills and physical characteristics, please feel free to submit your
-                          application.
-                          <br />
-                          <br />
-                          We will do a first screening based on the information supplied by you and, should we deem it interesting to go further, we will propose you a meeting in
-                          our offices. Please consider that, in case you are under the age of 18, your application must be approved by your parents/legal guardian. We will not be
-                          in a position to consider your application, unless we receive your parental/legal guardian’s approval. This is why we ask you to provide us with an email
-                          address, telephone number and other data of your parent/legal guardian. In case of his/her refusal, or in the event the approval is not granted within 15
-                          days from our request, we will delete all the data supplied by you in the application. Please remember that your parent/legal guardian contact information
-                          will be the only ones we will utilize, should we intend to contact you to propose a meeting. Please also remember that we will require that your
-                          parent/legal guardian attend any meeting we might propose to you in the future.
-                          <br />
-                          <br />
-                          We will utilize the information, the photographs and the personal data provided by you for the sole scope of a preliminary evaluation of your potential as
-                          a model. It is important you give us true and complete information in order to allow us to do such an evaluation. In particular, please verify you are
-                          legally in a position to provide us with the photos you are annexing herewith and that no third party (the photographer or others) may object to this.
-                          <br />
-                          <br />
-                          Your personal data will be stored in the EU and will be treated electronically or physically for the purposes indicated above. The storage and the
-                          treatment of your data will last for the period that is reasonably necessary in order to do the evaluation described above, not to exceed 6 (six) months.
-                          Thereafter, your data will be deleted, should your application be unsuccessful. There might be exceptions, in cases in which, though we not be immediately
-                          interested, we might wish to meet you in the future. We will inform you and your parent/legal guardian, should this be the case.
-                          <br />
-                        </div>
-                      )}
+                      {showInformation && <div className="text-xs" dangerouslySetInnerHTML={{ __html: data.pages.become.information?.split('\n').join('<br/>') }}></div>}
                     </div>
                   </div>
                   <div className="mb-6 flex">
