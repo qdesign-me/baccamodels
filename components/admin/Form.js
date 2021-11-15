@@ -87,7 +87,7 @@ function MediaInput({ field, errors, data, setData }) {
         >
           Change
         </button>
-        <input type="file" className="sr-only" ref={inputFileRef} accept={field.accept} onChange={onFileSelect} />
+        <input type="file" className="sr-only" ref={inputFileRef} accept={field.accept} onChange={onFileSelect} name={field.newname} />
         <input type="hidden" name={field.field} value={data[field.field]} />
 
         {field.allow === 'image' && <p className="ml-auto text-xs text-gray-500">PNG, JPG up to 10MB</p>}
@@ -396,7 +396,7 @@ function UploadInput({ field, errors, data, setData }) {
             <ThumbBox key={file.id} handleDrag={handleDrag} handleDrop={handleDrop} data={file} field={field} />
           ))}
       </aside>
-      <pre>{JSON.stringify(data, null, 2)}</pre>
+
       {uploadError && (
         <div className="mt-4">
           <div className="error text-lg -mt-6">{uploadError}</div>
@@ -406,10 +406,13 @@ function UploadInput({ field, errors, data, setData }) {
     </div>
   );
 }
-function PasswordInput({ field, errors, data }) {
+function PassInput({ field, errors, data, setData }) {
   const [visible, setVisible] = useState(false);
+  const handleChange = (e) => {
+    setData({ ...data, [field.field]: e.target.value });
+  };
   return (
-    <div>
+    <div className={`${errors[field.field] && 'has-error'}`}>
       <label htmlFor={field.field} className="block text-sm font-medium text-gray-700">
         {field.title}
       </label>
@@ -417,7 +420,9 @@ function PasswordInput({ field, errors, data }) {
         <input
           type={visible ? 'text' : 'password'}
           name={field.field}
+          value={data[field.field]}
           className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+          onChange={handleChange}
         />
         <div className="pointer absolute top-2 right-2">
           {visible === true && (
@@ -442,6 +447,7 @@ function PasswordInput({ field, errors, data }) {
             </svg>
           )}
         </div>
+        {errors[field.field] && <div className="error">{errors[field.field]}</div>}
       </div>
     </div>
   );
@@ -468,12 +474,12 @@ export default function Form({ title, subtitle, groups, data, errors }) {
                         {field.type === 'social' && checkDepend(field, userData) && <SocialInput field={field} errors={errors} data={userData} setData={setUserData} />}
                         {field.type === 'text' && checkDepend(field, userData) && <TextInput field={field} errors={errors} data={userData} setData={setUserData} />}
                         {field.type === 'select' && checkDepend(field, userData) && <SelectInput field={field} errors={errors} data={userData} setData={setUserData} />}
-                        {field.type === 'password' && checkDepend(field, userData) && <PasswordInput field={field} errors={errors} data={userData} setData={setUserData} />}
                         {field.type === 'textarea' && checkDepend(field, userData) && <TextareaInput field={field} errors={errors} data={userData} setData={setUserData} />}
                         {field.type === 'checkboxes' && checkDepend(field, userData) && <CheckboxesInput field={field} errors={errors} data={userData} setData={setUserData} />}
                         {field.type === 'radiobuttons' && checkDepend(field, userData) && <RadiobuttonsInput field={field} errors={errors} data={userData} setData={setUserData} />}
                         {field.type === 'upload' && checkDepend(field, userData) && <UploadInput field={field} errors={errors} data={userData} setData={setUserData} />}
                         {field.type === 'media' && checkDepend(field, userData) && <MediaInput field={field} errors={errors} data={userData} setData={setUserData} />}
+                        {field.type === 'password' && checkDepend(field, userData) && <PassInput field={field} errors={errors} data={userData} setData={setUserData} />}
                       </React.Fragment>
                     ))}
                   </div>

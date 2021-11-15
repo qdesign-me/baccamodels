@@ -1,16 +1,16 @@
 import { connectToDatabase, buildQuery } from 'hooks/useMongodb';
-
+import { ObjectId } from 'mongodb';
 export default async function modelsAPI(req, res) {
   try {
     const { db } = await connectToDatabase();
     const requestType = req.query.slug;
 
     switch (requestType) {
-      case 'all': {
-        const data = await buildQuery(db, 'models', req.body, ['name', 'region', 'category']);
+      // case 'all': {
+      //   const data = await buildQuery(db, 'models', req.body, ['name', 'region', 'category']);
 
-        return res.status(200).json({ status: 'ok', data });
-      }
+      //   return res.status(200).json({ status: 'ok', data });
+      // }
       case 'profile': {
         const { country, grid, profile } = req.body;
         const slug = `/${country}/${grid}/${profile}`;
@@ -27,23 +27,26 @@ export default async function modelsAPI(req, res) {
       case 'byids': {
         const { ids, country } = req.body;
 
-        const all = [...data[country].models['women'], ...data[country].models['development'], ...data[country].models['talent']];
-        const models = all
-          .filter((model) => ids.includes(model.id))
-          .map((model) => {
-            return { slug: model.slug, name: model.name, img: model.img };
-          });
+        const models = await db
+          .collection('models')
+          .find({ status: 'Active', _id: { $in: ids.map((id) => ObjectId(id)) } }, { projection: { category: 0, region: 0, country: 0, private: 0, profile: 0 } })
+          .sort({ name: 1 })
+          .toArray();
+
         return res.status(200).json({ status: 'ok', data: { models } });
       }
       case 'byname': {
         const { search, country } = req.body;
 
-        const all = [...data[country].models['women'], ...data[country].models['development'], ...data[country].models['talent']];
-        const models = all
-          .filter((model) => model.name.toLowerCase().includes(search.toLowerCase()))
-          .map((model) => {
-            return { slug: model.slug, name: model.name, img: model.img };
-          });
+        const models = (
+          await db
+            .collection('models')
+
+            .find({ region: country, status: 'Active' }, { projection: { category: 0, region: 0, country: 0, private: 0, profile: 0 } })
+            .sort({ name: 1 })
+            .toArray()
+        ).filter((model) => model.name.toLowerCase().includes(search.toLowerCase()));
+
         return res.status(200).json({ status: 'ok', data: { models } });
       }
     }

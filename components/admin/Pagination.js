@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 
 function Pagination({ dataLength, pageLimit, dataLimit, onPageChange, current }) {
-  const [pages] = useState(Math.round(dataLength / dataLimit));
+  const [pages, setPages] = useState(Math.ceil(dataLength / dataLimit));
   const [currentPage, setCurrentPage] = useState(current || 1);
+  useEffect(() => {
+    setPages(Math.ceil(dataLength / dataLimit));
+  }, [dataLength, dataLimit]);
   useEffect(() => {
     setCurrentPage(+current);
   }, [current]);

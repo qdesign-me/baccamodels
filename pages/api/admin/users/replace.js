@@ -1,5 +1,6 @@
 import { connectToDatabase, buildQuery } from 'hooks/useMongodb';
 import { ObjectId } from 'mongodb';
+import { createPassword } from 'hooks/auth';
 import formidable from 'formidable';
 import sharp from 'sharp';
 import fs from 'fs';
@@ -14,6 +15,17 @@ export default async function modelsAPI(req, res) {
     const { db } = await connectToDatabase();
 
     await form.parse(req, async (err, fields, files) => {
+      if (fields.mode === 'validate') {
+        const search = { email: fields.email };
+        if (fields.id !== 'new') search['_id'] = { $ne: ObjectId(fields.id) };
+        const found = await db.collection('users').findOne(search);
+
+        if (found) {
+          return res.status(200).json({ data: { message: 'This email is already taken' } });
+        } else {
+          return res.status(200).json({ data: { message: 'ok' } });
+        }
+      }
       const id = fields.id;
       const mode = fields.mode;
       const name = fields.name;
@@ -25,8 +37,9 @@ export default async function modelsAPI(req, res) {
       const file = files.newimg;
       let img = fields.img;
       const clean = await db.collection('users').findOne({ _id: ObjectId(id) });
+
       if (file && file.originalFilename) {
-        if (clean.img) {
+        if (clean?.img) {
           const oldFile = `${process.cwd()}/public${clean.img}`;
           if (fs.existsSync(oldFile)) {
             fs.unlinkSync(oldFile);
@@ -43,12 +56,20 @@ export default async function modelsAPI(req, res) {
           });
       }
       if (mode === 'edit') {
-        await db.collection('users').updateOne({ _id: ObjectId(id) }, { $set: { name, phone, email, status, role, region, img } });
+        const newData = { name, phone, email, status, role, region, img };
+
+        if (fields.setNewPwd === 'Yes') {
+          const password = createPassword(fields.password);
+          newData.password = password;
+        }
+
+        await db.collection('users').updateOne({ _id: ObjectId(id) }, { $set: newData });
         return res.status(200).json({ status: 'ok', data: { message: 'Successfully Updated!' }, redirect: `/admin/users` });
       }
       if (mode === 'create') {
-        const item = await db.collection('users').insertOne({ name, phone, email, status, role, region, img });
-        const id = item.insertedId.toString();
+        const password = createPassword(fields.password);
+
+        await db.collection('users').insertOne({ name, phone, email, password, status, role, region, img });
         return res.status(200).json({ status: 'ok', data: { message: 'Successfully Created!' }, redirect: `/admin/users` });
       }
     });

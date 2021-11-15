@@ -1,12 +1,13 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Form from 'components/admin/Form';
 import FormWrap from 'components/admin/FormWrap';
+import { getSession } from 'next-auth/react';
+
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 
-import { getSession } from 'next-auth/react';
-
-function UserEdit({ data, mode, pageTitle, id }) {
+function UserEdit({ data, mode, pageTitle, id, session }) {
+  let canSetPassword = false;
   const router = useRouter();
   if (!data) data = {};
   useEffect(() => {
@@ -22,18 +23,40 @@ function UserEdit({ data, mode, pageTitle, id }) {
         img: data.img ?? '',
       },
     },
-    Password: {
-      data: {
-        password: '',
-      },
-    },
     'Region Management': {
       data: {
         role: data.role ?? 'Admin',
         region: data.region ?? 'all',
       },
     },
+    Password: {
+      data: {
+        setNewPwd: 'No',
+        password: '',
+      },
+    },
   };
+  const validators = { required: ['img', 'name', 'phone', 'email'], email: ['email'] };
+  if (mode === 'create') {
+    validators.password = ['password'];
+    validators.required.push('password');
+    validators.server = {
+      field: 'email',
+      url: '/api/admin/users/replace',
+    };
+    canSetPassword = true;
+  }
+  if (mode === 'edit') {
+    if ((session?.user && session.user.id == router.query.id) || router.query.id === 'profile') {
+      validators.password = ['password'];
+      validators.server = {
+        field: 'email',
+        url: '/api/admin/users/replace',
+      };
+      canSetPassword = true;
+    }
+  }
+
   const onSubmit = async (body) => {
     if (mode === 'edit') body.append('id', id);
     body.append('mode', mode);
@@ -65,7 +88,7 @@ function UserEdit({ data, mode, pageTitle, id }) {
           <div className="border-t border-gray-200" />
         </div>
       </div>
-      <FormWrap onSubmit={onSubmit} validators={{ required: ['img', 'name', 'phone', 'email'], email: ['email'] }}>
+      <FormWrap onSubmit={onSubmit} validators={validators}>
         <Form
           title="General Information"
           data={chunks['General Information']}
@@ -107,34 +130,6 @@ function UserEdit({ data, mode, pageTitle, id }) {
           ]}
         />
 
-        {false && (
-          <>
-            <div className="hidden sm:block" aria-hidden="true">
-              <div className="py-5">
-                <div className="border-t border-gray-200" />
-              </div>
-            </div>
-
-            <Form
-              title="Password"
-              data={chunks['Password']}
-              subtitle=""
-              groups={[
-                {
-                  fields: [
-                    {
-                      field: 'password',
-                      title: 'Password',
-                      type: 'password',
-                      show: false,
-                    },
-                  ],
-                },
-              ]}
-            />
-          </>
-        )}
-
         <div className="hidden sm:block" aria-hidden="true">
           <div className="py-5">
             <div className="border-t border-gray-200" />
@@ -171,6 +166,59 @@ function UserEdit({ data, mode, pageTitle, id }) {
             },
           ]}
         />
+
+        {canSetPassword && (
+          <div className="hidden sm:block" aria-hidden="true">
+            <div className="py-5">
+              <div className="border-t border-gray-200" />
+            </div>
+          </div>
+        )}
+
+        {canSetPassword && mode === 'create' && (
+          <Form
+            title="Password"
+            data={chunks['Password']}
+            groups={[
+              {
+                className: 'space-y-6',
+                fields: [
+                  {
+                    field: 'password',
+                    title: 'Password',
+                    type: 'password',
+                  },
+                ],
+              },
+            ]}
+          />
+        )}
+        {canSetPassword && mode === 'edit' && (
+          <Form
+            title="Password"
+            data={chunks['Password']}
+            groups={[
+              {
+                className: 'space-y-6',
+                fields: [
+                  {
+                    field: 'setNewPwd',
+                    title: 'Set new Password',
+                    type: 'checkboxes',
+                    values: ['Yes', 'No'],
+                    variants: [{ subtitle: '' }],
+                  },
+                  {
+                    showOnly: 'setNewPwd===Yes',
+                    field: 'password',
+                    title: 'Password',
+                    type: 'password',
+                  },
+                ],
+              },
+            ]}
+          />
+        )}
       </FormWrap>
     </>
   );
@@ -178,15 +226,15 @@ function UserEdit({ data, mode, pageTitle, id }) {
 UserEdit.layout = 'admin';
 export default UserEdit;
 export async function getServerSideProps(context) {
+  const session = await getSession(context);
   let id = context.query.id;
   if (id === 'new') {
     return {
-      props: { data: {}, mode: 'create', pageTitle: 'Create User', id: null },
+      props: { data: {}, mode: 'create', pageTitle: 'Create User', id: null, session },
     };
   }
   let pageTitle = 'Edit User';
   if (id === 'profile') {
-    const session = await getSession(context);
     id = session.user.id;
     pageTitle = 'Edit Profile';
   }
@@ -203,6 +251,6 @@ export async function getServerSideProps(context) {
   }).then((res) => res.json());
 
   return {
-    props: { data: response.data, mode: 'edit', pageTitle, id },
+    props: { data: response.data, mode: 'edit', pageTitle, id, session },
   };
 }

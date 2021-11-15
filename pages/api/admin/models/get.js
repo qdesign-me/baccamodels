@@ -1,5 +1,6 @@
 import { connectToDatabase, buildQuery } from 'hooks/useMongodb';
 import { ObjectId } from 'mongodb';
+
 export default async function getModel(req, res) {
   try {
     const { db } = await connectToDatabase();

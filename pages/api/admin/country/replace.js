@@ -99,6 +99,7 @@ export default async function modelsAPI(req, res) {
             vk: fields['info.social.vk'],
           },
           cover: fields['info.cover'],
+          company: fields['info.company'],
         },
       };
 

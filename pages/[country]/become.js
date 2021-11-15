@@ -117,7 +117,7 @@ function Become({ data }) {
         </div>
       )}
       <Meta>
-        <title>{data.pages.become.metatitle}</title>
+        <title>{`${data.pages.become.metatitle} | ${data.info.company}`}</title>
         <meta name="description" content={data.pages.become.metadescription} />
       </Meta>
       <Nav className="relative theme-img" data={data.info} />

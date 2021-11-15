@@ -12,6 +12,7 @@ function CountryEdit({ data }) {
         'info.social.facebook': data.info?.social?.facebook ?? '',
         'info.social.vk': data.info?.social?.vk ?? '',
         'info.cover': data.info?.cover ?? '',
+        'info.company': data.info?.company ?? '',
       },
     },
     Women: {
@@ -62,6 +63,7 @@ function CountryEdit({ data }) {
         'pages.become.metatitle': data.pages?.become?.metatitle ?? '',
         'pages.become.metadescription': data.pages?.become?.metadescription ?? '',
         'pages.become.text': data.pages?.become?.text ?? '',
+        'pages.become.information': data.pages?.become?.information ?? '',
         'pages.become.cover': data.pages?.become?.cover ?? '',
       },
     },
@@ -92,10 +94,12 @@ function CountryEdit({ data }) {
         <title>Edit Country | Bacca Model Management</title>
       </Head>
       <FormWrap
+        previewUrl={`/${router.query.country}`}
         onSubmit={onSubmit}
         validators={{
           required: [
             'info.cover',
+            'info.company',
             'info.social.instagram',
             'pages.home.metatitle',
             'pages.home.metadescription',
@@ -141,6 +145,7 @@ function CountryEdit({ data }) {
             {
               className: 'grid grid-cols-3 gap-6',
               fields: [
+                { field: 'info.company', title: 'Copany Name', type: 'text', span: '3' },
                 { field: 'info.social.instagram', title: 'Instagram', type: 'social' },
                 { field: 'info.social.facebook', title: 'Facebook', type: 'social' },
                 { field: 'info.social.vk', title: 'Vkontakte', type: 'social' },

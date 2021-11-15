@@ -15,8 +15,8 @@ function Sidebar() {
       ],
     },
     {
-      title: 'Kazachstan',
-      url: '/admin/kazachstan',
+      title: 'Kazakhstan',
+      url: '/admin/kazakhstan',
       children: [
         { title: 'Content', url: '' },
         { title: 'Models', url: '/models' },

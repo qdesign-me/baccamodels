@@ -7,7 +7,7 @@ function About({ data }) {
   return (
     <>
       <Meta>
-        <title>{data.pages.about.metatitle}</title>
+        <title>{`${data.pages.about.metatitle} | ${data.info.company}`}</title>
         <meta name="description" content={data.pages.about.metadescription} />
       </Meta>
       <Nav className="relative" data={data.info} />

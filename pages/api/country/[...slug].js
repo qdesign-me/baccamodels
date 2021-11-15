@@ -44,6 +44,7 @@ export default async function modelsAPI(req, res) {
         const all = await db
           .collection('models')
           .find({ region: countrySlug, category: requestType, status: 'Active' }, { projection: { profile: 0, private: 0 } })
+          .sort({ name: 1 })
           .limit(1000)
           .toArray();
         console.log(all);
@@ -65,6 +66,7 @@ export default async function modelsAPI(req, res) {
         const countrymodels = await db
           .collection('models')
           .find({ region: countrySlug, status: 'Active' }, { projection: { profile: 0 } })
+          .sort({ name: 1 })
           .limit(1000)
           .toArray();
 

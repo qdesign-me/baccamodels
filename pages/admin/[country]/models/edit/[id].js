@@ -104,6 +104,7 @@ function ModelEdit({ data, mode, pageTitle, id }) {
             'category',
           ],
           email: ['private.email'],
+          domain: ['profile.social.instagram', 'profile.social.facebook', 'profile.social.vk'],
         }}
       >
         <div className="hidden sm:block" aria-hidden="true">

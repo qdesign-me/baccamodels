@@ -32,11 +32,17 @@ export async function connectToDatabase() {
 }
 
 export async function buildQuery(db, collection, params, searchColumns) {
-  let filters = {};
+  let search = {};
   const limit = 10;
   const page = params.page ?? 1;
   const skip = (page - 1) * limit;
   let sort = { _id: 1 };
+  const filters = {};
+  if (params.filters) {
+    Object.keys(params.filters).map((f) => {
+      filters[f] = params.filters[f];
+    });
+  }
 
   if (params.sort) {
     const sortDir = params.asc === 'true' ? 1 : -1;
@@ -45,17 +51,20 @@ export async function buildQuery(db, collection, params, searchColumns) {
     };
   }
   if (params.search) {
-    filters = {
+    search = {
       $or: searchColumns.map((column) => {
         return { [column]: { $regex: params.search, $options: 'i' } };
       }),
     };
   }
-  const results = await db.collection(collection).find(filters, { projection: {} }).sort(sort).skip(skip).limit(limit).toArray();
-  const count = await db.collection(collection).countDocuments();
+
+  const find = { $and: [filters, search] };
+
+  const results = await db.collection(collection).find(find, { projection: {} }).sort(sort).skip(skip).limit(limit).toArray();
+  const count = (await db.collection(collection).find(find).toArray()).length;
   const start = skip + 1;
   const end = start + results.length > count ? count : start + results.length - 1;
   const showing = `showing ${start}-${end} of ${count}`;
-  console.log({ params, sort, count, page, showing });
+
   return { results, count, page, showing };
 }

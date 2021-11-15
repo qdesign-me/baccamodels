@@ -9,7 +9,7 @@ function Contacts({ data }) {
   return (
     <>
       <Meta>
-        <title>{data.pages.contacts.metatitle}</title>
+        <title>{`${data.pages.contacts.metatitle} | ${data.info.company}`}</title>
         <meta name="description" content={data.pages.contacts.metadescription} />
       </Meta>
       <Nav className="relative theme-map" data={data.info} />

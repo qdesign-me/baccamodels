@@ -7,16 +7,18 @@ import { SessionProvider } from 'next-auth/react';
 
 const AdminLayout = (props) => {
   const [notification, setNotification] = useState(null);
-  const handler = (data) => {
+
+  const notify = (data) => {
     setNotification(data.detail.text);
     setTimeout(() => {
       setNotification(null);
     }, 3000);
   };
+
   useEffect(() => {
-    document.addEventListener('notify', handler);
+    document.addEventListener('notify', notify);
     return () => {
-      document.removeEventListener('notify', handler);
+      document.removeEventListener('notify', notify);
     };
   }, []);
 

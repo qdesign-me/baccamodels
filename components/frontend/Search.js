@@ -37,7 +37,7 @@ function Search() {
       },
       body: JSON.stringify({
         search: term,
-        country: 'russia',
+        country: router.query.country || 'russia',
       }),
     }).then((res) => res.json());
     setModels(response.data.models);
@@ -58,7 +58,7 @@ function Search() {
               <div className="search-grid">
                 {models.length === 0 && search.length > 2 && <div>Nothing found.</div>}
                 {models.map((model) => (
-                  <SearchItem key={model.id} model={model} />
+                  <SearchItem key={model._id} model={model} />
                 ))}
               </div>
             </div>

@@ -10,9 +10,9 @@ function classNames(...classes) {
 
 function Nav() {
   const { data: session } = useSession();
+
   return (
     <div className="flex items-center justify-end py-4 ">
-      {JSON.stringify(session)}
       <div>
         <Menu as="div" className="ml-3 relative">
           <div>

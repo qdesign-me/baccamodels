@@ -1,23 +1,23 @@
 import Nav from 'components/frontend/Nav';
 import React, { useState, useEffect } from 'react';
-import useLocalStorage from 'hooks/useLocalStorage';
+import { useRouter } from 'next/router';
 import ModelThumb from 'components/frontend/ModelThumb';
 
 function Favorites({ data }) {
+  const router = useRouter();
   const [models, setModels] = useState(null);
 
-  const [favorites] = useLocalStorage('favorites', []);
-
   useEffect(() => {
+    const ids = JSON.parse(window.localStorage.getItem('favorites')) ?? [];
     const fetchModels = async () => {
       const response = await fetch(`${process.env.HOSTNAME}/api/model/byids`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ ids: favorites, country: 'russia' }),
+        body: JSON.stringify({ ids, country: router.query.country }),
       }).then((res) => res.json());
-      setModels(response.data.models);
+      if (response?.data?.models) setModels(response.data.models);
     };
     fetchModels();
   }, []);

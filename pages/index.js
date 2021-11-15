@@ -1,13 +1,13 @@
 import Header from 'components/frontend/Header';
-import Head from 'next/head';
+import Meta from 'components/frontend/Meta';
 import RegionLinks from 'components/frontend/RegionLinks';
 export default function Home({ data }) {
   return (
     <>
-      <Head>
+      <Meta>
         <title>{data.metatitle}</title>
         <meta name="description" content={data.metadesciption} />
-      </Head>
+      </Meta>
       <Header video={data.info.cover}>
         <div className="container">
           <main className="home-links">

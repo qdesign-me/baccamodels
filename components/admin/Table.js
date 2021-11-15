@@ -221,7 +221,6 @@ export default function Table({ headers, data }) {
           </a>
         </Link>
       </div>
-
       <table className="divide-y divide-gray-200 w-full">
         <thead className="bg-gray-50">
           <tr>

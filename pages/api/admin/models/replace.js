@@ -12,6 +12,13 @@ export const config = {
 export default async function modelsAPI(req, res, prefix) {
   const prepareUrl = (url) => url?.toLowerCase().replace(/ /g, '-');
 
+  const cleanUp = (fileName) => {
+    const file = `${process.cwd()}/public${fileName}`;
+    if (fs.existsSync(file)) {
+      fs.unlinkSync(file);
+    }
+  };
+
   try {
     const files = [];
     const fields = [];
@@ -28,17 +35,24 @@ export default async function modelsAPI(req, res, prefix) {
       })
       .on('end', async () => {
         const unid = Date.now().toString();
-        const id = fields.id;
-
-        //const clean = await db.collection('models').findOne({ _id: ObjectId(id) });
-        const slug = `/${fields['region']}/${fields['category']}/${prepareUrl(fields['name'])}`;
-        const dir = `/images/${fields['region']}/models/${id}`;
-        if (!fs.existsSync(`${process.cwd()}/public${dir}`)) {
-          fs.mkdirSync(`${process.cwd()}/public${dir}`);
+        let id = fields.id;
+        let clean = null;
+        if (fields.mode === 'create') {
+          const item = await db.collection('models').insertOne({});
+          id = item.insertedId.toString();
         }
-        const videodir = `/video/${fields['region']}/models/${id}`;
-        if (!fs.existsSync(`${process.cwd()}/public${videodir}`)) {
-          fs.mkdirSync(`${process.cwd()}/public${videodir}`);
+        if (fields.mode === 'edit') {
+          clean = await db.collection('models').findOne({ _id: ObjectId(id) });
+        }
+
+        const slug = `/${fields['region']}/${fields['category']}/${prepareUrl(fields['name'])}`;
+        const imagesDir = `/images/${fields['region']}/models/${id}`;
+        if (!fs.existsSync(`${process.cwd()}/public${imagesDir}`)) {
+          fs.mkdirSync(`${process.cwd()}/public${imagesDir}`);
+        }
+        const videoDir = `/video/${fields['region']}/models/${id}`;
+        if (!fs.existsSync(`${process.cwd()}/public${videoDir}`)) {
+          fs.mkdirSync(`${process.cwd()}/public${videoDir}`);
         }
 
         if (typeof fields['book'] === 'string') fields['book'] = JSON.parse(fields['book']);
@@ -54,7 +68,7 @@ export default async function modelsAPI(req, res, prefix) {
               });
 
               if (found?.filepath) {
-                const preview = `${dir}/${unid}_book${newFile.order + 1}.jpg`;
+                const preview = `${imagesDir}/${unid}_book${newFile.order + 1}.jpg`;
 
                 const target = `${process.cwd()}/public${preview}`;
                 await sharp(found.filepath)
@@ -95,7 +109,7 @@ export default async function modelsAPI(req, res, prefix) {
               });
 
               if (found?.filepath) {
-                const preview = `${dir}/${unid}_polaroid${newFile.order + 1}.jpg`;
+                const preview = `${imagesDir}/${unid}_polaroid${newFile.order + 1}.jpg`;
 
                 const target = `${process.cwd()}/public${preview}`;
                 await sharp(found.filepath)
@@ -136,7 +150,7 @@ export default async function modelsAPI(req, res, prefix) {
               });
 
               if (found?.filepath) {
-                const preview = `${videodir}/${unid}_video${newFile.order + 1}.mp4`;
+                const preview = `${videoDir}/${unid}_video${newFile.order + 1}.mp4`;
 
                 const target = `${process.cwd()}/public${preview}`;
                 await fs.rename(found.filepath, target, function (error) {
@@ -160,11 +174,12 @@ export default async function modelsAPI(req, res, prefix) {
 
         fields['allvideos'] = [...media];
 
-        if (files.newimg && files.newimg.originalFilename) {
-          const dir = `/images/${fields['region']}/models/${id}`;
-          fields['img'] = `${dir}/${unid}_thumb.jpg`;
+        if (files.newimg && files.newimg[0]?.originalFilename) {
+          console.log(`update img ${imagesDir}/${unid}_thumb.jpg`);
+          fields['img'] = `${imagesDir}/${unid}_thumb.jpg`;
+
           const target = `${process.cwd()}/public${fields['img']}`;
-          await sharp(files.newimg.filepath)
+          await sharp(files.newimg[0].filepath)
             .rotate()
             .resize({ height: 427, width: 320, fit: 'contain', background: { r: 255, g: 255, b: 255, alpha: 1 } })
             .jpeg({ mozjpeg: true })
@@ -172,12 +187,11 @@ export default async function modelsAPI(req, res, prefix) {
               if (error) console.log('error uploading', error);
             });
         }
-        if (files.newcover && files.newcover.originalFilename) {
-          if (files.newcover.mimetype.includes('image')) {
-            const dir = `/images/${fields['region']}/models/${id}`;
-            fields['profile.cover'] = `${dir}/${unid}_cover.jpg`;
+        if (files.newcover && files.newcover[0]?.originalFilename) {
+          if (files.newcover[0].mimetype.includes('image')) {
+            fields['profile.cover'] = `${imagesDir}/${unid}_cover.jpg`;
             const target = `${process.cwd()}/public${fields['profile.cover']}`;
-            await sharp(files.newcover.filepath)
+            await sharp(files.newcover[0].filepath)
               .rotate()
               .resize({ height: 2600, width: 1950, fit: 'contain', background: { r: 255, g: 255, b: 255, alpha: 1 } })
               .jpeg({ mozjpeg: true })
@@ -185,11 +199,10 @@ export default async function modelsAPI(req, res, prefix) {
                 if (error) console.log('error uploading', error);
               });
           }
-          if (files.newcover.mimetype.includes('video')) {
-            const dir = `/video/${fields['region']}/models/${id}`;
-            fields['profile.cover'] = `${dir}/${unid}_cover.mp4`;
+          if (files.newcover[0].mimetype.includes('video')) {
+            fields['profile.cover'] = `${videoDir}/${unid}_cover.mp4`;
             const target = `${process.cwd()}/public${fields['profile.cover']}`;
-            await fs.rename(files.newcover.filepath, target, function (error) {
+            await fs.rename(files.newcover[0].filepath, target, function (error) {
               if (error) console.log('error uploading', error);
             });
           }
@@ -231,9 +244,51 @@ export default async function modelsAPI(req, res, prefix) {
             cover: fields['profile.cover'],
           },
         };
-        console.log(newData);
+        if (clean) {
+          if (clean.img && newData.img !== clean.img) {
+            cleanUp(clean.img);
+          }
+          if (clean.profile?.cover && newData.profile.cover !== clean.profile.cover) {
+            cleanUp(clean.profile.cover);
+          }
+          if (clean.profile?.book) {
+            clean.profile.book.map((oldName) => {
+              const found = newData.profile.book?.find((newName) => {
+                return oldName.preview === newName.preview;
+              });
+              if (!found) {
+                cleanUp(oldName);
+              }
+            });
+          }
+          if (clean.profile?.polaroids) {
+            clean.profile.polaroids.map((oldName) => {
+              const found = newData.profile.polaroids?.find((newName) => {
+                return oldName.preview === newName.preview;
+              });
+              if (!found) {
+                cleanUp(oldName);
+              }
+            });
+          }
+          if (clean.profile?.videos) {
+            clean.profile.videos.map((oldName) => {
+              const found = newData.profile.videos?.find((newName) => {
+                return oldName.preview === newName.preview;
+              });
+              if (!found) {
+                cleanUp(oldName);
+              }
+            });
+          }
+        }
+
         await db.collection('models').replaceOne({ _id: ObjectId(id) }, newData);
-        res.status(200).json({ status: 'ok', data: { message: 'Successfully Updated!' }, redirect: `/admin//${fields['region']}/models` });
+        res.status(200).json({
+          status: 'ok',
+          data: { message: 'Successfully Updated!' },
+          redirect: `/admin//${fields['region']}/models`,
+        });
       });
     form.parse(req);
   } catch (error) {

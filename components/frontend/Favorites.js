@@ -1,15 +1,41 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import useLocalStorage from 'hooks/useLocalStorage';
+
 function Favorites() {
   const router = useRouter();
   const country = router.query.country;
-  const [favorites] = useLocalStorage('favorites', []);
+  const [count, setCount] = useState(0);
+
+  const fetchModels = async (id) => {
+    const ids = JSON.parse(window.localStorage.getItem('favorites')) ?? [];
+    const response = await fetch(`${process.env.HOSTNAME}/api/model/byids`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ ids }),
+    }).then((res) => res.json());
+    setCount(response?.data?.models?.length);
+  };
+  useEffect(() => {
+    fetchModels(null);
+  }, []);
+
+  const notify = () => {
+    setTimeout(() => fetchModels(), 500);
+  };
+
+  useEffect(() => {
+    document.addEventListener('updateFavorites', notify);
+    return () => {
+      document.removeEventListener('updateFavorites', notify);
+    };
+  }, []);
   return (
     <Link href={`/${country}/favorites`}>
       <a className="icon-favorites">
-        {favorites.length > 0 && <span>{favorites.length}</span>}
+        {count > 0 && <span>{count}</span>}
         <svg xmlns="http://www.w3.org/2000/svg" className="icon-button" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path
             strokeLinecap="round"

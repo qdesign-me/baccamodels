@@ -231,12 +231,17 @@ Models.layout = 'admin';
 export default Models;
 
 export async function getServerSideProps(context) {
+  const query = { ...context.query };
+  if (context.query.country) {
+    query.filters = {};
+    query.filters.region = context.query.country;
+  }
   const response = await fetch(`${process.env.HOSTNAME}/api/admin/models/get`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(context.query),
+    body: JSON.stringify(query),
   }).then((res) => res.json());
 
   return {

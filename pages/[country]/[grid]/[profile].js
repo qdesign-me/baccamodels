@@ -1,13 +1,21 @@
 import Nav from 'components/frontend/Nav';
 import Header from 'components/frontend/Header';
+import Meta from 'components/frontend/Meta';
 import React, { useState, useEffect, useRef } from 'react';
 import Carousel from 'react-multi-carousel';
 import { convertMetric, scrollTo } from 'hooks/utils';
-import useLocalStorage from 'hooks/useLocalStorage';
 import 'react-multi-carousel/lib/styles.css';
 
-function Profile({ data }) {
-  const [favorites, setFavorites] = useLocalStorage('favorites', []);
+function Profile({ data, metaDescription }) {
+  const [favorites, setFavorites] = useState([]);
+  useEffect(() => {
+    const data = JSON.parse(window.localStorage.getItem('favorites')) ?? [];
+    setFavorites(data);
+  }, []);
+  useEffect(() => {
+    window.localStorage.setItem('favorites', JSON.stringify(favorites));
+  }, [favorites]);
+
   const [video, setVideo] = useState('');
   const [visible, setVisible] = useState(false);
   const videoRef = useRef(null);
@@ -30,8 +38,9 @@ function Profile({ data }) {
   };
 
   const toggleFavorites = (id) => {
-    if (favorites.includes(id)) return setFavorites(favorites.filter((favorite) => favorite != id));
-    setFavorites([...favorites, id]);
+    favorites.includes(id) ? setFavorites(favorites.filter((favorite) => favorite != id)) : setFavorites([...favorites, id]);
+    const customEvent = new CustomEvent('updateFavorites');
+    document.dispatchEvent(customEvent);
   };
 
   const handleScroll = () => {
@@ -68,7 +77,7 @@ function Profile({ data }) {
   const responsiveVideo = {
     tablet: {
       breakpoint: { max: 10000, min: 640 },
-      items: 2,
+      items: 3,
     },
     mobile: {
       breakpoint: { max: 640, min: 0 },
@@ -77,6 +86,10 @@ function Profile({ data }) {
   };
   return (
     <>
+      <Meta>
+        <title>{`${data.model.name} | ${data.info.company}`}</title>
+        <meta name="description" content={metaDescription} />
+      </Meta>
       <Nav className="relative theme-img" data={data.info} showSearch={false} showBack={true} />
       <Header img={data.model.profile?.img} video={data.model.profile?.video} className="static header-profile">
         <>
@@ -118,8 +131,8 @@ function Profile({ data }) {
       </Header>
       <div className="content">
         <div className={`add2favorites ${visible ? 'on' : ''}`}>
-          <div className="active" onClick={(e) => toggleFavorites(data.model.id)}>
-            {favorites.includes(data.model.id) ? (
+          <div className="active" onClick={(e) => toggleFavorites(data.model._id)}>
+            {favorites.includes(data.model._id) ? (
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 pulse" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
               </svg>
@@ -229,7 +242,6 @@ function Profile({ data }) {
               </div>
             </div>
           </div>
-          <pre>{JSON.stringify(data, null, 2)}</pre>
         </main>
       </div>
     </>
@@ -246,8 +258,23 @@ export async function getServerSideProps(context) {
     },
     body: JSON.stringify(context.params),
   }).then((res) => res.json());
-  console.log(response);
+
+  let features = '';
+  if (response.data.model.profile?.book?.length > 0) {
+    features += 'Book portfolio';
+  }
+  if (response.data.model.profile?.polaroids?.length > 0) {
+    if (features.length) features += ', polaroids';
+    else features = 'Polaroids';
+  }
+  if (response.data.model.profile?.videos?.length > 0) {
+    if (features.length) features += ' and videos';
+    else features = 'Videos';
+  }
+  if (features.length) features += '.';
+
+  const metaDescription = `${response.data.model.name}. ${features} ${response.data.info.company}`;
   return {
-    props: { data: response.data },
+    props: { data: response.data, metaDescription },
   };
 }

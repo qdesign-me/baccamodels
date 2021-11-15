@@ -4,6 +4,7 @@ import fs from 'fs';
 export default async function deleteUser(req, res) {
   try {
     const { db } = await connectToDatabase();
+
     const id = ObjectId(req.body.id);
     const clean = await db.collection('users').findOne({ _id: id });
     const oldFile = `${process.cwd()}/public${clean.img}`;

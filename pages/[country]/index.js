@@ -8,7 +8,8 @@ function Index({ data }) {
   return (
     <>
       <Meta>
-        <title>{data.pages.home.metatitle}</title>
+        <title>{`${data.pages.home.metatitle} | ${data.info.company}`}</title>
+
         <meta name="description" content={data.pages.home.metadescription} />
       </Meta>
       <Nav data={data.info} />

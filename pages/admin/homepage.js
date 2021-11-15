@@ -3,6 +3,7 @@ import Form from 'components/admin/Form';
 import FormWrap from 'components/admin/FormWrap';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+
 function Homepage({ data }) {
   const router = useRouter();
 
@@ -36,7 +37,7 @@ function Homepage({ data }) {
       <Head>
         <title>Edit Homepage | Bacca Model Management</title>
       </Head>
-      <FormWrap onSubmit={onSubmit} validators={{ required: ['info.cover', 'metatitle', 'metadescription'] }}>
+      <FormWrap onSubmit={onSubmit} validators={{ required: ['info.cover', 'metatitle', 'metadescription'] }} previewUrl="/">
         <div className="hidden sm:block" aria-hidden="true">
           <div className="py-5">
             <div className="border-t border-gray-200" />
@@ -68,6 +69,18 @@ Homepage.layout = 'admin';
 export default Homepage;
 
 export async function getServerSideProps(context) {
+  /*
+  const session = await getSession(context);
+  console.log(session);
+  if (!session) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: '/auth/signin',
+      },
+    };
+  }
+  */
   const response = await fetch(`${process.env.HOSTNAME}/api/admin/country/get`, {
     method: 'POST',
     headers: {

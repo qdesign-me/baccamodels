@@ -57,7 +57,7 @@ function Grid({ data }) {
   return (
     <>
       <Meta>
-        <title>{data.page.metatitle}</title>
+        <title>{`${data.page.metatitle} | ${data.info.company}`}</title>
         <meta name="description" content={data.page.metadescription} />
       </Meta>
       <Nav className="relative" data={data.info} />
