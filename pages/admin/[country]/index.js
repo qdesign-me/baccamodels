@@ -328,7 +328,7 @@ CountryEdit.layout = 'admin';
 export default CountryEdit;
 
 export async function getServerSideProps(context) {
-  const response = await fetch(`${process.env.HOSTNAME}/api/admin/country/get`, {
+  const response = await fetch(`${process.env.HOST}/api/admin/country/get`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

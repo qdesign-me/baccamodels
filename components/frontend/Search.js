@@ -31,7 +31,7 @@ function Search() {
     }
     const fetchData = async () => {
       console.log('call', debouncedSearch);
-      const response = await fetch(`${process.env.HOSTNAME}/api/model/byname`, {
+      const response = await fetch(`${process.env.HOST}/api/model/byname`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

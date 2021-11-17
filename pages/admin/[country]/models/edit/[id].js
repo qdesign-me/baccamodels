@@ -333,7 +333,7 @@ export async function getServerSideProps(context) {
       props: { data: {}, mode: 'create', pageTitle: 'Create User', id: null },
     };
   }
-  const response = await fetch(`${process.env.HOSTNAME}/api/admin/models/get`, {
+  const response = await fetch(`${process.env.HOST}/api/admin/models/get`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

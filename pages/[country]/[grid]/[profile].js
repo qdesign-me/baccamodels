@@ -254,7 +254,7 @@ export default Profile;
 
 export async function getServerSideProps(context) {
   try {
-    const response = await fetch(`${process.env.HOSTNAME}/api/model/profile`, {
+    const response = await fetch(`${process.env.HOST}/api/model/profile`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -282,7 +282,7 @@ export async function getServerSideProps(context) {
       props: { data: response.data, metaDescription },
     };
   } catch (e) {
-    // const response = await fetch(`${process.env.HOSTNAME}/api/country/${context.params.country}/become`).then((res) => res.json());
+    // const response = await fetch(`${process.env.HOST}/api/country/${context.params.country}/become`).then((res) => res.json());
     // context.res.statusCode = 404;
     // return {
     //   props: { data: {}, error: response.data },

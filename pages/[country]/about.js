@@ -40,7 +40,7 @@ export async function getServerSideProps(context) {
   try {
     const { country } = context.params;
 
-    const response = await fetch(`${process.env.HOSTNAME}/api/country/${country}/about`).then((res) => res.json());
+    const response = await fetch(`${process.env.HOST}/api/country/${country}/about`).then((res) => res.json());
     return {
       props: { data: response.data },
     };

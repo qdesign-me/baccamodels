@@ -10,7 +10,7 @@ function Favorites({ data }) {
   useEffect(() => {
     const ids = JSON.parse(window.localStorage.getItem('favorites')) ?? [];
     const fetchModels = async () => {
-      const response = await fetch(`${process.env.HOSTNAME}/api/model/byids`, {
+      const response = await fetch(`${process.env.HOST}/api/model/byids`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -55,7 +55,7 @@ export async function getServerSideProps(context) {
   try {
     const { country } = context.params;
 
-    const response = await fetch(`${process.env.HOSTNAME}/api/country/${country}/home`).then((res) => res.json());
+    const response = await fetch(`${process.env.HOST}/api/country/${country}/home`).then((res) => res.json());
     return {
       props: { data: response.data },
     };

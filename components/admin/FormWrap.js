@@ -98,7 +98,7 @@ function FormWrap({ children, validators, onSubmit, previewUrl }) {
       if (validators?.server) {
         const value = data.get(validators.server.field);
         if (value) {
-          const found = await fetch(`${process.env.HOSTNAME}${validators.server.url}`, {
+          const found = await fetch(`${process.env.HOST}${validators.server.url}`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

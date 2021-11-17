@@ -9,7 +9,7 @@ function Favorites() {
 
   const fetchModels = async (id) => {
     const ids = JSON.parse(window.localStorage.getItem('favorites')) ?? [];
-    const response = await fetch(`${process.env.HOSTNAME}/api/model/byids`, {
+    const response = await fetch(`${process.env.HOST}/api/model/byids`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

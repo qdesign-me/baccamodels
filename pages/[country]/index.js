@@ -42,7 +42,7 @@ export async function getServerSideProps(context) {
   try {
     const country = context.params.country;
     if (!['russia', 'kids', 'kazakhstan'].includes(country)) throw new Error('Wrong country slug');
-    const response = await fetch(`${process.env.HOSTNAME}/api/country/${country}/info`).then((res) => res.json());
+    const response = await fetch(`${process.env.HOST}/api/country/${country}/info`).then((res) => res.json());
 
     return {
       props: { data: response.data },

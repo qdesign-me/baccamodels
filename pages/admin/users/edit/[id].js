@@ -238,7 +238,7 @@ export async function getServerSideProps(context) {
     pageTitle = 'Edit Profile';
   }
 
-  const response = await fetch(`${process.env.HOSTNAME}/api/admin/users/get`, {
+  const response = await fetch(`${process.env.HOST}/api/admin/users/get`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

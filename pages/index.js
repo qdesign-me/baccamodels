@@ -23,7 +23,7 @@ export default function Home({ data }) {
 Home.layout = 'empty';
 
 export async function getServerSideProps(context) {
-  const response = await fetch(`${process.env.HOSTNAME}/api/country/all/home`).then((res) => res.json());
+  const response = await fetch(`${process.env.HOST}/api/country/all/home`).then((res) => res.json());
 
   return {
     props: { data: response.data },

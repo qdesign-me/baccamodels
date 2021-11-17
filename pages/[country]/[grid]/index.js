@@ -96,7 +96,7 @@ export async function getServerSideProps(context) {
 
     const h1 = titles[grid];
 
-    const response = await fetch(`${process.env.HOSTNAME}/api/country/${country}/${grid}`).then((res) => res.json());
+    const response = await fetch(`${process.env.HOST}/api/country/${country}/${grid}`).then((res) => res.json());
     return {
       props: { data: { ...response.data, h1 } },
     };

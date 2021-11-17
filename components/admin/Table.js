@@ -71,7 +71,7 @@ export default function Table({ headers, data }) {
   const doDelete = async ({ id, url }) => {
     if (url.includes('/models/delete')) url = '/api/admin/models/delete';
 
-    await fetch(`${process.env.HOSTNAME}${url}`, {
+    await fetch(`${process.env.HOST}${url}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
