@@ -277,6 +277,7 @@ export async function getServerSideProps(context) {
     if (features.length) features += '.';
 
     const metaDescription = `${response.data.model.name}. ${features} ${response.data.info.company}`;
+
     return {
       props: { data: response.data, metaDescription },
     };
