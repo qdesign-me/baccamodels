@@ -35,7 +35,7 @@ function Favorites({ data }) {
                 {models && models.length === 0 && <div className="max-w-[600px]">Click the heart icon on the bottom left of a model profile to create your custom collection.</div>}
                 {models && models.length > 0 && (
                   <div className="box">
-                    <div className="grid-thumbs grid-cols-4">
+                    <div className="grid-thumbs ">
                       {models.map((model) => (
                         <ModelThumb key={model.id} model={model} />
                       ))}

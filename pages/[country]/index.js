@@ -4,7 +4,7 @@ import Nav from 'components/frontend/Nav';
 import Follow from 'components/frontend/Follow';
 import Latest from 'components/frontend/Latest';
 import Meta from 'components/frontend/Meta';
-function Index({ data }) {
+function Country({ data }) {
   return (
     <>
       <Meta>
@@ -34,9 +34,7 @@ function Index({ data }) {
     </>
   );
 }
-Index.layout = 'default';
-
-export default Index;
+Country.layout = 'default';
 
 export async function getServerSideProps(context) {
   try {
@@ -53,3 +51,4 @@ export async function getServerSideProps(context) {
     };
   }
 }
+export default Country;
