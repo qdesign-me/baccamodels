@@ -37,12 +37,18 @@ function About({ data }) {
 }
 About.layout = 'default';
 export async function getServerSideProps(context) {
-  const { country } = context.params;
+  try {
+    const { country } = context.params;
 
-  const response = await fetch(`${process.env.HOSTNAME}/api/country/${country}/about`).then((res) => res.json());
-  return {
-    props: { data: response.data },
-  };
+    const response = await fetch(`${process.env.HOSTNAME}/api/country/${country}/about`).then((res) => res.json());
+    return {
+      props: { data: response.data },
+    };
+  } catch (e) {
+    return {
+      notFound: true,
+    };
+  }
 }
 
 export default About;

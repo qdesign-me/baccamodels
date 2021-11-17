@@ -37,17 +37,20 @@ function Become({ data }) {
       try {
         setUploadErrror(null);
         console.log(acceptedFiles);
-        acceptedFiles = acceptedFiles.slice(0, 3);
+        const canAccepth = 3 - files.length;
+        acceptedFiles = acceptedFiles.slice(0, canAccepth);
         acceptedFiles.map((file) => {
           if (+file.size > 5000000) {
             throw new Error("File can't be larger than 5mb");
           }
         });
         setFiles(
-          acceptedFiles.map((file) =>
-            Object.assign(file, {
-              preview: URL.createObjectURL(file),
-            })
+          files.concat(
+            acceptedFiles.map((file) =>
+              Object.assign(file, {
+                preview: URL.createObjectURL(file),
+              })
+            )
           )
         );
       } catch (error) {
@@ -100,7 +103,7 @@ function Become({ data }) {
     reset();
     setShowNotification('Your application was sent');
     setTimeout(() => {
-      setShowNotificationx(null);
+      setShowNotification(null);
     }, 3000);
   };
 
@@ -144,7 +147,7 @@ function Become({ data }) {
             <div className="wrap py-20 text-lg text">
               <div className="max-w-[600px]">
                 <form action="#" className="text-gray-500" onSubmit={handleSubmit(onSubmit)} ref={formRef} method="post" encType="multipart/form-data" noValidate>
-                  <input type="hidden" name="country" value={router.query.country} />
+                  <input type="hidden" name="page" value={router.query.country} />
                   <div className="mb-6">
                     <div className="flex space-x-10">
                       <label>
@@ -384,11 +387,17 @@ function Become({ data }) {
 }
 Become.layout = 'default';
 export async function getServerSideProps(context) {
-  const { country } = context.params;
+  try {
+    const { country } = context.params;
 
-  const response = await fetch(`${process.env.HOSTNAME}/api/country/${country}/become`).then((res) => res.json());
-  return {
-    props: { data: response.data },
-  };
+    const response = await fetch(`${process.env.HOSTNAME}/api/country/${country}/become`).then((res) => res.json());
+    return {
+      props: { data: response.data },
+    };
+  } catch (e) {
+    return {
+      notFound: true,
+    };
+  }
 }
 export default Become;

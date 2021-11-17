@@ -8,7 +8,7 @@ export const config = {
 export default async function api(req, res) {
   const humanReadable = (key) => {
     const arr = {
-      country: 'Country',
+      page: 'Page',
       gender: 'Gender',
       firstName: 'First Name',
       lastName: 'Last Name',
@@ -19,7 +19,7 @@ export default async function api(req, res) {
       agency: 'Agency',
       height: 'Height',
       waist: 'Waist',
-      bustAndChest: 'Bust And Chest',
+      bustAndChest: 'Bust and Chest',
       hips: 'Hips',
       shoeSize: 'Shoe Size',
       hairColor: 'Hair Color',

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Table from 'components/admin/Table';
 import Social from 'components/frontend/Social';
-import Head from 'next/head';
+import Meta from 'components/frontend/Meta';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Flag from 'components/admin/Flag';
@@ -21,9 +21,9 @@ function Models({ data }) {
   };
   return (
     <>
-      <Head>
+      <Meta>
         <title>Models | Bacca Model Management</title>
-      </Head>
+      </Meta>
       <Table
         headers={[
           {

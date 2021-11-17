@@ -53,7 +53,7 @@ function FilterByName({ models }) {
   );
 }
 
-function Grid({ data }) {
+function Grid({ data, error }) {
   return (
     <>
       <Meta>
@@ -86,17 +86,23 @@ export default Grid;
 
 export async function getServerSideProps(context) {
   const { country, grid } = context.params;
+  try {
+    if (!['talent', 'development', 'women'].includes(grid)) throw new Error('Wrong page slug');
+    const titles = {
+      talent: 'Talent',
+      development: 'Development',
+      women: 'Women',
+    };
 
-  const titles = {
-    talent: 'Talent',
-    development: 'Development',
-    women: 'Women',
-  };
+    const h1 = titles[grid];
 
-  const h1 = titles[grid];
-
-  const response = await fetch(`${process.env.HOSTNAME}/api/country/${country}/${grid}`).then((res) => res.json());
-  return {
-    props: { data: { ...response.data, h1 } },
-  };
+    const response = await fetch(`${process.env.HOSTNAME}/api/country/${country}/${grid}`).then((res) => res.json());
+    return {
+      props: { data: { ...response.data, h1 } },
+    };
+  } catch (e) {
+    return {
+      notFound: true,
+    };
+  }
 }

@@ -39,10 +39,17 @@ Index.layout = 'default';
 export default Index;
 
 export async function getServerSideProps(context) {
-  const country = context.params.country;
-  const response = await fetch(`${process.env.HOSTNAME}/api/country/${country}/info`).then((res) => res.json());
+  try {
+    const country = context.params.country;
+    if (!['russia', 'kids', 'kazakhstan'].includes(country)) throw new Error('Wrong country slug');
+    const response = await fetch(`${process.env.HOSTNAME}/api/country/${country}/info`).then((res) => res.json());
 
-  return {
-    props: { data: response.data },
-  };
+    return {
+      props: { data: response.data },
+    };
+  } catch (e) {
+    return {
+      notFound: true,
+    };
+  }
 }

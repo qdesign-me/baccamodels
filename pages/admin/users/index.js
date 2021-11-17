@@ -1,12 +1,12 @@
 import React from 'react';
 import Table from 'components/admin/Table';
-import Head from 'next/head';
+import Meta from 'components/frontend/Meta';
 function Users({ data }) {
   return (
     <>
-      <Head>
+      <Meta>
         <title>Users | Bacca Model Management</title>
-      </Head>
+      </Meta>
       <Table
         headers={[
           {

@@ -39,16 +39,17 @@ export const convertMetric = (n, metric = 'feet') => {
   }
 };
 
+export const errorHandler = (cb) => {
+  try {
+    return cb();
+  } catch (e) {
+    return {
+      notFound: true,
+    };
+  }
+};
+
 export const scrollTo = (target, block = 'center') => {
   const section = document.querySelector(target);
   if (section) section.scrollIntoView({ behavior: 'smooth', block, inline: 'nearest' });
-};
-export const debounce = (func, timeout = 1500) => {
-  let timer;
-  return (...args) => {
-    clearTimeout(timer);
-    timer = setTimeout(() => {
-      func.apply(this, args);
-    }, timeout);
-  };
 };

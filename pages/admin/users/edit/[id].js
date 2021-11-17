@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Form from 'components/admin/Form';
 import FormWrap from 'components/admin/FormWrap';
 import { getSession } from 'next-auth/react';
-
-import Head from 'next/head';
+import Meta from 'components/frontend/Meta';
 import { useRouter } from 'next/router';
 
 function UserEdit({ data, mode, pageTitle, id, session }) {
@@ -80,9 +79,9 @@ function UserEdit({ data, mode, pageTitle, id, session }) {
   };
   return (
     <>
-      <Head>
+      <Meta>
         <title>{pageTitle} | Bacca Model Management</title>
-      </Head>
+      </Meta>
       <div className="hidden sm:block" aria-hidden="true">
         <div className="pb-5">
           <div className="border-t border-gray-200" />

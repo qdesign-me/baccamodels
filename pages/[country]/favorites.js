@@ -52,11 +52,17 @@ function Favorites({ data }) {
 }
 Favorites.layout = 'default';
 export async function getServerSideProps(context) {
-  const { country } = context.params;
+  try {
+    const { country } = context.params;
 
-  const response = await fetch(`${process.env.HOSTNAME}/api/country/${country}/home`).then((res) => res.json());
-  return {
-    props: { data: response.data },
-  };
+    const response = await fetch(`${process.env.HOSTNAME}/api/country/${country}/home`).then((res) => res.json());
+    return {
+      props: { data: response.data },
+    };
+  } catch (e) {
+    return {
+      notFound: true,
+    };
+  }
 }
 export default Favorites;

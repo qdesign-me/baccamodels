@@ -44,12 +44,14 @@ const AdminLayout = (props) => {
       session={props.session}
     >
       {notification && <Notification title={notification} />}
-      <div className="flex w-full min-h-screen">
+      <div className="w-full min-h-screen">
         <Sidebar />
-        <div className="flex-1 bg-gray-50  sm:px-6 lg:px-8 sm:pb-6 lg:pb-8">
-          <Nav />
-          <Breadcrumbs />
-          <main>{props.children}</main>
+        <div className="ml-48">
+          <div className="bg-gray-50  sm:px-6 lg:px-8 sm:pb-6 lg:pb-8">
+            <Nav />
+            <Breadcrumbs />
+            <main>{props.children}</main>
+          </div>
         </div>
       </div>
     </SessionProvider>

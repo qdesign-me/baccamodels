@@ -4,9 +4,11 @@ import Meta from 'components/frontend/Meta';
 import React, { useState, useEffect, useRef } from 'react';
 import Carousel from 'react-multi-carousel';
 import { convertMetric, scrollTo } from 'hooks/utils';
+//import ErrorPage from 'components/frontend/Error';
 import 'react-multi-carousel/lib/styles.css';
 
 function Profile({ data, metaDescription }) {
+  //if (error) return <ErrorPage data={error} />;
   const [favorites, setFavorites] = useState([]);
   useEffect(() => {
     const data = JSON.parse(window.localStorage.getItem('favorites')) ?? [];
@@ -251,30 +253,41 @@ Profile.layout = 'default';
 export default Profile;
 
 export async function getServerSideProps(context) {
-  const response = await fetch(`${process.env.HOSTNAME}/api/model/profile`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(context.params),
-  }).then((res) => res.json());
+  try {
+    const response = await fetch(`${process.env.HOSTNAME}/api/model/profile`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(context.params),
+    }).then((res) => res.json());
 
-  let features = '';
-  if (response.data.model.profile?.book?.length > 0) {
-    features += 'Book portfolio';
-  }
-  if (response.data.model.profile?.polaroids?.length > 0) {
-    if (features.length) features += ', polaroids';
-    else features = 'Polaroids';
-  }
-  if (response.data.model.profile?.videos?.length > 0) {
-    if (features.length) features += ' and videos';
-    else features = 'Videos';
-  }
-  if (features.length) features += '.';
+    let features = '';
+    if (response.data.model.profile?.book?.length > 0) {
+      features += 'Book portfolio';
+    }
+    if (response.data.model.profile?.polaroids?.length > 0) {
+      if (features.length) features += ', polaroids';
+      else features = 'Polaroids';
+    }
+    if (response.data.model.profile?.videos?.length > 0) {
+      if (features.length) features += ' and videos';
+      else features = 'Videos';
+    }
+    if (features.length) features += '.';
 
-  const metaDescription = `${response.data.model.name}. ${features} ${response.data.info.company}`;
-  return {
-    props: { data: response.data, metaDescription },
-  };
+    const metaDescription = `${response.data.model.name}. ${features} ${response.data.info.company}`;
+    return {
+      props: { data: response.data, metaDescription },
+    };
+  } catch (e) {
+    // const response = await fetch(`${process.env.HOSTNAME}/api/country/${context.params.country}/become`).then((res) => res.json());
+    // context.res.statusCode = 404;
+    // return {
+    //   props: { data: {}, error: response.data },
+    // };
+    return {
+      notFound: true,
+    };
+  }
 }

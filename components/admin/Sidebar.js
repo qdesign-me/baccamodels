@@ -33,7 +33,7 @@ function Sidebar() {
   ];
   if (!session) return '';
   return (
-    <div className="sm:px-6 lg:px-8 py-4  bg-gray-100 shadow-md border-r-[1px]">
+    <div className="sm:px-6 lg:px-8 py-4 h-screen bg-gray-100 shadow-md border-r-[1px] fixed top-0 w-[200px]">
       <Link href="/admin">
         <a>
           <img src="/images/logo.svg" alt="" className="h-10" />

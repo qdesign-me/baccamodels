@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Julius+Sans+One&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -765,6 +764,14 @@
   .stickly-controls {
     @apply sticky bottom-0;
   }
+  .div404 {
+    @apply flex items-center justify-end lg:justify-center flex-col w-full h-screen relative;
+    background-image: url(/images/become.jpg);
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: top right;
+  }
+
   @media (max-width: 1536px) {
     h1 {
       font-size: 60px;
@@ -932,6 +939,19 @@
     .video-player .content {
       padding: 0 70px;
       width: calc(100vw - 70px);
+    }
+    .div404 {
+      background-size: cover;
+      background-position: top center;
+    }
+    .div404:before {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      content: '';
+      background: rgba(255, 255, 255, 0.6);
     }
   }
   @media (max-width: 640px) {

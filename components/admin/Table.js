@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Pagination from 'components/admin/Pagination';
 import Flag from 'components/admin/Flag';
+import useDebounce from 'hooks/useDebounce';
 
 function SortControl({ tableParams, header }) {
   if (tableParams.sort !== header.field) return null;
@@ -33,13 +34,18 @@ export default function Table({ headers, data }) {
   const [deleteRow, setDeleteRow] = useState(null);
   const [tableParams, setTableParams] = useState({ search: router.query.search ?? '', page: router.query.page ?? 1 });
   const [tableData, setTableData] = useState(data);
+  const [search, setSearch] = useState(tableParams.search);
+
+  const debouncedSearch = useDebounce(search, 500);
+
   useEffect(() => {
     setTableData(data);
   }, [data]);
 
-  const setSearch = (search) => {
-    setTableParams({ ...tableParams, search, page: 1 });
-  };
+  useEffect(() => {
+    setTableParams({ ...tableParams, search: debouncedSearch, page: 1 });
+  }, [debouncedSearch]);
+
   useEffect(() => {
     const query = { ...tableParams };
     if (!query.search) delete query.search;
@@ -211,7 +217,7 @@ export default function Table({ headers, data }) {
         <div style={{ minWidth: 100 }}>
           <div className="text-sm text-gray-700">{tableData.showing}</div>
         </div>
-        <input className="max-w-xs input" type="text" placeholder="Search..." value={tableParams.search} onChange={(e) => setSearch(e.target.value)} />
+        <input className="max-w-xs input" type="text" placeholder="Search..." value={search} onChange={(e) => setSearch(e.target.value)} />
         <Link href={`${baseUrl}/new`}>
           <a className="manager-btn">
             <div>Create</div>

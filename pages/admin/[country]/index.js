@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import Form from 'components/admin/Form';
 import FormWrap from 'components/admin/FormWrap';
-import Head from 'next/head';
+import Meta from 'components/frontend/Meta';
 import { useRouter } from 'next/router';
 function CountryEdit({ data }) {
   const router = useRouter();
@@ -90,9 +90,9 @@ function CountryEdit({ data }) {
   };
   return (
     <>
-      <Head>
+      <Meta>
         <title>Edit Country | Bacca Model Management</title>
-      </Head>
+      </Meta>
       <FormWrap
         previewUrl={`/${router.query.country}`}
         onSubmit={onSubmit}

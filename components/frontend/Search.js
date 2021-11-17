@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import SearchItem from './SearchItem';
 import { useRouter } from 'next/router';
-
+import useDebounce from 'hooks/useDebounce';
 function Search() {
   const router = useRouter();
   const [models, setModels] = useState([]);
   const [search, setSearch] = useState('');
+  const debouncedSearch = useDebounce(search, 500);
 
   useEffect(() => {
     return () => {
@@ -22,26 +23,30 @@ function Search() {
   const hideSearch = () => {
     document.body.classList.remove('search-open', 'has-overflow');
   };
-  const doSearch = async (e) => {
-    const term = e.target.value;
-    setSearch(term);
-    if (term.length < 2) {
+
+  useEffect(() => {
+    if (debouncedSearch.length < 2) {
       setModels([]);
       return;
     }
+    const fetchData = async () => {
+      console.log('call', debouncedSearch);
+      const response = await fetch(`${process.env.HOSTNAME}/api/model/byname`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          search: debouncedSearch,
+          country: router.query.country || 'russia',
+        }),
+      }).then((res) => res.json());
+      setModels(response.data.models);
+    };
 
-    const response = await fetch(`${process.env.HOSTNAME}/api/model/byname`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        search: term,
-        country: router.query.country || 'russia',
-      }),
-    }).then((res) => res.json());
-    setModels(response.data.models);
-  };
+    fetchData();
+  }, [debouncedSearch]);
+
   return (
     <>
       <svg xmlns="http://www.w3.org/2000/svg" className="icon-search  icon-button opener" fill="none" viewBox="0 0 24 24" stroke="currentColor" onClick={showSearch}>
@@ -54,7 +59,7 @@ function Search() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
             <div className="w-full">
-              <input type="text" placeholder="Type to search" className="py-1 w-full outline-none" value={search} onChange={doSearch} />
+              <input type="text" placeholder="Type to search" className="py-1 w-full outline-none" value={search} onChange={(e) => setSearch(e.target.value)} />
               <div className="search-grid">
                 {models.length === 0 && search.length > 2 && <div>Nothing found.</div>}
                 {models.map((model) => (

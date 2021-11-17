@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import Form from 'components/admin/Form';
 import FormWrap from 'components/admin/FormWrap';
-import Head from 'next/head';
+import Meta from 'components/frontend/Meta';
 import { useRouter } from 'next/router';
 
 function Homepage({ data }) {
@@ -34,9 +34,9 @@ function Homepage({ data }) {
   };
   return (
     <>
-      <Head>
+      <Meta>
         <title>Edit Homepage | Bacca Model Management</title>
-      </Head>
+      </Meta>
       <FormWrap onSubmit={onSubmit} validators={{ required: ['info.cover', 'metatitle', 'metadescription'] }} previewUrl="/">
         <div className="hidden sm:block" aria-hidden="true">
           <div className="py-5">

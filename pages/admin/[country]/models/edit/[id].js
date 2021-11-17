@@ -1,7 +1,7 @@
 import React from 'react';
 import Form from 'components/admin/Form';
 import FormWrap from 'components/admin/FormWrap';
-import Head from 'next/head';
+import Meta from 'components/frontend/Meta';
 import { useRouter } from 'next/router';
 function ModelEdit({ data, mode, pageTitle, id }) {
   const router = useRouter();
@@ -83,9 +83,9 @@ function ModelEdit({ data, mode, pageTitle, id }) {
 
   return (
     <>
-      <Head>
+      <Meta>
         <title>{pageTitle} | Bacca Model Management</title>
-      </Head>
+      </Meta>
       <FormWrap
         onSubmit={onSubmit}
         previewUrl={previewUrl}
