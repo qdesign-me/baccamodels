@@ -1,6 +1,6 @@
 module.exports = {
   env: {
-    HOSTNAME: process.env.HOSTNAME,
+    HOST: process.env.HOST,
   },
   async rewrites() {
     return [
