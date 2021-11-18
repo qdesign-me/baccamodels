@@ -82,7 +82,7 @@ function UserEdit({ data, mode, pageTitle, id, session }) {
       <Meta>
         <title>{pageTitle} | Bacca Model Management</title>
       </Meta>
-      <div className="hidden sm:block" aria-hidden="true">
+      <div>
         <div className="pb-5">
           <div className="border-t border-gray-200" />
         </div>
@@ -93,7 +93,7 @@ function UserEdit({ data, mode, pageTitle, id, session }) {
           data={chunks['General Information']}
           groups={[
             {
-              className: 'grid grid-cols-3 gap-6',
+              className: ' ',
               fields: [
                 {
                   field: 'img',
@@ -129,7 +129,7 @@ function UserEdit({ data, mode, pageTitle, id, session }) {
           ]}
         />
 
-        <div className="hidden sm:block" aria-hidden="true">
+        <div>
           <div className="py-5">
             <div className="border-t border-gray-200" />
           </div>
@@ -167,7 +167,7 @@ function UserEdit({ data, mode, pageTitle, id, session }) {
         />
 
         {canSetPassword && (
-          <div className="hidden sm:block" aria-hidden="true">
+          <div>
             <div className="py-5">
               <div className="border-t border-gray-200" />
             </div>

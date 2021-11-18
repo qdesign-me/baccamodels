@@ -45,45 +45,43 @@ function Pagination({ dataLength, pageLimit, dataLimit, onPageChange, current })
   if (pages <= 1) return null;
 
   return (
-    <div className="bg-white px-4 py-3 flex items-center border-t border-gray-200 sm:px-6">
-      <div className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-        {currentPage !== 1 && (
-          <button
-            onClick={goToPreviousPage}
-            className={`relative inline-flex items-center px-1 py-1 rounded-l-md border border-gray-300 bg-white text-xs font-medium text-gray-500 hover:bg-gray-50`}
-          >
-            <span className="sr-only">Previous</span>
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
-        )}
+    <div className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+      {currentPage !== 1 && (
+        <button
+          onClick={goToPreviousPage}
+          className={`relative inline-flex items-center px-1 py-1 rounded-l-md border border-gray-300 bg-white text-xs font-medium text-gray-500 hover:bg-gray-50`}
+        >
+          <span className="sr-only">Previous</span>
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+      )}
 
-        {getPaginationGroup().map((item, index) => (
-          <button
-            key={index}
-            onClick={changePage}
-            aria-current="page"
-            className={`relative inline-flex items-center px-2 py-1 border text-xs font-medium ${
-              currentPage === item ? 'text-bold font-black z-10  ' : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'
-            }`}
-          >
-            {item}
-          </button>
-        ))}
+      {getPaginationGroup().map((item, index) => (
+        <button
+          key={index}
+          onClick={changePage}
+          aria-current="page"
+          className={`relative inline-flex items-center px-2 py-1 border text-xs font-medium ${
+            currentPage === item ? 'text-bold font-black z-10  ' : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'
+          }`}
+        >
+          {item}
+        </button>
+      ))}
 
-        {currentPage !== pages && (
-          <button
-            onClick={goToNextPage}
-            className={`relative inline-flex items-center px-1 py-1 rounded-r-md border border-gray-300 bg-white text-xs font-medium text-gray-500 hover:bg-gray-50}`}
-          >
-            <span className="sr-only">Next</span>
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
-        )}
-      </div>
+      {currentPage !== pages && (
+        <button
+          onClick={goToNextPage}
+          className={`relative inline-flex items-center px-1 py-1 rounded-r-md border border-gray-300 bg-white text-xs font-medium text-gray-500 hover:bg-gray-50}`}
+        >
+          <span className="sr-only">Next</span>
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      )}
     </div>
   );
 }

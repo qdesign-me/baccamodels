@@ -107,7 +107,7 @@ function ModelEdit({ data, mode, pageTitle, id }) {
           domain: ['profile.social.instagram', 'profile.social.facebook', 'profile.social.vk'],
         }}
       >
-        <div className="hidden sm:block" aria-hidden="true">
+        <div>
           <div className="pb-5">
             <div className="border-t border-gray-200" />
           </div>
@@ -141,11 +141,11 @@ function ModelEdit({ data, mode, pageTitle, id }) {
               fields: [{ field: 'name', title: 'Full Name', type: 'text', input: 'text' }],
             },
             {
-              className: 'grid grid-cols-3 gap-6',
+              className: 'grid grid-cols-12 gap-6',
               fields: [
-                { field: 'profile.social.instagram', title: 'Instagram', type: 'social' },
-                { field: 'profile.social.facebook', title: 'Facebook', type: 'social' },
-                { field: 'profile.social.vk', title: 'Vkontakte', type: 'social' },
+                { field: 'profile.social.instagram', title: 'Instagram', type: 'social', span: 12 },
+                { field: 'profile.social.facebook', title: 'Facebook', type: 'social', span: 12 },
+                { field: 'profile.social.vk', title: 'Vkontakte', type: 'social', span: 12 },
               ],
             },
             {
@@ -158,13 +158,10 @@ function ModelEdit({ data, mode, pageTitle, id }) {
                 { field: 'profile.params.waist', title: 'Waist (cm)', type: 'text', span: 3 },
                 { field: 'profile.params.hips', title: 'Hips (cm)', type: 'text', span: 3 },
                 { field: 'profile.params.shoes', title: 'Shoes (size)', type: 'select', span: 3, variants: ['', '34', '35', '36', '37', '38', '39', '40', '41', '42'] },
+                { field: 'country', title: 'Now in', type: 'select', span: 3, variants: ['', 'Russia', 'Belarus', 'Kazakhstan'] },
               ],
             },
 
-            {
-              className: 'grid gap-6 grid-cols-12',
-              fields: [{ field: 'country', title: 'Now in Country', type: 'select', span: 6, variants: ['', 'Russia', 'Belarus', 'Kazakhstan'] }],
-            },
             {
               className: 'grid gap-6 grid-cols-12',
               fields: [
@@ -172,7 +169,7 @@ function ModelEdit({ data, mode, pageTitle, id }) {
                   field: 'status',
                   title: 'Active',
                   type: 'checkboxes',
-                  span: 6,
+                  span: 12,
                   values: ['Active', 'Disabled'],
                   variants: [{ subtitle: 'Only active models are shown on website' }],
                 },
@@ -181,7 +178,7 @@ function ModelEdit({ data, mode, pageTitle, id }) {
           ]}
         />
 
-        <div className="hidden sm:block" aria-hidden="true">
+        <div>
           <div className="py-5">
             <div className="border-t border-gray-200" />
           </div>
@@ -206,7 +203,7 @@ function ModelEdit({ data, mode, pageTitle, id }) {
           ]}
         />
 
-        <div className="hidden sm:block" aria-hidden="true">
+        <div>
           <div className="py-5">
             <div className="border-t border-gray-200" />
           </div>
@@ -218,7 +215,7 @@ function ModelEdit({ data, mode, pageTitle, id }) {
           subtitle="Decide where to show current profile"
           groups={[
             {
-              className: 'grid grid-cols-3 gap-6',
+              className: 'grid gap-6',
               fields: [
                 {
                   field: 'category',
@@ -235,7 +232,7 @@ function ModelEdit({ data, mode, pageTitle, id }) {
           ]}
         />
 
-        <div className="hidden sm:block" aria-hidden="true">
+        <div>
           <div className="py-5">
             <div className="border-t border-gray-200" />
           </div>
@@ -264,7 +261,7 @@ function ModelEdit({ data, mode, pageTitle, id }) {
           ]}
         />
 
-        <div className="hidden sm:block" aria-hidden="true">
+        <div>
           <div className="py-5">
             <div className="border-t border-gray-200" />
           </div>
@@ -292,7 +289,7 @@ function ModelEdit({ data, mode, pageTitle, id }) {
           ]}
         />
 
-        <div className="hidden sm:block" aria-hidden="true">
+        <div>
           <div className="py-5">
             <div className="border-t border-gray-200" />
           </div>

@@ -129,7 +129,7 @@ function CountryEdit({ data }) {
           domain: ['info.social.instagram', 'info.social.facebook', 'info.social.vk'],
         }}
       >
-        <div className="hidden sm:block" aria-hidden="true">
+        <div>
           <div className="pb-5">
             <div className="border-t border-gray-200" />
           </div>
@@ -143,18 +143,18 @@ function CountryEdit({ data }) {
               fields: [{ field: 'info.cover', title: 'Cover', newname: 'newinfocover', type: 'media', allow: 'video', accept: 'video/mp4' }],
             },
             {
-              className: 'grid grid-cols-3 gap-6',
+              className: 'grid grid-cols-12 gap-6',
               fields: [
-                { field: 'info.company', title: 'Copany Name', type: 'text', span: '3' },
-                { field: 'info.social.instagram', title: 'Instagram', type: 'social' },
-                { field: 'info.social.facebook', title: 'Facebook', type: 'social' },
-                { field: 'info.social.vk', title: 'Vkontakte', type: 'social' },
+                { field: 'info.company', title: 'Copany Name', type: 'text', span: '12' },
+                { field: 'info.social.instagram', title: 'Instagram', type: 'social', span: '12' },
+                { field: 'info.social.facebook', title: 'Facebook', type: 'social', span: '12' },
+                { field: 'info.social.vk', title: 'Vkontakte', type: 'social', span: '12' },
               ],
             },
           ]}
         />
 
-        <div className="hidden sm:block" aria-hidden="true">
+        <div>
           <div className="py-5">
             <div className="border-t border-gray-200" />
           </div>
@@ -175,7 +175,7 @@ function CountryEdit({ data }) {
           ]}
         />
 
-        <div className="hidden sm:block" aria-hidden="true">
+        <div>
           <div className="py-5">
             <div className="border-t border-gray-200" />
           </div>
@@ -195,7 +195,7 @@ function CountryEdit({ data }) {
           ]}
         />
 
-        <div className="hidden sm:block" aria-hidden="true">
+        <div>
           <div className="py-5">
             <div className="border-t border-gray-200" />
           </div>
@@ -215,7 +215,7 @@ function CountryEdit({ data }) {
           ]}
         />
 
-        <div className="hidden sm:block" aria-hidden="true">
+        <div>
           <div className="py-5">
             <div className="border-t border-gray-200" />
           </div>
@@ -234,7 +234,7 @@ function CountryEdit({ data }) {
             },
           ]}
         />
-        <div className="hidden sm:block" aria-hidden="true">
+        <div>
           <div className="py-5">
             <div className="border-t border-gray-200" />
           </div>
@@ -255,7 +255,7 @@ function CountryEdit({ data }) {
           ]}
         />
 
-        <div className="hidden sm:block" aria-hidden="true">
+        <div>
           <div className="py-5">
             <div className="border-t border-gray-200" />
           </div>
@@ -291,7 +291,7 @@ function CountryEdit({ data }) {
           ]}
         />
 
-        <div className="hidden sm:block" aria-hidden="true">
+        <div>
           <div className="py-5">
             <div className="border-t border-gray-200" />
           </div>

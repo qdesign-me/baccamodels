@@ -44,10 +44,10 @@ const AdminLayout = (props) => {
       session={props.session}
     >
       {notification && <Notification title={notification} />}
-      <div className="w-full min-h-screen">
+      <div className="w-full min-h-screen bg-gray-50">
         <Sidebar />
-        <div className="ml-48">
-          <div className="bg-gray-50  sm:px-6 lg:px-8 sm:pb-6 lg:pb-8">
+        <div className="admin-main pl-[200px]">
+          <div className="px-4 sm:px-6 pb-4 sm:pb-6">
             <Nav />
             <Breadcrumbs />
             <main>{props.children}</main>

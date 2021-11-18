@@ -32,13 +32,7 @@ function Models({ data }) {
             render: 'name',
             sort: true,
           },
-          {
-            title: 'Region',
-            field: 'region',
-            render: 'region',
-            className: 'cell-default',
-            sort: true,
-          },
+
           {
             title: 'Category',
             field: 'category',

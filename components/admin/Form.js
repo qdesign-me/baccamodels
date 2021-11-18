@@ -1,5 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
+
+const spans = { 12: 'col-span-12', 6: 'col-span-12 sm:col-span-6', 3: 'col-span-6 md:col-span-3' };
+
 function checkDepend(field, data) {
   if (!field.showOnly) return true;
   const temp = field.showOnly.split('===');
@@ -90,9 +93,9 @@ function MediaInput({ field, errors, data, setData }) {
         <input type="file" className="sr-only" ref={inputFileRef} accept={field.accept} onChange={onFileSelect} name={field.newname} />
         <input type="hidden" name={field.field} value={data[field.field]} />
 
-        {field.allow === 'image' && <p className="ml-auto text-xs text-gray-500">PNG, JPG up to 10MB</p>}
-        {field.allow === 'video' && <p className="ml-auto text-xs text-gray-500">MP4</p>}
-        {field.allow === 'all' && <p className="ml-auto text-xs text-gray-500">PNG, JPG or MP4 up to 10MB</p>}
+        {field.allow === 'image' && <p className="ml-auto pl-4 text-xs text-gray-500">PNG, JPG up to 10MB</p>}
+        {field.allow === 'video' && <p className="ml-auto pl-4  text-xs text-gray-500">MP4</p>}
+        {field.allow === 'all' && <p className="ml-auto pl-4  text-xs text-gray-500">PNG, JPG or MP4 up to 10MB</p>}
       </div>
       {errors[field.field] && <div className="error">{errors[field.field]}</div>}
     </div>
@@ -102,7 +105,7 @@ function SelectInput({ field, errors, data, setData }) {
   const handleChange = (e) => {
     setData({ ...data, [field.field]: e.target.value });
   };
-  const spans = { 6: 'col-span-6', 3: 'col-span-6 sm:col-span-3' };
+
   return (
     <div className={`${spans[field.span]} ${errors[field.field] && 'has-error'}`}>
       <label htmlFor={field.field} className="block text-sm font-medium text-gray-700">
@@ -126,7 +129,6 @@ function TextInput({ field, errors, data, setData }) {
   const handleChange = (e) => {
     setData({ ...data, [field.field]: e.target.value });
   };
-  const spans = { 12: 'col-span-12', 6: 'col-span-6', 3: 'col-span-6 sm:col-span-3' };
   return (
     <div className={`${spans[field.span]} ${errors[field.field] && 'has-error'}`}>
       <label htmlFor={field.field} className="block text-sm font-medium text-gray-700">
@@ -148,7 +150,7 @@ function SocialInput({ field, errors, data, setData }) {
     setData({ ...data, [field.field]: e.target.value });
   };
   return (
-    <div className={`col-span-3 ${errors[field.field] && 'has-error'}`}>
+    <div className={`${spans[field.span]} ${errors[field.field] && 'has-error'}`}>
       <label htmlFor="company-website" className="block text-sm font-medium text-gray-700">
         {field.title}
       </label>
@@ -169,7 +171,6 @@ function SocialInput({ field, errors, data, setData }) {
 }
 
 function CheckboxesInput({ field, errors, data, setData }) {
-  const spans = { 12: 'col-span-12', 6: 'col-span-6', 3: 'col-span-6 sm:col-span-3' };
   const getRealValue = (val) => {
     if (val) return field.values[0];
     return field.values[1];
@@ -240,7 +241,6 @@ function RadiobuttonsInput({ field, errors, data, setData }) {
   );
 }
 function TextareaInput({ field, errors, data, setData }) {
-  const spans = { 12: 'col-span-12', 6: 'col-span-6', 3: 'col-span-6 sm:col-span-3' };
   const handleChange = (e) => {
     setData({ ...data, [field.field]: e.target.value });
   };
@@ -379,11 +379,11 @@ function UploadInput({ field, errors, data, setData }) {
           <div className="flex text-sm text-gray-600">
             <label
               htmlFor="file-upload"
-              className="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
+              className="text-xs sm:text-base relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
             >
               <span>Upload a file</span>
             </label>
-            <p className="pl-1">or drag and drop</p>
+            <p className="text-xs sm:text-base pl-1 hidden sm:inline-block">or drag and drop</p>
           </div>
           {field.media === 'images' && <p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>}
           {field.media === 'videos' && <p className="text-xs text-gray-500">MP4</p>}
@@ -457,14 +457,14 @@ export default function Form({ title, subtitle, groups, data, errors }) {
   return (
     <>
       <div>
-        <div className="grid grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <div className="col-span-1">
-            <div className="px-4 sm:px-0">
+            <div className="">
               <h3 className="text-lg font-medium leading-6 text-gray-900">{title}</h3>
-              <p className="mt-1 text-sm text-gray-600">{subtitle}.</p>
+              {subtitle && <p className="mt-1 text-sm text-gray-600">{subtitle}.</p>}
             </div>
           </div>
-          <div className="mt-5 md:mt-0 col-span-3">
+          <div className="mt-0 col-span-3">
             <div className="shadow sm:rounded-md sm:overflow-hidden">
               <div className="px-4 py-5 bg-white space-y-6 sm:p-6">
                 {groups?.map((group, groupIndex) => (

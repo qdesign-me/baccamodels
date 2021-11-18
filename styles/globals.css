@@ -789,7 +789,19 @@
     background-size: contain;
     background-position: top right;
   }
-
+  .table-adaptive {
+    @apply max-w-full overflow-auto;
+  }
+  .showing-bottom {
+    display: none;
+  }
+  .admin-menu-trigger {
+    @apply cursor-pointer px-2 -ml-2;
+  }
+  .admin-overlay {
+    @apply fixed top-0 left-0 right-0 bottom-0 z-10 hidden w-screen h-screen;
+    background: rgba(0, 0, 0, 0.3);
+  }
   @media (max-width: 1536px) {
     h1 {
       font-size: 60px;
@@ -971,6 +983,36 @@
       content: '';
       background: rgba(255, 255, 255, 0.6);
     }
+    .admin-sidebar {
+      @apply z-10;
+      width: 220px !important;
+      transform: translateX(-200px);
+    }
+    .admin-menu-block {
+      display: flex !important;
+    }
+    .admin-menu-open .admin-sidebar {
+      transform: translateX(0);
+    }
+    .admin-menu-open .admin-overlay {
+      display: block !important;
+    }
+    .admin-main {
+      padding-left: 0 !important;
+    }
+    .showing-bottom {
+      display: block !important;
+    }
+    .showing-top {
+      display: none !important;
+    }
+    .table-search {
+      @apply mr-4 sm:mr-6 flex-1;
+    }
+    .manager-btn-create {
+      max-width: 110px;
+      margin-top: 0 !important;
+    }
   }
   @media (max-width: 640px) {
     body {
@@ -1082,6 +1124,10 @@
     .search-open .icon-favorites,
     .search-open .icon-instagram {
       display: none;
+    }
+    .thumb {
+      width: 60px;
+      height: 60px;
     }
   }
   @media (min-width: 641px) {
