@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Table from 'components/admin/Table';
 import Social from 'components/frontend/Social';
 import Meta from 'components/frontend/Meta';
@@ -11,6 +11,27 @@ function Models({ data }) {
   const [quickView, setQuickView] = useState(null);
   const router = useRouter();
   const baseUrl = router.asPath.split('?')[0];
+
+  const openQuickView = () => {
+    document.body.classList.add('has-overflow');
+  };
+
+  const closeQuickView = () => {
+    document.body.classList.remove('has-overflow');
+  };
+  useEffect(() => {
+    return () => {
+      closeQuickView();
+    };
+  }, []);
+  useEffect(() => {
+    closeQuickView();
+  }, [router]);
+
+  useEffect(() => {
+    quickView ? openQuickView() : closeQuickView();
+  }, [quickView]);
+
   const onView = (data) => {
     setQuickView(data);
   };
@@ -125,7 +146,7 @@ function Models({ data }) {
       {quickView && (
         <>
           <div className="fixed top-0 left-0 bottom-0 right-0 bg-gray-500 opacity-50"></div>
-          <div className="fixed shadow-lg bg-white max-w-md w-full sm:p-6 lg:p-8 top-0 bottom-0 right-0 h-screen z-10">
+          <div className="fixed shadow-lg bg-white max-w-md w-full p-4 lg:p-6 top-0 bottom-0 right-0 h-screen z-10">
             <div className="relative">
               <button className="absolute top-0 right-0 text-gray-600 hover:text-black transition" onClick={(e) => setQuickView(null)}>
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
