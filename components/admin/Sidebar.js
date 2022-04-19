@@ -67,6 +67,7 @@ function Sidebar() {
           {menu
             .filter((page) => {
               const title = page.title.toLowerCase();
+              if (!session || !session.user) return false;
               if (session.user.role === 'Admin') return true;
               if (session.user.role === 'Manager' && title === 'users') return false;
               if (session.user.role === 'Manager' && title === 'homepage') return false;

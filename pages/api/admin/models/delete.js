@@ -1,4 +1,4 @@
-import { connectToDatabase } from 'hooks/useMongodb';
+import { connectToDatabase, client } from 'hooks/useMongodb';
 import { ObjectId } from 'mongodb';
 export default async function deleteModel(req, res) {
   try {

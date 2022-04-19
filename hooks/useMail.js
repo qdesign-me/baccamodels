@@ -20,20 +20,18 @@ export default async function sendEmail(subject, html, attachments = [], cc = ''
     html,
   };
 
-  console.log(mailOptions);
-
   if (attachments.length) {
     mailOptions.attachments = attachments;
   }
 
   try {
     const res = await transporter.sendMail(mailOptions);
-    console.log(res);
+
     if (cc.length) {
       mailOptions.to = cc;
       await transporter.sendMail(mailOptions);
     }
   } catch (error) {
-    console.log('error', error);
+    console.log('mail error', error);
   }
 }

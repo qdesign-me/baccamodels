@@ -1,6 +1,8 @@
 import React from 'react';
 import Table from 'components/admin/Table';
 import Meta from 'components/frontend/Meta';
+import { getSession } from 'next-auth/react';
+
 function Users({ data }) {
   return (
     <>
@@ -61,7 +63,9 @@ export async function getServerSideProps(context) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      cookie: context.req.headers.cookie,
     },
+
     body: JSON.stringify(context.query),
   }).then((res) => res.json());
 

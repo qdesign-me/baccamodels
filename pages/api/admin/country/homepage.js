@@ -40,11 +40,9 @@ export default async function Homepage(req, res) {
       };
 
       await db.collection('regions').updateOne({ _id: id }, { $set: newData });
-
       return res.status(200).json({ status: 'ok', data: { message: 'Successfully Updated!' } });
     });
   } catch (error) {
-    console.log(error);
     res.status(404).json({ status: 'error' });
   }
 }

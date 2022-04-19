@@ -49,7 +49,8 @@ export const errorHandler = (cb) => {
   }
 };
 
-export const scrollTo = (target, block = 'center') => {
+export const scrollToMe = (target, block = 'center') => {
   const section = document.querySelector(target);
+
   if (section) section.scrollIntoView({ behavior: 'smooth', block, inline: 'nearest' });
 };

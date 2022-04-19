@@ -2,6 +2,7 @@ import Nav from 'components/frontend/Nav';
 import React, { useState, useEffect } from 'react';
 import ModelThumb from 'components/frontend/ModelThumb';
 import Meta from 'components/frontend/Meta';
+import { scrollToMe } from 'hooks/utils';
 
 function FilterByName({ models }) {
   const letters = [
@@ -11,6 +12,8 @@ function FilterByName({ models }) {
       }, [])
     ),
   ];
+
+  if (!letters.length) return null;
 
   const [opened, setOpened] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -34,7 +37,8 @@ function FilterByName({ models }) {
     e.preventDefault();
     e.stopPropagation();
     const letter = e.target.innerText;
-    scrollTo('[data-name="${letter}"]', 'end');
+
+    scrollToMe(`[data-name="${letter}"]`, 'center');
 
     setOpened(false);
   };

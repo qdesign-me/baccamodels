@@ -2,27 +2,43 @@ import Nav from 'components/frontend/Nav';
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import ModelThumb from 'components/frontend/ModelThumb';
+import Meta from 'components/frontend/Meta';
 
 function Favorites({ data }) {
   const router = useRouter();
   const [models, setModels] = useState(null);
 
+  const fetchModels = async () => {
+    const ids = JSON.parse(window.localStorage.getItem('favorites') || null) ?? [];
+    if (!ids.length) return setModels([]);
+    const response = await fetch(`${process.env.HOST}/api/model/byids`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ ids, country: router.query.country }),
+    }).then((res) => res.json());
+    if (response?.data?.models) setModels(response.data.models);
+  };
+
+  const deleteFromFavorites = (id) => {
+    let ids = JSON.parse(window.localStorage.getItem('favorites') || null) ?? [];
+
+    ids = ids.filter((favorite) => favorite != id);
+    window.localStorage.setItem('favorites', JSON.stringify(ids));
+    const customEvent = new CustomEvent('updateFavorites');
+    document.dispatchEvent(customEvent);
+    fetchModels();
+  };
+
   useEffect(() => {
-    const ids = JSON.parse(window.localStorage.getItem('favorites')) ?? [];
-    const fetchModels = async () => {
-      const response = await fetch(`${process.env.HOST}/api/model/byids`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ ids, country: router.query.country }),
-      }).then((res) => res.json());
-      if (response?.data?.models) setModels(response.data.models);
-    };
     fetchModels();
   }, []);
   return (
     <>
+      <Meta>
+        <title>{`Favorites | ${data.info.company}`}</title>
+      </Meta>
       <Nav className="relative" data={data.info} />
       <div className="content mt-[200px]">
         <main>
@@ -37,7 +53,7 @@ function Favorites({ data }) {
                   <div className="box">
                     <div className="grid-thumbs ">
                       {models.map((model) => (
-                        <ModelThumb key={model.id} model={model} />
+                        <ModelThumb key={model._id} model={model} showClose={true} onClick={(id) => deleteFromFavorites(id)} />
                       ))}
                     </div>
                   </div>

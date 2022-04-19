@@ -23,6 +23,7 @@ function ModelEdit({ data, mode, pageTitle, id }) {
         'profile.params.hips': data.profile?.params?.Hips ?? '',
         'profile.params.shoes': data.profile?.params?.Shoes ?? '',
         status: data.status ?? 'Active',
+        featured: data.featured ?? 'No',
         country: data.country ?? '',
       },
     },
@@ -161,7 +162,19 @@ function ModelEdit({ data, mode, pageTitle, id }) {
                 { field: 'country', title: 'Now in', type: 'select', span: 3, variants: ['', 'Russia', 'Belarus', 'Kazakhstan'] },
               ],
             },
-
+            {
+              className: 'grid gap-6 grid-cols-12',
+              fields: [
+                {
+                  field: 'featured',
+                  title: 'Featured',
+                  type: 'checkboxes',
+                  span: 12,
+                  values: ['Yes', 'No'],
+                  variants: [{ subtitle: 'Show on country main page' }],
+                },
+              ],
+            },
             {
               className: 'grid gap-6 grid-cols-12',
               fields: [
@@ -334,6 +347,7 @@ export async function getServerSideProps(context) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      cookie: context.req.headers.cookie,
     },
     body: JSON.stringify({ id, requestType: 'one' }),
   }).then((res) => res.json());

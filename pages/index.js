@@ -6,7 +6,7 @@ export default function Home({ data }) {
     <>
       <Meta>
         <title>{data.metatitle}</title>
-        <meta name="description" content={data.metadesciption} />
+        <meta name="description" content={data.metadescription} />
       </Meta>
       <Header video={data.info.cover}>
         <div className="container">

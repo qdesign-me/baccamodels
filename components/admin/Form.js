@@ -184,7 +184,7 @@ function CheckboxesInput({ field, errors, data, setData }) {
       <div className="mt-4 space-y-4">
         <input type="hidden" value={data[field.field]} name={field.field} />
         {field.variants.map((variant) => (
-          <div className="flex items-start" key={variant.title}>
+          <div key={variant.title} className="flex items-start" key={variant.title}>
             <div className="flex items-center h-5">
               <input
                 type="checkbox"
@@ -454,6 +454,10 @@ function PassInput({ field, errors, data, setData }) {
 }
 export default function Form({ title, subtitle, groups, data, errors }) {
   const [userData, setUserData] = useState(data.data);
+
+  useEffect(() => {
+    setUserData(data.data);
+  }, [data.data]);
   return (
     <>
       <div>

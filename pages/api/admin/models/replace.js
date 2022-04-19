@@ -214,6 +214,7 @@ export default async function modelsAPI(req, res, prefix) {
           category: fields['category'],
           country: fields['country'],
           status: fields['status'],
+          featured: fields['featured'],
           region: fields['region'],
           private: {
             city: fields['private.city'],

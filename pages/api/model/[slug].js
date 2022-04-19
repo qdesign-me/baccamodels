@@ -21,7 +21,6 @@ export default async function modelsAPI(req, res) {
           if (model.profile.cover.startsWith('/images')) model.profile.img = model.profile.cover;
           if (model.profile.cover.startsWith('/video')) model.profile.video = model.profile.cover;
         }
-
         return res.status(200).json({ status: 'ok', data: { model, info } });
       }
       case 'byids': {
@@ -32,7 +31,6 @@ export default async function modelsAPI(req, res) {
           .find({ status: 'Active', _id: { $in: ids.map((id) => ObjectId(id)) } }, { projection: { category: 0, region: 0, country: 0, private: 0, profile: 0 } })
           .sort({ name: 1 })
           .toArray();
-
         return res.status(200).json({ status: 'ok', data: { models } });
       }
       case 'byname': {
@@ -46,7 +44,6 @@ export default async function modelsAPI(req, res) {
             .sort({ name: 1 })
             .toArray()
         ).filter((model) => model.name.toLowerCase().includes(search.toLowerCase()));
-
         return res.status(200).json({ status: 'ok', data: { models } });
       }
     }

@@ -29,7 +29,7 @@ function Breadcrumbs() {
     <div className="w-full mb-4">
       <ol className="list-reset flex text-grey-dark uppercase text-xs">
         {parts.map((part, index) => (
-          <>
+          <React.Fragment key={index}>
             {index < parts.length - 1 ? (
               <>
                 <li key={part}>{buildLink(part, index)}</li>
@@ -41,7 +41,7 @@ function Breadcrumbs() {
             ) : (
               <li>{buildLink(part, index)}</li>
             )}
-          </>
+          </React.Fragment>
         ))}
       </ol>
     </div>

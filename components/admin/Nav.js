@@ -33,7 +33,7 @@ function Nav() {
         <div>
           <Menu.Button className="flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
             <span className="sr-only">Open user menu</span>
-            <Avatar img={session?.user.img} />
+            <Avatar img={session?.user?.img} />
           </Menu.Button>
         </div>
         <Transition

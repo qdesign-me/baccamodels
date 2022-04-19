@@ -68,6 +68,7 @@ function CountryEdit({ data }) {
       },
     },
   };
+  console.log('chunks', chunks);
   const onSubmit = async (body) => {
     body.append('id', router.query.country);
     const res = await fetch('/api/admin/country/replace', {
@@ -332,6 +333,7 @@ export async function getServerSideProps(context) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      cookie: context.req.headers.cookie,
     },
     body: JSON.stringify({ id: context.query.country }),
   }).then((res) => res.json());

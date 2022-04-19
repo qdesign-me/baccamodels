@@ -3,7 +3,7 @@ import Header from 'components/frontend/Header';
 import Meta from 'components/frontend/Meta';
 import React, { useState, useEffect, useRef } from 'react';
 import Carousel from 'react-multi-carousel';
-import { convertMetric, scrollTo } from 'hooks/utils';
+import { convertMetric, scrollToMe } from 'hooks/utils';
 //import ErrorPage from 'components/frontend/Error';
 import 'react-multi-carousel/lib/styles.css';
 
@@ -11,9 +11,10 @@ function Profile({ data, metaDescription }) {
   //if (error) return <ErrorPage data={error} />;
   const [favorites, setFavorites] = useState([]);
   useEffect(() => {
-    const data = JSON.parse(window.localStorage.getItem('favorites')) ?? [];
+    const data = JSON.parse(window.localStorage.getItem('favorites') || null) ?? [];
     setFavorites(data);
   }, []);
+
   useEffect(() => {
     window.localStorage.setItem('favorites', JSON.stringify(favorites));
   }, [favorites]);
@@ -100,18 +101,18 @@ function Profile({ data, metaDescription }) {
               <div className="model-menu">
                 <ul>
                   {data.model.profile?.book?.length > 0 && (
-                    <li onClick={(e) => scrollTo('.box-book')}>
+                    <li onClick={(e) => scrollToMe('.box-book', 'nearest')}>
                       <span>Book</span>
                     </li>
                   )}
 
                   {data.model.profile?.videos?.length > 0 && (
-                    <li onClick={(e) => scrollTo('.box-videos')}>
+                    <li onClick={(e) => scrollToMe('.box-videos', 'nearest')}>
                       <span>Videos</span>
                     </li>
                   )}
                   {data.model.profile?.polaroids?.length > 0 && (
-                    <li onClick={(e) => scrollTo('.box-polaroids')}>
+                    <li onClick={(e) => scrollToMe('.box-polaroids', 'nearest')}>
                       <span>Polaroids</span>
                     </li>
                   )}
@@ -215,6 +216,7 @@ function Profile({ data, metaDescription }) {
               </div>
             </div>
           )}
+
           {data.model.profile?.polaroids?.length > 0 && (
             <div className="box !pt-0 countable">
               <div className="container">

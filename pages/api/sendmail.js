@@ -37,21 +37,28 @@ export default async function api(req, res) {
 
     await form.parse(req, async (err, fields, files) => {
       const attachments = [];
-      if (files.photos) {
-        files.photos.map((file) => {
-          console.log('file', file);
-          attachments.push({
-            filename: file.originalFilename,
-            contentType: file.mimetype,
-            path: file.filepath,
+      if (files && files.photos) {
+        let photos = files.photos;
+
+        if (!Array.isArray(files.photos)) {
+          photos = [files.photos];
+        }
+
+        if (photos) {
+          photos.map((file) => {
+            attachments.push({
+              filename: file.originalFilename,
+              contentType: file.mimetype,
+              path: file.filepath,
+            });
           });
-        });
+        }
       }
       let html = '';
       Object.keys(fields).map((key) => {
         html += `${humanReadable(key)}: ${fields[key]} <br/>`;
       });
-      await sendEmail('Resume Application', html, attachments);
+      await sendEmail(`${process.env.MAIL_USERNAME} Resume Application`, html, attachments);
 
       return res.status(200).json({ status: 'ok', data: { message: 'Application Submitted!' } });
     });

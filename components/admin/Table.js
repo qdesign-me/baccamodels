@@ -215,7 +215,7 @@ export default function Table({ headers, data }) {
       {deleteRow && <Confirm onOk={(e) => doDelete(deleteRow)} onClose={(e) => setDeleteRow(null)} />}
       <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
         <div className="showing showing-top mr-4 sm:mr-6" style={{ minWidth: 100 }}>
-          <div className="text-sm text-gray-700">{tableData.showing}</div>
+          {tableData?.count > 0 && <div className="text-sm text-gray-700">{tableData.showing}</div>}
         </div>
         <input className="max-w-xs input table-search" type="text" placeholder="Search..." value={search} onChange={(e) => setSearch(e.target.value)} />
         <Link href={`${baseUrl}/new`}>
@@ -227,54 +227,59 @@ export default function Table({ headers, data }) {
           </a>
         </Link>
       </div>
-      <div className="table-adaptive">
-        <table className="divide-y divide-gray-200 w-full">
-          <thead className="bg-gray-50">
-            <tr>
-              {headers.map((header, $headerIndex) => {
-                const params = { key: $headerIndex };
-                const className = ['px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider relative'];
-                if (header.className) className.push(header.className);
-                if (header.sort) className.push('cursor-pointer');
-                params.className = className.join(' ');
-                if (header.width) params.width = header.width;
-                if (header.sort) {
-                  params.onClick = () => {
-                    toggleSort(header);
-                  };
-                }
-                return (
-                  <th {...params} scope="col">
-                    {header.title}
-                    {header.sort && <SortControl tableParams={tableParams} header={header} />}
-                  </th>
-                );
-              })}
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {tableData?.results?.map((row, $rowIndex) => (
-              <tr key={$rowIndex}>
-                {headers.map((header, $headerIndex) => {
-                  const params = { key: $headerIndex };
-                  if (header.width) params.width = header.width;
-                  let className = ['px-6 py-4 whitespace-nowrap text-gray-500'];
-                  if (header.className) className.push(header.className);
-                  if (className.length) params.className = className.join(' ');
-                  return <td {...params}>{getValue(row, header, $rowIndex)}</td>;
-                })}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      {tableData?.count === 0 && <div className="text-center mt-3 mb-3 text-xs">no items found</div>}
+      {tableData?.count > 0 && (
+        <>
+          <div className="table-adaptive">
+            <table className="divide-y divide-gray-200 w-full">
+              <thead className="bg-gray-50">
+                <tr>
+                  {headers.map((header, $headerIndex) => {
+                    const params = { key: $headerIndex };
+                    const className = ['px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider relative'];
+                    if (header.className) className.push(header.className);
+                    if (header.sort) className.push('cursor-pointer');
+                    params.className = className.join(' ');
+                    if (header.width) params.width = header.width;
+                    if (header.sort) {
+                      params.onClick = () => {
+                        toggleSort(header);
+                      };
+                    }
+                    return (
+                      <th {...params} scope="col">
+                        {header.title}
+                        {header.sort && <SortControl tableParams={tableParams} header={header} />}
+                      </th>
+                    );
+                  })}
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {tableData?.results?.map((row, $rowIndex) => (
+                  <tr key={$rowIndex}>
+                    {headers.map((header, $headerIndex) => {
+                      const params = { key: $headerIndex };
+                      if (header.width) params.width = header.width;
+                      let className = ['px-6 py-4 whitespace-nowrap text-gray-500'];
+                      if (header.className) className.push(header.className);
+                      if (className.length) params.className = className.join(' ');
+                      return <td {...params}>{getValue(row, header, $rowIndex)}</td>;
+                    })}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
 
-      <div className="flex items-center justify-between bg-white px-4 py-3  border-t border-gray-200 sm:px-6">
-        <Pagination dataLength={tableData?.count} pageLimit={5} dataLimit={10} onPageChange={onPageChange} current={tableData.page} />
-        <div className="showing showing-bottom" style={{ minWidth: 100 }}>
-          <div className="text-sm text-gray-700">{tableData.showing}</div>
-        </div>
-      </div>
+          <div className="flex items-center justify-between bg-white px-4 py-3  border-t border-gray-200 sm:px-6">
+            <Pagination dataLength={tableData?.count} pageLimit={5} dataLimit={10} onPageChange={onPageChange} current={tableData.page} />
+            <div className="showing showing-bottom" style={{ minWidth: 100 }}>
+              <div className="text-sm text-gray-700">{tableData.showing}</div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }

@@ -7,6 +7,7 @@ import { connectToDatabase } from 'hooks/useMongodb';
 
 export default NextAuth({
   secret: process.env.SECRET,
+
   session: {
     jwt: true,
   },
@@ -15,7 +16,7 @@ export default NextAuth({
     // secret: 'INp8IvdIyeMcoGAgFGoA61DdBglwwSqnXJZkgz8PSnw',
     secret: process.env.SECRET,
     // Set to true to use encryption (default: false)
-    // encryption: true,
+    encryption: false,
     // You can define your own encode/decode functions for signing and encryption
     // if you want to override the default behaviour.
     // encode: async ({ secret, token, maxAge }) => {},
@@ -36,9 +37,9 @@ export default NextAuth({
     },
   },
   pages: {
-    signIn: '/auth/signin', // Displays signin buttons
-    //signOut: '/auth/signout', // Displays form with sign out button
-    error: '/auth/signin', // Error code passed in query string as ?error=
+    // signIn: '/auth/signin', // Displays signin buttons
+    // signOut: '/auth/signout', // Displays form with sign out button
+    // error: '/auth/signin', // Error code passed in query string as ?error=
     // verifyRequest: '/auth/verify-request', // Used for check email page
     // newUser: null // If set, new users will be directed here on first sign in
   },
@@ -73,7 +74,7 @@ export default NextAuth({
         if (!found) return null;
 
         if (!comparePassword(credentials.password, found.password)) return null;
-
+        console.log('found', found);
         return { id: found._id.toString(), email: found.email, name: found.name, img: found.img, region: found.region, role: found.role, status: found.status };
       },
     }),

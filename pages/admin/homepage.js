@@ -69,22 +69,11 @@ Homepage.layout = 'admin';
 export default Homepage;
 
 export async function getServerSideProps(context) {
-  /*
-  const session = await getSession(context);
-  console.log(session);
-  if (!session) {
-    return {
-      redirect: {
-        permanent: false,
-        destination: '/auth/signin',
-      },
-    };
-  }
-  */
   const response = await fetch(`${process.env.HOST}/api/admin/country/get`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      cookie: context.req.headers.cookie,
     },
     body: JSON.stringify({ id: 'all' }),
   }).then((res) => res.json());

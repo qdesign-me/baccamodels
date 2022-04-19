@@ -251,10 +251,12 @@ export async function getServerSideProps(context) {
     query.filters = {};
     query.filters.region = context.query.country;
   }
+
   const response = await fetch(`${process.env.HOST}/api/admin/models/get`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      cookie: context.req.headers.cookie,
     },
     body: JSON.stringify(query),
   }).then((res) => res.json());

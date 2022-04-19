@@ -104,7 +104,6 @@ export default async function modelsAPI(req, res) {
       };
 
       await db.collection('regions').updateOne({ _id: id }, { $set: newData });
-
       return res.status(200).json({ status: 'ok', data: { message: 'Successfully Updated!' } });
     });
   } catch (error) {

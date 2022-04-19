@@ -36,7 +36,6 @@ function Become({ data }) {
     onDrop: (acceptedFiles) => {
       try {
         setUploadErrror(null);
-        console.log(acceptedFiles);
         const canAccepth = 3 - files.length;
         acceptedFiles = acceptedFiles.slice(0, canAccepth);
         acceptedFiles.map((file) => {
@@ -101,6 +100,7 @@ function Become({ data }) {
 
     setLoading(false);
     reset();
+    setFiles([]);
     setShowNotification('Your application was sent');
     setTimeout(() => {
       setShowNotification(null);
@@ -223,7 +223,7 @@ function Become({ data }) {
                         >
                           {(function (rows, i, len) {
                             rows.push(
-                              <option disabled value selected>
+                              <option key="-1" disabled selected>
                                 Height
                               </option>
                             );

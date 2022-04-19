@@ -8,7 +8,7 @@ function Favorites() {
   const [count, setCount] = useState(0);
 
   const fetchModels = async (id) => {
-    const ids = JSON.parse(window.localStorage.getItem('favorites')) ?? [];
+    const ids = JSON.parse(window.localStorage.getItem('favorites') || '') ?? [];
     const response = await fetch(`${process.env.HOST}/api/model/byids`, {
       method: 'POST',
       headers: {

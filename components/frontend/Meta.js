@@ -11,7 +11,6 @@ function Meta({ children }) {
         <link rel="icon" href="/favicon.ico" type="image/x-icon"></link>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin />
-        <meta name="robots" content="noindex" />
       </>
     </Head>
   );

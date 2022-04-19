@@ -242,6 +242,7 @@ export async function getServerSideProps(context) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      cookie: context.req.headers.cookie,
     },
     body: JSON.stringify({
       id,

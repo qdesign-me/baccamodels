@@ -30,7 +30,6 @@ function Search() {
       return;
     }
     const fetchData = async () => {
-      console.log('call', debouncedSearch);
       const response = await fetch(`${process.env.HOST}/api/model/byname`, {
         method: 'POST',
         headers: {

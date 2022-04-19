@@ -802,6 +802,9 @@
     @apply fixed top-0 left-0 right-0 bottom-0 z-10 hidden w-screen h-screen;
     background: rgba(0, 0, 0, 0.3);
   }
+  .favorites-close-btn {
+    @apply !absolute w-5 h-5 bg-black text-white right-0 top-0 z-10 text-xl flex items-center justify-center;
+  }
   @media (max-width: 1536px) {
     h1 {
       font-size: 60px;

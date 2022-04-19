@@ -2,13 +2,13 @@ import React from 'react';
 import Header from 'components/frontend/Header';
 import Nav from 'components/frontend/Nav';
 import Follow from 'components/frontend/Follow';
-import Latest from 'components/frontend/Latest';
+import Featured from 'components/frontend/Featured';
 import Meta from 'components/frontend/Meta';
 function Country({ data }) {
   return (
     <>
       <Meta>
-        <title>{`${data.pages.home.metatitle} | ${data.info.company}`}</title>
+        <title>{data.pages.home.metatitle}</title>
 
         <meta name="description" content={data.pages.home.metadescription} />
       </Meta>
@@ -27,7 +27,7 @@ function Country({ data }) {
               </div>
             </div>
           </div>
-          <Latest slides={data.pages.home.latest} />
+          <Featured slides={data.featured} />
           <Follow url={data.info.social.instagram} />
         </main>
       </div>
@@ -40,6 +40,7 @@ export async function getServerSideProps(context) {
   try {
     const country = context.params.country;
     if (!['russia', 'kids', 'kazakhstan'].includes(country)) throw new Error('Wrong country slug');
+
     const response = await fetch(`${process.env.HOST}/api/country/${country}/info`).then((res) => res.json());
 
     return {
