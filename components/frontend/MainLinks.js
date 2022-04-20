@@ -4,7 +4,10 @@ import { useRouter } from 'next/router';
 function MainLinks() {
   const router = useRouter();
   const country = router.query.country;
-  const pages = ['Women', 'Main', 'Development', 'Talent'];
+  let pages = ['Women', 'Main', 'Development', 'Talent'];
+  if (country == 'kids') {
+    pages = ['Girls', 'Boys', 'Main', 'Development', 'Talent'];
+  }
   return (
     <ul>
       {pages.map((page) => {

@@ -91,11 +91,15 @@ export default Grid;
 export async function getServerSideProps(context) {
   const { country, grid } = context.params;
   try {
-    if (!['talent', 'development', 'women'].includes(grid)) throw new Error('Wrong page slug');
+    let allowed = ['talent', 'development', 'women'];
+    if (country === 'kids') allowed = ['talent', 'development', 'boys', 'girls'];
+    if (!allowed.includes(grid)) throw new Error('Wrong page slug');
     const titles = {
       talent: 'Talent',
       development: 'Development',
       women: 'Women',
+      boys: 'Boys',
+      girls: 'Girls',
     };
 
     const h1 = titles[grid];

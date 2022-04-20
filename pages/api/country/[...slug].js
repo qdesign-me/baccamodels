@@ -40,6 +40,8 @@ export default async function modelsAPI(req, res) {
       case 'women':
       case 'development':
       case 'talent':
+      case 'boys':
+      case 'girls':
         country = await db.collection('regions').findOne({ _id: countrySlug }, { projection: { info: 1, [`pages.${requestType}`]: 1 } });
         console.log({ region: countrySlug, category: requestType, status: 'Active' });
         const all = await db
@@ -57,7 +59,6 @@ export default async function modelsAPI(req, res) {
           },
         });
       case 'info':
-        console.log(countrySlug);
         data = await db.collection('regions').findOne(
           { _id: countrySlug },
           {

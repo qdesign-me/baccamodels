@@ -74,7 +74,6 @@ export default NextAuth({
         if (!found) return null;
 
         if (!comparePassword(credentials.password, found.password)) return null;
-        console.log('found', found);
         return { id: found._id.toString(), email: found.email, name: found.name, img: found.img, region: found.region, role: found.role, status: found.status };
       },
     }),
