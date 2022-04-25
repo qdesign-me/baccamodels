@@ -11,12 +11,16 @@ function Events({ data }) {
       <Table
         headers={[
           {
-            title: 'Model',
+            title: 'Picture',
             field: 'name',
             render: 'name',
             sort: true,
           },
-
+          {
+            title: 'Title',
+            field: 'title',
+            sort: true,
+          },
           {
             title: 'Date',
             field: 'added',
@@ -47,15 +51,21 @@ Events.layout = 'admin';
 export default Events;
 
 export async function getServerSideProps(context) {
-  console.log(context.query);
+  const query = { ...context.query };
+  if (context.query.country) {
+    query.filters = {};
+    query.filters.country = context.query.country;
+  }
+
+  delete query.country;
+
   const response = await fetch(`${process.env.HOST}/api/admin/events/get`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       cookie: context.req.headers.cookie,
     },
-
-    body: JSON.stringify(context.query),
+    body: JSON.stringify(query),
   }).then((res) => res.json());
 
   return {

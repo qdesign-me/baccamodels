@@ -427,7 +427,6 @@ function ModelEdit({ data, mode, pageTitle, id, country }) {
           ]}
         />
       </FormWrap>
-      <pre>{JSON.stringify(data, null, 2)}</pre>
     </>
   );
 }

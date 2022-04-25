@@ -126,7 +126,7 @@ export default function Table({ headers, data }) {
         const src = regions[value];
         return (
           <div className="flex items-center">
-            <img src={src} className="h-5 mr-2 rounded-full" />
+            <img src={src} className="h-5 mr-2 rounded-full object-cover" />
             {value}
           </div>
         );

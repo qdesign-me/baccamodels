@@ -259,7 +259,7 @@ function Models({ data }) {
                 </svg>
               </button>
               <div className="flex items-center mb-4">
-                <img className="h-16 w-16 rounded-full mr-4" src={quickView.img} alt="" />
+                <img className="h-16 w-16 rounded-full mr-4 object-cover" src={quickView.img} alt="" />
                 <div className="text-lg font-bold">{quickView.name}</div>
               </div>
               <div className="flex mb-10">
@@ -355,7 +355,7 @@ function Models({ data }) {
                 </svg>
               </button>
               <div className="flex items-center mb-4">
-                <img className="h-16 w-16 rounded-full mr-4" src={historyView.img} alt="" />
+                <img className="h-16 w-16 rounded-full mr-4 object-cover" src={historyView.img} alt="" />
                 <div className="text-lg font-bold">{historyView.name}</div>
               </div>
               <div className="flex mb-10">

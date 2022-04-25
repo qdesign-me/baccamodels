@@ -319,7 +319,6 @@ export default async function modelsAPI(req, res, prefix) {
       });
     form.parse(req);
   } catch (error) {
-    console.log('MY ERRROR', error);
     res.status(404).json({ status: 'error' });
   }
 }

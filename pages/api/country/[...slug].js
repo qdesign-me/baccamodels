@@ -43,7 +43,7 @@ export default async function modelsAPI(req, res) {
       case 'boys':
       case 'girls':
         country = await db.collection('regions').findOne({ _id: countrySlug }, { projection: { info: 1, [`pages.${requestType}`]: 1 } });
-        console.log({ region: countrySlug, category: requestType, status: 'Active' });
+
         const all = await db
           .collection('models')
           .find({ region: countrySlug, category: requestType, status: 'Active' }, { projection: { profile: 0, private: 0 } })
@@ -67,7 +67,7 @@ export default async function modelsAPI(req, res) {
         );
         const temp = await db.collection('modelevents').find({ country: countrySlug, status: 'Active' }).limit(1000).toArray();
 
-        const events = await Promise.all(
+        let events = await Promise.all(
           temp.map(async (event) => {
             const findModel = async (id) => {
               const model = await db.collection('models').findOne({ status: 'Active', _id: ObjectId(id) }, { projection: { profile: 0, private: 0 } });
@@ -78,6 +78,8 @@ export default async function modelsAPI(req, res) {
             return event;
           })
         );
+
+        events = events.filter((event) => event.modelData);
 
         data.events = events;
         const models = await db
@@ -95,7 +97,6 @@ export default async function modelsAPI(req, res) {
     }
     res.status(200).json({ status: 'ok' });
   } catch (error) {
-    console.log(error);
     res.status(404).json({ status: 'error' });
   }
 }

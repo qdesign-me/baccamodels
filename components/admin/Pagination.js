@@ -37,8 +37,6 @@ function Pagination({ dataLength, pageLimit, dataLimit, onPageChange, current })
       pageLimit = pages;
     }
 
-    console.log('pagination', start, pageLimit, currentPage);
-
     return new Array(pageLimit).fill().map((_, idx) => start + idx + 1);
   };
 

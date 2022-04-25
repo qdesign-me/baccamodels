@@ -30,7 +30,7 @@ function ModelEvents({ slides }) {
     },
   };
 
-  if (!slides) return '';
+  if (!slides.length) return '';
 
   return (
     <div>

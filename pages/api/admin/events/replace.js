@@ -22,9 +22,8 @@ export default async function Replace(req, res) {
     const { db } = await connectToDatabase();
 
     await form.parse(req, async (err, fields, files) => {
-      console.log('fields', fields);
       const parts = fields.added.split('-');
-      // const added = new Date(parts[0], parseInt(parts[1]) - 1, parseInt(parts[2]));
+
       const added = fields.added;
       const file = files.newimg;
       let img = fields.img;
@@ -66,7 +65,6 @@ export default async function Replace(req, res) {
       return res.status(200).json({ status: 'ok', data: { message: 'Successfully Updated!' }, redirect: `/admin/${fields.country}/events` });
     });
   } catch (error) {
-    console.log('error', error);
     res.status(404).json({ status: 'error' });
   }
 }

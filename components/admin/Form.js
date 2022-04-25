@@ -39,7 +39,7 @@ function MediaInput({ field, errors, data, setData }) {
     if (!selectedFile) {
       return;
     }
-    console.log(selectedFile);
+
     setMediaType(selectedFile.type.split('/')[0]);
     const objectUrl = URL.createObjectURL(selectedFile);
     setData({ ...data, [field.field]: objectUrl });

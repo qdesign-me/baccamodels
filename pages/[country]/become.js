@@ -73,11 +73,6 @@ function Become({ data }) {
         setUploadErrror(error.message);
       }
     },
-    // onDropRejected: (e) => {
-    //   console.log(e);
-    //   if (e[0].errors[0].code === 'file-too-large') setUploadErrror("File can't be larger than 5mb");
-    //   if (e[0].errors[0].code === 'too-many-files') setUploadErrror('Upload up to 4 photos');
-    // },
   });
 
   const thumbs = files.map((file, index) => (

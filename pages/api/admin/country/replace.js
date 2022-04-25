@@ -120,7 +120,6 @@ export default async function modelsAPI(req, res) {
       return res.status(200).json({ status: 'ok', data: { message: 'Successfully Updated!' } });
     });
   } catch (error) {
-    console.log(error);
     res.status(404).json({ status: 'error' });
   }
 }

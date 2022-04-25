@@ -4,10 +4,10 @@ import { createPassword } from 'hooks/auth';
 export default async function deleteUser(req, res) {
   try {
     const { db } = await connectToDatabase();
-    console.log('body', req.body);
+
     if (req.body.action === 'send') {
       const user = await db.collection('users').findOne({ email: req.body.email });
-      console.log('user', user);
+
       if (user && user.status !== 'Active') {
         return res.status(200).json({ status: 'error', message: 'User is disabled' });
       }
@@ -51,7 +51,6 @@ export default async function deleteUser(req, res) {
       return res.status(200).json({ status: 'ok', message: `Email was successfully sent` });
     }
   } catch (error) {
-    console.log('ERROR', error);
     res.status(404).json({ status: 'error' });
   }
 }

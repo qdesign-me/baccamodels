@@ -18,7 +18,6 @@ export default async function Delete(req, res) {
 
     return res.status(200).json({ status: 'ok' });
   } catch (error) {
-    console.log(error);
     res.status(404).json({ status: 'error' });
   }
 }

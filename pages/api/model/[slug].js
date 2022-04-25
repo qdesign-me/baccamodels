@@ -48,7 +48,6 @@ export default async function modelsAPI(req, res) {
       }
     }
   } catch (error) {
-    console.log('error', error);
     res.status(404).json({ status: 'error' });
   }
 }

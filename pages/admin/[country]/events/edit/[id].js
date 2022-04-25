@@ -10,7 +10,7 @@ function EditEvent({ data, mode, pageTitle, id, session, models }) {
   if (!data) data = {};
 
   const chunks = {
-    Image: {
+    'Event Data': {
       data: {
         status: data.status ?? 'Active',
         model: data.model ?? '',
@@ -47,6 +47,21 @@ function EditEvent({ data, mode, pageTitle, id, session, models }) {
     }
     return Promise.resolve();
   };
+
+  if (models.length < 2)
+    return (
+      <>
+        <Meta>
+          <title>{pageTitle} | Bacca Model Management</title>
+        </Meta>
+        <div>
+          <div className="pb-5">
+            <div className="border-t border-gray-200" />
+          </div>
+        </div>
+        <p>Unable to create an event. Add models first.</p>
+      </>
+    );
   return (
     <>
       <Meta>
@@ -58,14 +73,10 @@ function EditEvent({ data, mode, pageTitle, id, session, models }) {
         </div>
       </div>
       <FormWrap onSubmit={onSubmit} validators={validators}>
-        <div>
-          <div className="pb-5">
-            <div className="border-t border-gray-200" />
-          </div>
-        </div>
+        <div></div>
         <Form
-          title="Image"
-          data={chunks['Image']}
+          title="Event Data"
+          data={chunks['Event Data']}
           groups={[
             {
               className: 'grid gap-6',
@@ -112,14 +123,15 @@ export async function getServerSideProps(context) {
           cookie: context.req.headers.cookie,
         },
         body: JSON.stringify({
-          country: 'russia',
+          region: context.query.country,
           requestType: 'all',
         }),
       }).then((res) => res.json())
-    ).data.results?.map((model) => ({
+    ).data?.map((model) => ({
       value: model._id,
       text: model.name,
     })) ?? [];
+
   if (models.length) models.unshift({ value: '', text: '' });
   let id = context.query.id;
   if (id === 'new') {

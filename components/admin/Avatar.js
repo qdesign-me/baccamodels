@@ -13,7 +13,7 @@ function Avatar({ img }) {
       </svg>
     );
   }
-  return <img className="h-10 w-10 rounded-full" src={img} alt="" />;
+  return <img className="h-10 w-10 rounded-full object-cover" src={img} alt="" />;
 }
 
 export default Avatar;

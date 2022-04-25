@@ -24,7 +24,6 @@ function Nav() {
   }, []);
 
   const fetchUser = async () => {
-    console.log('fetch user');
     if (!session) return;
     const response = await fetch(`${process.env.HOST}/api/admin/users/get`, {
       method: 'POST',

@@ -18,8 +18,6 @@ function FormWrap({ children, validators, onSubmit, previewUrl, useId }) {
       element?.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
       setScrollElement(null);
     }
-
-    // console.log(element.getAttribute('type'));
   }, [scrollElement]);
   const back = () => router.back();
   const change = (e) => {

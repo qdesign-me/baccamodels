@@ -12,7 +12,22 @@ export default async function Get(req, res) {
         return res.status(200).json({ status: 'ok', data });
       }
       default: {
-        const data = await buildQuery(db, 'modelevents', req.body, ['model', 'country', 'status', 'img']);
+        const adjastResults = async (collection, results) => {
+          return await Promise.all(
+            results.map(async (result) => {
+              const findModel = async (id) => {
+                const model = await db.collection('models').findOne({ status: 'Active', _id: ObjectId(id) }, { projection: { profile: 0, private: 0 } });
+
+                return model.name;
+              };
+              result.name = await findModel(result.model);
+              return result;
+            })
+          );
+          return results;
+        };
+        const data = await buildQuery(db, 'modelevents', req.body, ['title', 'country', 'status', 'added', 'name'], adjastResults);
+
         return res.status(200).json({ status: 'ok', data });
       }
     }

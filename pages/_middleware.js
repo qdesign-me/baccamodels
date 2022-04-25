@@ -16,7 +16,6 @@ export async function middleware(req) {
     url.pathname = '/admin/401';
     if (session.user.role === 'Manager') {
       if (req.page?.name === '/admin/users/edit/[id]') {
-        console.log('CHECK', req.page?.name, session.user.id);
         if (req.page.params.id !== session.user.id) {
           return NextResponse.redirect(url);
         }

@@ -26,7 +26,7 @@ function Featured({ slides }) {
     },
   };
 
-  if (!slides) return '';
+  if (!slides.length) return '';
   return (
     <div>
       <h2 className="text-center">Featured Models</h2>

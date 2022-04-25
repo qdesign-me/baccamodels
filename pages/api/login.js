@@ -16,7 +16,7 @@ export default async (req, res) => {
 
     var token = jwt.sign(user, process.env.SECRET);
 
-    console.log(token)
+
 
 
     // Set Cookie

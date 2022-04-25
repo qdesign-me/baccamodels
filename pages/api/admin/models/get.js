@@ -7,8 +7,8 @@ export default async function getModel(req, res) {
     const requestType = req.body.requestType;
 
     switch (requestType) {
-      case 'one': {
-        const data = await db.collection('models').find({ region: req.body.region }).toArray();
+      case 'all': {
+        const data = await db.collection('models').find({ region: req.body.region }).sort({ name: 1 }).toArray();
         return res.status(200).json({ status: 'ok', data });
       }
       case 'one': {
