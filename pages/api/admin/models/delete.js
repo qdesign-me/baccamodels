@@ -6,6 +6,8 @@ export default async function deleteModel(req, res) {
     const { db } = await connectToDatabase();
     const id = req.body.id;
     const found = await db.collection('models').findOne({ _id: ObjectId(id) });
+    await db.collection('modelnotes').deleteMany({ model: id });
+    await db.collection('modelevents').deleteMany({ model: id });
 
     const imagesDir = `/images/${found['region']}/models/${id}`;
     const videoDir = `/video/${found['region']}/models/${id}`;
