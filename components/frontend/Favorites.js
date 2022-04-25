@@ -7,8 +7,9 @@ function Favorites() {
   const country = router.query.country;
   const [count, setCount] = useState(0);
 
-  const fetchModels = async (id) => {
-    const ids = JSON.parse(window.localStorage.getItem('favorites') || '') ?? [];
+  const fetchModels = async () => {
+    if (!window.localStorage.getItem('favorites')) return setCount(0);
+    const ids = JSON.parse(window.localStorage.getItem('favorites') ?? '') ?? [];
     const response = await fetch(`${process.env.HOST}/api/model/byids`, {
       method: 'POST',
       headers: {
