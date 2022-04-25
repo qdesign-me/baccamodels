@@ -70,6 +70,7 @@ export default function Table({ headers, data }) {
 
   const doDelete = async ({ id, url }) => {
     if (url.includes('/models/delete')) url = '/api/admin/models/delete';
+    if (url.includes('/events/delete')) url = '/api/admin/events/delete';
 
     await fetch(`${process.env.HOST}${url}`, {
       method: 'POST',
@@ -160,7 +161,7 @@ export default function Table({ headers, data }) {
                 {typeof action === 'object' && (
                   <div onClick={(e) => action.onClick(row)}>
                     {action.icon === 'view' && (
-                      <a>
+                      <a title="View">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                           <path
@@ -172,12 +173,19 @@ export default function Table({ headers, data }) {
                         </svg>
                       </a>
                     )}
+                    {action.icon === 'history' && (
+                      <a title="Add note">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+                        </svg>
+                      </a>
+                    )}
                   </div>
                 )}
 
                 {typeof action === 'string' && action === 'edit' && (
                   <Link href={`${baseUrl}/edit/${row._id}`}>
-                    <a>
+                    <a title="Edit">
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path
                           strokeLinecap="round"
@@ -190,7 +198,7 @@ export default function Table({ headers, data }) {
                   </Link>
                 )}
                 {typeof action === 'string' && action === 'delete' && (
-                  <a className="cursor-pointer" onClick={(e) => askDelete(row._id, `/api${baseUrl}/delete`)}>
+                  <a title="Delete" className="cursor-pointer" onClick={(e) => askDelete(row._id, `/api${baseUrl}/delete`)}>
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path
                         strokeLinecap="round"

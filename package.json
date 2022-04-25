@@ -30,6 +30,7 @@
     "react-hook-form": "^7.30.0",
     "react-mapbox-gl": "^5.1.1",
     "react-multi-carousel": "^2.8.0",
+    "react-time-ago": "^7.1.9",
     "sharp": "^0.29.2"
   },
   "devDependencies": {

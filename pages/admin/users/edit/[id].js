@@ -7,11 +7,10 @@ import { useRouter } from 'next/router';
 
 function UserEdit({ data, mode, pageTitle, id, session }) {
   let canSetPassword = false;
+  const canChangeRegion = session?.user?.role === 'Admin';
   const router = useRouter();
   if (!data) data = {};
-  useEffect(() => {
-    router.prefetch('/admin/users');
-  });
+
   const chunks = {
     'General Information': {
       data: {
@@ -35,23 +34,22 @@ function UserEdit({ data, mode, pageTitle, id, session }) {
       },
     },
   };
-  const validators = { required: ['img', 'name', 'phone', 'email'], email: ['email'] };
+  const validators = {
+    required: ['img', 'name', 'phone', 'email'],
+    email: ['email'],
+    server: {
+      fields: ['email'],
+      url: '/api/admin/users/replace',
+    },
+  };
   if (mode === 'create') {
     validators.password = ['password'];
     validators.required.push('password');
-    validators.server = {
-      field: 'email',
-      url: '/api/admin/users/replace',
-    };
     canSetPassword = true;
   }
   if (mode === 'edit') {
-    if ((session?.user && session.user.id == router.query.id) || router.query.id === 'profile') {
+    if (session?.user?.id == router.query.id || router.query.id === 'profile') {
       validators.password = ['password'];
-      validators.server = {
-        field: 'email',
-        url: '/api/admin/users/replace',
-      };
       canSetPassword = true;
     }
   }
@@ -59,6 +57,7 @@ function UserEdit({ data, mode, pageTitle, id, session }) {
   const onSubmit = async (body) => {
     if (mode === 'edit') body.append('id', id);
     body.append('mode', mode);
+
     const res = await fetch('/api/admin/users/replace', {
       method: 'POST',
       headers: {
@@ -72,7 +71,12 @@ function UserEdit({ data, mode, pageTitle, id, session }) {
       document.dispatchEvent(customEvent);
     }
 
-    if (res.redirect) {
+    if (session.user.id == router.query.id) {
+      const customEvent = new CustomEvent('updateAvatar');
+      document.dispatchEvent(customEvent);
+    }
+
+    if (res.redirect && session.user.role !== 'Manager') {
       router.push(res.redirect);
     }
     return Promise.resolve();
@@ -128,43 +132,46 @@ function UserEdit({ data, mode, pageTitle, id, session }) {
             },
           ]}
         />
-
-        <div>
-          <div className="py-5">
-            <div className="border-t border-gray-200" />
+        {canChangeRegion && (
+          <div>
+            <div className="py-5">
+              <div className="border-t border-gray-200" />
+            </div>
           </div>
-        </div>
+        )}
 
-        <Form
-          title="Region Management"
-          data={chunks['Region Management']}
-          groups={[
-            {
-              className: 'space-y-6',
-              fields: [
-                {
-                  field: 'role',
-                  title: 'Role',
-                  type: 'checkboxes',
-                  values: ['Admin', 'Manager'],
-                  variants: [{ subtitle: 'Admins have full access' }],
-                },
-                {
-                  field: 'region',
-                  title: 'Region',
-                  type: 'radiobuttons',
-                  showOnly: 'role===Manager',
-                  variants: [
-                    { title: 'All', value: 'all', subtitle: 'Can manage any region' },
-                    { title: 'Russia', value: 'russia', subtitle: 'Can manage only models in region Russia' },
-                    { title: 'Kazahstan', value: 'kazahstan', subtitle: 'Can manage only models in region Kazahstan' },
-                    { title: 'Kids', value: 'kids', subtitle: 'Can manage only models in Kids' },
-                  ],
-                },
-              ],
-            },
-          ]}
-        />
+        {canChangeRegion && (
+          <Form
+            title="Region Management"
+            data={chunks['Region Management']}
+            groups={[
+              {
+                className: 'space-y-6',
+                fields: [
+                  {
+                    field: 'role',
+                    title: 'Role',
+                    type: 'checkboxes',
+                    values: ['Admin', 'Manager'],
+                    variants: [{ subtitle: 'Admins have full access' }],
+                  },
+                  {
+                    field: 'region',
+                    title: 'Region',
+                    type: 'radiobuttons',
+                    showOnly: 'role===Manager',
+                    variants: [
+                      { title: 'All', value: 'all', subtitle: 'Can manage any region' },
+                      { title: 'Russia', value: 'russia', subtitle: 'Can manage only models in region Russia' },
+                      { title: 'Kazakhstan', value: 'kazakhstan', subtitle: 'Can manage only models in region Kazakhstan' },
+                      { title: 'Kids', value: 'kids', subtitle: 'Can manage only models in Kids' },
+                    ],
+                  },
+                ],
+              },
+            ]}
+          />
+        )}
 
         {canSetPassword && (
           <div>

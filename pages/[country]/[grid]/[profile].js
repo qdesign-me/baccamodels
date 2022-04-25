@@ -162,6 +162,11 @@ function Profile({ data, metaDescription }) {
                       <div>{formatParam(key, data.model.profile.params[key])}</div>
                     </div>
                   ))}
+                  {data.model.country && (
+                    <div>
+                      <div className="title">Now in</div> <div>{data.model.country}</div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

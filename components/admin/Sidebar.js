@@ -34,6 +34,7 @@ function Sidebar() {
       children: [
         { title: 'Content', url: '' },
         { title: 'Models', url: '/models' },
+        { title: 'Events', url: '/events' },
       ],
     },
     {
@@ -42,6 +43,7 @@ function Sidebar() {
       children: [
         { title: 'Content', url: '' },
         { title: 'Models', url: '/models' },
+        { title: 'Events', url: '/events' },
       ],
     },
     {
@@ -50,6 +52,7 @@ function Sidebar() {
       children: [
         { title: 'Content', url: '' },
         { title: 'Models', url: '/models' },
+        { title: 'Events', url: '/events' },
       ],
     },
   ];
@@ -67,11 +70,12 @@ function Sidebar() {
           {menu
             .filter((page) => {
               const title = page.title.toLowerCase();
-              if (!session || !session.user) return false;
+              if (!session?.user?.role) return false;
               if (session.user.role === 'Admin') return true;
-              if (session.user.role === 'Manager' && title === 'users') return false;
-              if (session.user.role === 'Manager' && title === 'homepage') return false;
+              if (title === 'users') return false;
+              if (title === 'homepage') return false;
               if (session.user.region === 'all') return true;
+
               return title === session.user.region;
             })
             .map((page) => (

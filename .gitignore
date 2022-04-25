@@ -15,9 +15,11 @@
 .env
 # production
 /build
-/public/images/russia
-/public/video/russia
-
+/public/images/russia/
+/public/images/kazakhstan/
+/public/images/kids/
+/public/images/admin/
+/public/video/
 # misc
 .DS_Store
 *.pem

@@ -3,7 +3,7 @@ import Form from 'components/admin/Form';
 import FormWrap from 'components/admin/FormWrap';
 import Meta from 'components/frontend/Meta';
 import { useRouter } from 'next/router';
-function ModelEdit({ data, mode, pageTitle, id }) {
+function ModelEdit({ data, mode, pageTitle, id, country }) {
   const router = useRouter();
   const previewUrl = mode === 'edit' ? `${data.slug}` : null;
   const chunks = {
@@ -40,6 +40,7 @@ function ModelEdit({ data, mode, pageTitle, id }) {
     'Show on Page': {
       data: {
         category: data.category ?? '',
+        region: country,
       },
     },
     Book: {
@@ -62,7 +63,7 @@ function ModelEdit({ data, mode, pageTitle, id }) {
   const onSubmit = async (body) => {
     if (mode === 'edit') body.append('id', id);
     body.append('mode', mode);
-    body.append('region', router.query.country);
+
     const res = await fetch('/api/admin/models/replace', {
       method: 'POST',
       headers: {
@@ -93,7 +94,6 @@ function ModelEdit({ data, mode, pageTitle, id }) {
         validators={{
           required: [
             'name',
-
             'profile.params.height',
             'profile.params.hair',
             'profile.params.eyes',
@@ -106,6 +106,10 @@ function ModelEdit({ data, mode, pageTitle, id }) {
           ],
           email: ['private.email'],
           domain: ['profile.social.instagram', 'profile.social.facebook', 'profile.social.vk'],
+          server: {
+            fields: ['name', 'category', 'region'],
+            url: '/api/admin/models/replace',
+          },
         }}
       >
         <div>
@@ -153,13 +157,70 @@ function ModelEdit({ data, mode, pageTitle, id }) {
               className: 'grid grid-cols-12 gap-6',
               fields: [
                 { field: 'profile.params.height', title: 'Height (cm)', type: 'text', span: 3 },
-                { field: 'profile.params.hair', title: 'Hair', type: 'select', span: 3, variants: ['', 'Black', 'Brown ', 'Auburn ', 'Red', 'Blond', 'Gray / White', 'Blue'] },
-                { field: 'profile.params.eyes', title: 'Eyes', type: 'select', span: 3, variants: ['', 'Black', 'Blue', 'Blue / Green', 'Brown', 'Green', 'Gray'] },
+                {
+                  field: 'profile.params.hair',
+                  title: 'Hair',
+                  type: 'select',
+                  span: 3,
+                  variants: [
+                    { value: '', text: '' },
+                    { value: 'Black', text: 'Black' },
+                    { value: 'Brown', text: 'Brown' },
+                    { value: 'Auburn', text: 'Auburn' },
+                    { value: 'Red', text: 'Red' },
+                    { value: 'Blond', text: 'Blond' },
+                    { value: 'Gray / White', text: 'Gray / White' },
+                    { value: 'Blue', text: 'Blue' },
+                  ],
+                },
+                {
+                  field: 'profile.params.eyes',
+                  title: 'Eyes',
+                  type: 'select',
+                  span: 3,
+                  variants: [
+                    { value: '', text: '' },
+                    { value: 'Black', text: 'Black' },
+                    { value: 'Blue', text: 'Blue' },
+                    { value: 'Blue / Green', text: 'Blue / Green' },
+                    { value: 'Brown', text: 'Brown' },
+                    { value: 'Green', text: 'Green' },
+                    { value: 'Gray', text: 'Gray' },
+                  ],
+                },
                 { field: 'profile.params.bust', title: 'Bust (cm)', type: 'text', span: 3 },
                 { field: 'profile.params.waist', title: 'Waist (cm)', type: 'text', span: 3 },
                 { field: 'profile.params.hips', title: 'Hips (cm)', type: 'text', span: 3 },
-                { field: 'profile.params.shoes', title: 'Shoes (size)', type: 'select', span: 3, variants: ['', '34', '35', '36', '37', '38', '39', '40', '41', '42'] },
-                { field: 'country', title: 'Now in', type: 'select', span: 3, variants: ['', 'Russia', 'Belarus', 'Kazakhstan'] },
+                {
+                  field: 'profile.params.shoes',
+                  title: 'Shoes (size)',
+                  type: 'select',
+                  span: 3,
+                  variants: [
+                    { value: '', text: '' },
+                    { value: 34, text: 34 },
+                    { value: 35, text: 35 },
+                    { value: 36, text: 36 },
+                    { value: 37, text: 37 },
+                    { value: 38, text: 38 },
+                    { value: 39, text: 39 },
+                    { value: 40, text: 40 },
+                    { value: 41, text: 41 },
+                    { value: 42, text: 42 },
+                  ],
+                },
+                {
+                  field: 'country',
+                  title: 'Now in',
+                  type: 'select',
+                  span: 3,
+                  variants: [
+                    { value: '', text: '' },
+                    { value: 'Russia', text: 'Russia' },
+                    { value: 'Belarus', text: 'Belarus' },
+                    { value: 'Kazakhstan', text: 'Kazakhstan' },
+                  ],
+                },
               ],
             },
             {
@@ -171,7 +232,7 @@ function ModelEdit({ data, mode, pageTitle, id }) {
                   type: 'checkboxes',
                   span: 12,
                   values: ['Yes', 'No'],
-                  variants: [{ subtitle: 'Show on country main page' }],
+                  variants: [{ subtitle: 'Show in featured' }],
                 },
               ],
             },
@@ -190,13 +251,11 @@ function ModelEdit({ data, mode, pageTitle, id }) {
             },
           ]}
         />
-
         <div>
           <div className="py-5">
             <div className="border-t border-gray-200" />
           </div>
         </div>
-
         <Form
           title="Private Information"
           data={chunks['Private Information']}
@@ -208,49 +267,92 @@ function ModelEdit({ data, mode, pageTitle, id }) {
                 { field: 'private.email', title: 'Email', type: 'text', span: 6, input: 'email' },
                 { field: 'private.phone', title: 'Phone', type: 'text', span: 6, input: 'tel' },
                 { field: 'private.city', title: 'From City', type: 'text', span: 6 },
-                { field: 'private.country', title: 'From Country', type: 'select', span: 6, variants: ['', 'Russia', 'Belarus', 'Kazakhstan'] },
+                {
+                  field: 'private.country',
+                  title: 'From Country',
+                  type: 'select',
+                  span: 6,
+                  variants: [
+                    { value: '', text: '' },
+                    { value: 'Russia', text: 'Russia' },
+                    { value: 'Belarus', text: 'Belarus' },
+                    { value: 'Kazakhstan', text: 'Kazakhstan' },
+                  ],
+                },
                 { field: 'private.agency', title: 'Agency (if already moeling)', type: 'text', span: 6 },
                 { field: 'private.dob', title: 'Date of Birth', type: 'text', span: 6, input: 'date' },
               ],
             },
           ]}
         />
-
         <div>
           <div className="py-5">
             <div className="border-t border-gray-200" />
           </div>
         </div>
 
-        <Form
-          title="Show on Page"
-          data={chunks['Show on Page']}
-          subtitle="Decide where to show current profile"
-          groups={[
-            {
-              className: 'grid gap-6',
-              fields: [
-                {
-                  field: 'category',
-                  title: 'Page Type',
-                  type: 'radiobuttons',
-                  variants: [
-                    { title: 'Women', subtitle: 'Profile will show on Women page', value: 'women' },
-                    { title: 'Development', subtitle: 'Profile will show on Development page', value: 'development' },
-                    { title: 'Talent', subtitle: 'Profile will show on Talent page', value: 'talent' },
-                  ],
-                },
-              ],
-            },
-          ]}
-        />
-
+        {country !== 'kids' && (
+          <Form
+            title="Show on Page"
+            data={chunks['Show on Page']}
+            subtitle="Decide where to show current profile"
+            groups={[
+              {
+                className: 'hide-my-input',
+                fields: [{ field: 'region', title: '', type: 'text', input: 'text', attr: 'disabled="disabled"' }],
+              },
+              {
+                className: 'grid gap-6',
+                fields: [
+                  {
+                    field: 'category',
+                    title: 'Page Type',
+                    type: 'radiobuttons',
+                    variants: [
+                      { title: 'Women', subtitle: 'Profile will show on Women page', value: 'women' },
+                      { title: 'Development', subtitle: 'Profile will show on Development page', value: 'development' },
+                      { title: 'Talent', subtitle: 'Profile will show on Talent page', value: 'talent' },
+                    ],
+                  },
+                ],
+              },
+            ]}
+          />
+        )}
+        {country === 'kids' && (
+          <Form
+            title="Show on Page"
+            data={chunks['Show on Page']}
+            subtitle="Decide where to show current profile"
+            groups={[
+              {
+                className: 'hide-my-input',
+                fields: [{ field: 'region', title: '', type: 'text', input: 'text', attr: 'disabled="disabled"' }],
+              },
+              {
+                className: 'grid gap-6',
+                fields: [
+                  {
+                    field: 'category',
+                    title: 'Page Type',
+                    type: 'radiobuttons',
+                    variants: [
+                      { title: 'Girls', subtitle: 'Profile will show on Girls page', value: 'girls' },
+                      { title: 'Boys', subtitle: 'Profile will show on Boys page', value: 'boys' },
+                      { title: 'Development', subtitle: 'Profile will show on Development page', value: 'development' },
+                      { title: 'Talent', subtitle: 'Profile will show on Talent page', value: 'talent' },
+                    ],
+                  },
+                ],
+              },
+            ]}
+          />
+        )}
         <div>
           <div className="py-5">
             <div className="border-t border-gray-200" />
           </div>
         </div>
-
         <Form
           title="Book"
           subtitle="Images for Book"
@@ -273,13 +375,11 @@ function ModelEdit({ data, mode, pageTitle, id }) {
             },
           ]}
         />
-
         <div>
           <div className="py-5">
             <div className="border-t border-gray-200" />
           </div>
         </div>
-
         <Form
           title="Polaroids"
           data={chunks['Polaroids']}
@@ -301,13 +401,11 @@ function ModelEdit({ data, mode, pageTitle, id }) {
             },
           ]}
         />
-
         <div>
           <div className="py-5">
             <div className="border-t border-gray-200" />
           </div>
         </div>
-
         <Form
           title="Videos"
           data={chunks['Videos']}
@@ -329,6 +427,7 @@ function ModelEdit({ data, mode, pageTitle, id }) {
           ]}
         />
       </FormWrap>
+      <pre>{JSON.stringify(data, null, 2)}</pre>
     </>
   );
 }
@@ -337,10 +436,12 @@ ModelEdit.layout = 'admin';
 export default ModelEdit;
 
 export async function getServerSideProps(context) {
+  const country = context.resolvedUrl.split('/')[2];
+
   let id = context.query.id;
   if (id === 'new') {
     return {
-      props: { data: {}, mode: 'create', pageTitle: 'Create User', id: null },
+      props: { data: {}, mode: 'create', pageTitle: 'Create User', id: null, country },
     };
   }
   const response = await fetch(`${process.env.HOST}/api/admin/models/get`, {
@@ -353,6 +454,6 @@ export async function getServerSideProps(context) {
   }).then((res) => res.json());
 
   return {
-    props: { data: response.data, mode: 'edit', pageTitle: 'Edit Model', id },
+    props: { data: response.data, mode: 'edit', pageTitle: 'Edit Model', id, country },
   };
 }

@@ -15,10 +15,16 @@ function CountryEdit({ data }) {
         'info.company': data.info?.company ?? '',
       },
     },
-    Women: {
+    Girls: {
       data: {
-        'pages.women.metatitle': data.pages?.women?.metatitle ?? '',
-        'pages.women.metadescription': data.pages?.women?.metadescription ?? '',
+        'pages.girls.metatitle': data.pages?.girls?.metatitle ?? '',
+        'pages.girls.metadescription': data.pages?.girls?.metadescription ?? '',
+      },
+    },
+    Boys: {
+      data: {
+        'pages.boys.metatitle': data.pages?.boys?.metatitle ?? '',
+        'pages.boys.metadescription': data.pages?.boys?.metadescription ?? '',
       },
     },
     Development: {
@@ -70,7 +76,7 @@ function CountryEdit({ data }) {
   };
 
   const onSubmit = async (body) => {
-    body.append('id', router.query.country);
+    body.append('id', 'kids');
     const res = await fetch('/api/admin/country/replace', {
       method: 'POST',
       headers: {
@@ -105,8 +111,10 @@ function CountryEdit({ data }) {
             'pages.home.metatitle',
             'pages.home.metadescription',
             'pages.home.text',
-            'pages.women.metatitle',
-            'pages.women.metadescription',
+            'pages.girls.metatitle',
+            'pages.girls.metadescription',
+            'pages.boys.metatitle',
+            'pages.boys.metadescription',
             'pages.talent.metatitle',
             'pages.talent.metadescription',
             'pages.development.metatitle',
@@ -183,14 +191,34 @@ function CountryEdit({ data }) {
         </div>
 
         <Form
-          title="Women"
-          data={chunks['Women']}
+          title="Girls"
+          data={chunks['Girls']}
           groups={[
             {
               className: 'grid grid-cols-12 gap-6',
               fields: [
-                { field: 'pages.women.metatitle', title: 'Meta Title', type: 'text', span: 12 },
-                { field: 'pages.women.metadescription', title: 'Meta Description', type: 'textarea', span: 12, rows: 2 },
+                { field: 'pages.girls.metatitle', title: 'Meta Title', type: 'text', span: 12 },
+                { field: 'pages.girls.metadescription', title: 'Meta Description', type: 'textarea', span: 12, rows: 2 },
+              ],
+            },
+          ]}
+        />
+
+        <div>
+          <div className="py-5">
+            <div className="border-t border-gray-200" />
+          </div>
+        </div>
+
+        <Form
+          title="Boys"
+          data={chunks['Boys']}
+          groups={[
+            {
+              className: 'grid grid-cols-12 gap-6',
+              fields: [
+                { field: 'pages.boys.metatitle', title: 'Meta Title', type: 'text', span: 12 },
+                { field: 'pages.boys.metadescription', title: 'Meta Description', type: 'textarea', span: 12, rows: 2 },
               ],
             },
           ]}
@@ -335,7 +363,7 @@ export async function getServerSideProps(context) {
       'Content-Type': 'application/json',
       cookie: context.req.headers.cookie,
     },
-    body: JSON.stringify({ id: context.query.country }),
+    body: JSON.stringify({ id: 'kids' }),
   }).then((res) => res.json());
 
   return {

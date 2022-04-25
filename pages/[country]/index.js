@@ -3,6 +3,7 @@ import Header from 'components/frontend/Header';
 import Nav from 'components/frontend/Nav';
 import Follow from 'components/frontend/Follow';
 import Featured from 'components/frontend/Featured';
+import ModelEvents from 'components/frontend/ModelEvents';
 import Meta from 'components/frontend/Meta';
 function Country({ data }) {
   return (
@@ -28,6 +29,7 @@ function Country({ data }) {
             </div>
           </div>
           <Featured slides={data.featured} />
+          <ModelEvents slides={data.events} />
           <Follow url={data.info.social.instagram} />
         </main>
       </div>

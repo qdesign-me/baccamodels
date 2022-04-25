@@ -63,6 +63,9 @@ export default async function modelsAPI(req, res) {
           newData.password = password;
         }
 
+        if (!newData.role) delete newData.role;
+        if (!newData.region) delete newData.region;
+        console.log('newData', newData);
         await db.collection('users').updateOne({ _id: ObjectId(id) }, { $set: newData });
         return res.status(200).json({ status: 'ok', data: { message: 'Successfully Updated!' }, redirect: `/admin/users` });
       }

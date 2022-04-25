@@ -54,10 +54,6 @@ export default async function modelsAPI(req, res) {
       }
       const newData = {
         pages: {
-          women: {
-            metatitle: fields['pages.women.metatitle'],
-            metadescription: fields['pages.women.metadescription'],
-          },
           development: {
             metatitle: fields['pages.development.metatitle'],
             metadescription: fields['pages.development.metadescription'],
@@ -102,6 +98,23 @@ export default async function modelsAPI(req, res) {
           company: fields['info.company'],
         },
       };
+
+      if (id === 'kids') {
+        newData.pages.boys = {
+          metatitle: fields['pages.boys.metatitle'],
+          metadescription: fields['pages.boys.metadescription'],
+        };
+
+        newData.pages.girls = {
+          metatitle: fields['pages.girls.metatitle'],
+          metadescription: fields['pages.girls.metadescription'],
+        };
+      } else {
+        newData.pages.women = {
+          metatitle: fields['pages.women.metatitle'],
+          metadescription: fields['pages.women.metadescription'],
+        };
+      }
 
       await db.collection('regions').updateOne({ _id: id }, { $set: newData });
       return res.status(200).json({ status: 'ok', data: { message: 'Successfully Updated!' } });

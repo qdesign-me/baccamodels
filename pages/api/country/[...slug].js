@@ -1,5 +1,5 @@
 import { connectToDatabase } from 'hooks/useMongodb';
-
+import { ObjectId } from 'mongodb';
 export default async function modelsAPI(req, res) {
   try {
     const [countrySlug, requestType] = req.query.slug;
@@ -65,14 +65,29 @@ export default async function modelsAPI(req, res) {
             projection: { info: 1, 'pages.home': 1 }, //aggregate: [{ $lookup: { from: 'models', localField: 'modelId', foreignField: '_id', as: 'myCustomResut' } }]
           }
         );
-        const countrymodels = await db
+        const temp = await db.collection('modelevents').find({ country: countrySlug, status: 'Active' }).limit(1000).toArray();
+
+        const events = await Promise.all(
+          temp.map(async (event) => {
+            const findModel = async (id) => {
+              const model = await db.collection('models').findOne({ status: 'Active', _id: ObjectId(id) }, { projection: { profile: 0, private: 0 } });
+
+              return model;
+            };
+            event.modelData = await findModel(event.model);
+            return event;
+          })
+        );
+
+        data.events = events;
+        const models = await db
           .collection('models')
           .find({ region: countrySlug, status: 'Active', featured: 'Yes' }, { projection: { profile: 0, private: 0 } })
           .sort({ name: 1 })
           .limit(1000)
           .toArray();
 
-        data.featured = countrymodels;
+        data.featured = models;
         return res.status(200).json({
           status: 'ok',
           data,

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { validateEmail } from 'hooks/utils';
-function FormWrap({ children, validators, onSubmit, previewUrl }) {
+function FormWrap({ children, validators, onSubmit, previewUrl, useId }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [initialized, setInitialized] = useState(false);
@@ -83,7 +83,7 @@ function FormWrap({ children, validators, onSubmit, previewUrl }) {
           if (!value.match(/(?=.*[a-z])/)) message = 'Password should contain at least one lower case';
           if (!value.match(/(?=.*[A-Z])/)) message = 'Password should contain at least one upper case';
           if (!value.match(/(?=.*[!@#\$%\^\&*\)\(+=._-])/)) message = 'Password should contain at least one special character';
-          if (value.length < 7) message = 'Password should be at least 7 characters';
+          if (value.length < 6) message = 'Password should be at least 6 characters';
 
           if (message) {
             setErrors((old) => {
@@ -96,23 +96,25 @@ function FormWrap({ children, validators, onSubmit, previewUrl }) {
       });
 
       if (validators?.server) {
-        const value = data.get(validators.server.field);
-        if (value) {
-          const found = await fetch(`${process.env.HOST}${validators.server.url}`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ [validators.server.field]: value, mode: 'validate', id: router.query.id }),
-          }).then((res) => res.json());
+        const pairs = {};
+        validators.server.fields.map((field) => {
+          pairs[field] = data.get(field);
+        });
 
-          if (found.data.message !== 'ok') {
-            setErrors((old) => {
-              return { ...old, [validators.server.field]: found.data.message };
-            });
-            if (!errorCount) setScrollElement(validators.server.field);
-            errorCount++;
-          }
+        const found = await fetch(`${process.env.HOST}${validators.server.url}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ ...pairs, mode: 'validate', id: router.query.id }),
+        }).then((res) => res.json());
+
+        if (found.data.message !== 'ok') {
+          setErrors((old) => {
+            return { ...old, [validators.server.fields[0]]: found.data.message };
+          });
+          if (!errorCount) setScrollElement(validators.server.fields[0]);
+          errorCount++;
         }
       }
     }

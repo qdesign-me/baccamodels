@@ -118,7 +118,9 @@ function SelectInput({ field, errors, data, setData }) {
         className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
       >
         {field.variants.map((variant) => (
-          <option key={variant}>{variant}</option>
+          <option key={variant.value} value={variant.value}>
+            {variant.text}
+          </option>
         ))}
       </select>
       {errors[field.field] && <div className="error">{errors[field.field]}</div>}
@@ -266,52 +268,24 @@ function TextareaInput({ field, errors, data, setData }) {
   );
 }
 function UploadInput({ field, errors, data, setData }) {
-  const [dragId, setDragId] = useState();
-
   const [uploadError, setUploadErrror] = useState(null);
 
-  const handleDrag = (ev) => {
-    setDragId(ev.currentTarget.id);
+  const [dragWidget, setDragWidget] = useState();
+
+  const dragStartHandler = (e, widget) => {
+    setDragWidget(widget);
   };
 
-  const handleDrop = (ev) => {
-    const dragBox = data[field.field].find((box) => box.id === dragId);
-    const dropBox = data[field.field].find((box) => box.id === ev.currentTarget.id);
+  const dropHandler = (e, dropWidget) => {
+    e.preventDefault();
 
-    const dragBoxOrder = dragBox.order;
-    const dropBoxOrder = dropBox.order;
+    if (dropWidget.id === dragWidget.id) return;
+    const tmp = [...data[field.field]];
 
-    const newFiles = data[field.field].map((box) => {
-      if (box.id === dragId) {
-        box.order = dropBoxOrder;
-        return box;
-      }
-      if (box.order >= dropBoxOrder) {
-        box.order++;
-      }
-
-      return box;
-    });
-
-    setData({ ...data, [field.field]: newFiles });
-  };
-
-  const ThumbBox = ({ handleDrag, handleDrop, data, field }) => {
-    return (
-      <div draggable={true} id={data.id} onDragOver={(ev) => ev.preventDefault()} onDragStart={handleDrag} onDrop={handleDrop}>
-        <div className="thumb">
-          <div className="thumbInner">
-            <div className="delete-thumb" onClick={(e) => deleteFile(data.id)}>
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </div>
-            {field.media === 'images' && <img src={data.preview} alt="" />}
-            {field.media === 'videos' && <video autoPlay={true} muted={true} loop playsInline src={data.preview} className="w-12 h-12 object-cover" />}
-          </div>
-        </div>
-      </div>
-    );
+    const dragIdx = tmp.findIndex((widget) => widget.id === dragWidget.id);
+    const dropIdx = tmp.findIndex((widget) => widget.id === dropWidget.id);
+    [tmp[dragIdx], tmp[dropIdx]] = [tmp[dropIdx], tmp[dragIdx]];
+    setData({ ...data, [field.field]: tmp });
   };
 
   const deleteFile = (id) => {
@@ -390,11 +364,21 @@ function UploadInput({ field, errors, data, setData }) {
         </div>
       </div>
       <aside className="thumbsContainer">
-        {Object.values(data[field.field])
-          ?.sort((a, b) => a.order - b.order)
-          .map((file) => (
-            <ThumbBox key={file.id} handleDrag={handleDrag} handleDrop={handleDrop} data={file} field={field} />
-          ))}
+        {Object.values(data[field.field]).map((file) => (
+          <div key={file.order} draggable={true} onDragStart={(e) => dragStartHandler(e, file)} onDragOver={(e) => e.preventDefault()} onDrop={(e) => dropHandler(e, file)}>
+            <div className="thumb">
+              <div className="thumbInner">
+                <div className="delete-thumb" onClick={(e) => deleteFile(file.id)}>
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </div>
+                {field.media === 'images' && <img src={file.preview} alt="" />}
+                {field.media === 'videos' && <video autoPlay={true} muted={true} loop playsInline src={file.preview} className="w-12 h-12 object-cover" />}
+              </div>
+            </div>
+          </div>
+        ))}
       </aside>
 
       {uploadError && (

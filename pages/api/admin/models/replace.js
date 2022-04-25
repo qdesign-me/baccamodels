@@ -3,6 +3,15 @@ import formidable from 'formidable';
 import { ObjectId } from 'mongodb';
 import fs from 'fs';
 import sharp from 'sharp';
+const uid = (length = 16) => {
+  return parseInt(
+    Math.ceil(Math.random() * Date.now())
+      .toPrecision(length)
+      .toString()
+      .replace('.', '')
+  );
+};
+
 export const config = {
   api: {
     bodyParser: false,
@@ -21,10 +30,11 @@ export default async function modelsAPI(req, res, prefix) {
 
   try {
     const files = [];
-    const fields = [];
+    const fields = {};
     let media = [];
     const { db } = await connectToDatabase();
     const form = new formidable.IncomingForm();
+
     form
       .on('field', (field, value) => {
         fields[field] = value;
@@ -34,6 +44,19 @@ export default async function modelsAPI(req, res, prefix) {
         files[field].push(file);
       })
       .on('end', async () => {
+        if (fields.mode === 'validate') {
+          const search = { name: fields.name, region: fields.region, category: fields.category };
+          if (fields.id !== 'new') search['_id'] = { $ne: ObjectId(fields.id) };
+
+          const found = await db.collection('models').findOne(search);
+
+          if (found) {
+            return res.status(200).json({ data: { message: 'This name already exist' } });
+          } else {
+            return res.status(200).json({ data: { message: 'ok' } });
+          }
+        }
+
         const unid = Date.now().toString();
         let id = fields.id;
         let clean = null;
@@ -46,6 +69,7 @@ export default async function modelsAPI(req, res, prefix) {
         }
 
         const slug = `/${fields['region']}/${fields['category']}/${prepareUrl(fields['name'])}`;
+
         const imagesDir = `/images/${fields['region']}/models/${id}`;
         if (!fs.existsSync(`${process.cwd()}/public${imagesDir}`)) {
           fs.mkdirSync(`${process.cwd()}/public${imagesDir}`);
@@ -68,12 +92,13 @@ export default async function modelsAPI(req, res, prefix) {
               });
 
               if (found?.filepath) {
-                const preview = `${imagesDir}/${unid}_book${newFile.order + 1}.jpg`;
+                const nname = uid();
+                const preview = `${imagesDir}/book_${nname}.jpg`;
 
                 const target = `${process.cwd()}/public${preview}`;
                 await sharp(found.filepath)
                   .rotate()
-                  .resize({ height: 600 })
+                  .resize({ height: 600, width: 480 })
                   .jpeg({ mozjpeg: true })
                   .toFile(target, (error, info) => {
                     if (error) console.log('error uploading', error);
@@ -109,12 +134,13 @@ export default async function modelsAPI(req, res, prefix) {
               });
 
               if (found?.filepath) {
-                const preview = `${imagesDir}/${unid}_polaroid${newFile.order + 1}.jpg`;
+                const nname = uid();
+                const preview = `${imagesDir}/polaroid_${nname}.jpg`;
 
                 const target = `${process.cwd()}/public${preview}`;
                 await sharp(found.filepath)
                   .rotate()
-                  .resize({ height: 600 })
+                  .resize({ height: 600, width: 480 })
                   .jpeg({ mozjpeg: true })
                   .toFile(target, (error, info) => {
                     if (error) console.log('error uploading', error);
@@ -150,7 +176,8 @@ export default async function modelsAPI(req, res, prefix) {
               });
 
               if (found?.filepath) {
-                const preview = `${videoDir}/${unid}_video${newFile.order + 1}.mp4`;
+                const nname = uid();
+                const preview = `${videoDir}/video_${nname}.mp4`;
 
                 const target = `${process.cwd()}/public${preview}`;
                 await fs.rename(found.filepath, target, function (error) {
@@ -175,7 +202,6 @@ export default async function modelsAPI(req, res, prefix) {
         fields['allvideos'] = [...media];
 
         if (files.newimg && files.newimg[0]?.originalFilename) {
-          console.log(`update img ${imagesDir}/${unid}_thumb.jpg`);
           fields['img'] = `${imagesDir}/${unid}_thumb.jpg`;
 
           const target = `${process.cwd()}/public${fields['img']}`;
@@ -258,7 +284,7 @@ export default async function modelsAPI(req, res, prefix) {
                 return oldName.preview === newName.preview;
               });
               if (!found) {
-                cleanUp(oldName);
+                cleanUp(oldName.preview);
               }
             });
           }
@@ -268,7 +294,7 @@ export default async function modelsAPI(req, res, prefix) {
                 return oldName.preview === newName.preview;
               });
               if (!found) {
-                cleanUp(oldName);
+                cleanUp(oldName.preview);
               }
             });
           }
@@ -278,7 +304,7 @@ export default async function modelsAPI(req, res, prefix) {
                 return oldName.preview === newName.preview;
               });
               if (!found) {
-                cleanUp(oldName);
+                cleanUp(oldName.preview);
               }
             });
           }
@@ -293,6 +319,7 @@ export default async function modelsAPI(req, res, prefix) {
       });
     form.parse(req);
   } catch (error) {
+    console.log('MY ERRROR', error);
     res.status(404).json({ status: 'error' });
   }
 }

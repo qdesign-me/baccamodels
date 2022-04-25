@@ -1,4 +1,4 @@
-import { Fragment, useEffect } from 'react';
+import { Fragment, useState, useEffect } from 'react';
 import { Menu, Transition } from '@headlessui/react';
 import Avatar from './Avatar';
 import Link from 'next/link';
@@ -10,6 +10,36 @@ function classNames(...classes) {
 
 function Nav() {
   const { data: session } = useSession();
+  const [avatar, setAvatar] = useState();
+
+  useEffect(() => {
+    fetchUser();
+  }, [session]);
+
+  useEffect(() => {
+    document.addEventListener('updateAvatar', fetchUser);
+    return () => {
+      document.removeEventListener('updateAvatar', fetchUser);
+    };
+  }, []);
+
+  const fetchUser = async () => {
+    console.log('fetch user');
+    if (!session) return;
+    const response = await fetch(`${process.env.HOST}/api/admin/users/get`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id: session?.user?.id,
+        requestType: 'one',
+      }),
+    }).then((res) => res.json());
+    if (response.status == 'ok') {
+      setAvatar(response.data.img);
+    }
+  };
 
   const openMenu = () => {
     document.body.classList.add('admin-menu-open', 'has-overflow');
@@ -33,7 +63,7 @@ function Nav() {
         <div>
           <Menu.Button className="flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
             <span className="sr-only">Open user menu</span>
-            <Avatar img={session?.user?.img} />
+            <Avatar img={avatar} />
           </Menu.Button>
         </div>
         <Transition
@@ -48,7 +78,7 @@ function Nav() {
           <Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
             <Menu.Item>
               {({ active }) => (
-                <Link href={`/admin/users/edit/profile`}>
+                <Link href={`/admin/users/edit/${session.user.id}`}>
                   <a className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}>Your Profile</a>
                 </Link>
               )}

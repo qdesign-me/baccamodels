@@ -14,6 +14,22 @@ function Become({ data }) {
   const [showInformation, setShowInformation] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [dragWidget, setDragWidget] = useState();
+
+  const dragStartHandler = (e, widget) => {
+    setDragWidget(widget);
+  };
+
+  const dropHandler = (e, dropWidget) => {
+    e.preventDefault();
+    if (dropWidget.id === dragWidget.id) return;
+    const tmp = [...files];
+    const dragIdx = tmp.findIndex((widget) => widget.id === dragWidget.id);
+    const dropIdx = tmp.findIndex((widget) => widget.id === dropWidget.id);
+    [tmp[dragIdx], tmp[dropIdx]] = [tmp[dropIdx], tmp[dragIdx]];
+    setFiles(tmp);
+  };
+
   const {
     register,
     handleSubmit,
@@ -45,9 +61,10 @@ function Become({ data }) {
         });
         setFiles(
           files.concat(
-            acceptedFiles.map((file) =>
+            acceptedFiles.map((file, index) =>
               Object.assign(file, {
                 preview: URL.createObjectURL(file),
+                id: index,
               })
             )
           )
@@ -64,7 +81,14 @@ function Become({ data }) {
   });
 
   const thumbs = files.map((file, index) => (
-    <div className="thumb" key={file.name}>
+    <div
+      className="thumb"
+      key={file.name}
+      draggable={true}
+      onDragStart={(e) => dragStartHandler(e, file)}
+      onDragOver={(e) => e.preventDefault()}
+      onDrop={(e) => dropHandler(e, file)}
+    >
       <div className="thumbInner">
         <div className="delete-thumb" onClick={(e) => deleteFile(index)}>
           <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -315,6 +339,7 @@ function Become({ data }) {
                         <p className="text-xs text-gray-500">PNG, JPG files only</p>
                       </div>
                     </div>
+
                     <aside className="thumbsContainer">{thumbs}</aside>
                     {uploadError && (
                       <div className="mt-4">
