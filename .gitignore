@@ -15,12 +15,13 @@
 .env
 # production
 /build
+/public/images
+/public/video
 
 # misc
 .DS_Store
 *.pem
-/public/images
-/public/video
+
 # debug
 npm-debug.log*
 yarn-debug.log*
