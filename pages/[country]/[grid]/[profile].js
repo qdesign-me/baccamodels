@@ -87,6 +87,52 @@ function Profile({ data, metaDescription }) {
       items: 1,
     },
   };
+  const download = async () => {
+    const fnGetFileNameFromContentDispostionHeader = (header) => {
+      let contentDispostion = header.split(';');
+      const fileNameToken = `filename=`;
+
+      let fileName = 'profile.pdf';
+      for (let thisValue of contentDispostion) {
+        if (thisValue.trim().indexOf(fileNameToken) === 0) {
+          fileName = decodeURIComponent(thisValue.trim().replace(fileNameToken, ''));
+          break;
+        }
+      }
+      return fileName;
+    };
+
+    await fetch('/api/download', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id: data.model._id, country: data.model.region }),
+    })
+      .then(async (res) => {
+        console.log('res', res);
+        return {
+          filename: fnGetFileNameFromContentDispostionHeader(res.headers.get('content-disposition')),
+          type: res.headers.get('content-type'),
+          blob: await res.blob(),
+        };
+      })
+      .then((resObj) => {
+        const newBlob = new Blob([resObj.blob], { type: resObj.type });
+        if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+          window.navigator.msSaveOrOpenBlob(newBlob);
+        } else {
+          const objUrl = window.URL.createObjectURL(newBlob);
+          let link = document.createElement('a');
+          link.href = objUrl;
+          link.download = resObj.filename;
+          link.click();
+          setTimeout(() => {
+            window.URL.revokeObjectURL(objUrl);
+          }, 250);
+        }
+      });
+  };
   return (
     <>
       <Meta>
@@ -189,7 +235,7 @@ function Profile({ data, metaDescription }) {
               </div>
               <div className="container">
                 <div className="wrap-sm">
-                  <button className="link-follow mt-12">
+                  <button className="link-follow mt-12" onClick={download}>
                     <div className="mr-4">Download Book</div>
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />

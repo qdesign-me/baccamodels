@@ -11,6 +11,14 @@ export default async function modelsAPI(req, res) {
 
       //   return res.status(200).json({ status: 'ok', data });
       // }
+      case 'details': {
+        const { id, country } = req.body;
+        console.log('ID', id);
+        const model = await db.collection('models').findOne({ _id: ObjectId(id) });
+        const info = (await db.collection('regions').findOne({ _id: country }, { projection: { 'pages.contacts': true } })).pages.contacts;
+
+        return res.status(200).json({ status: 'ok', data: { model, info } });
+      }
       case 'profile': {
         const { country, grid, profile } = req.body;
         const slug = `/${country}/${grid}/${profile}`;
@@ -39,7 +47,6 @@ export default async function modelsAPI(req, res) {
         const models = (
           await db
             .collection('models')
-
             .find({ region: country, status: 'Active' }, { projection: { category: 0, region: 0, country: 0, private: 0, profile: 0 } })
             .sort({ name: 1 })
             .toArray()

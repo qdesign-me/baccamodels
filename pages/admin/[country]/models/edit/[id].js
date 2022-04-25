@@ -124,7 +124,7 @@ function ModelEdit({ data, mode, pageTitle, id, country }) {
           groups={[
             {
               className: 'grid gap-6',
-              fields: [{ field: 'img', title: 'Thumb', description: '320x427px', type: 'media', allow: 'image', newname: 'newimg', accept: 'image/png, image/gif, image/jpeg' }],
+              fields: [{ field: 'img', title: 'Thumb', description: '600x480px', type: 'media', allow: 'image', newname: 'newimg', accept: 'image/png, image/gif, image/jpeg' }],
             },
             {
               className: 'grid gap-6',

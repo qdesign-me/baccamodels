@@ -207,7 +207,7 @@ export default async function modelsAPI(req, res, prefix) {
           const target = `${process.cwd()}/public${fields['img']}`;
           await sharp(files.newimg[0].filepath)
             .rotate()
-            .resize({ height: 427, width: 320, fit: 'contain', background: { r: 255, g: 255, b: 255, alpha: 1 } })
+            .resize({ height: 600, width: 480, background: { r: 255, g: 255, b: 255, alpha: 1 } })
             .jpeg({ mozjpeg: true })
             .toFile(target, (error, info) => {
               if (error) console.log('error uploading', error);
