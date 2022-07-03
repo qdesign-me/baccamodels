@@ -11,9 +11,10 @@ export default async function deleteModel(req, res) {
 
     const imagesDir = `/images/${found['region']}/models/${id}`;
     const videoDir = `/video/${found['region']}/models/${id}`;
-
-    fs.rmdirSync(`${process.cwd()}/public${imagesDir}`, { recursive: true, force: true });
-    fs.rmdirSync(`${process.cwd()}/public${videoDir}`, { recursive: true, force: true });
+    try {
+      fs.rmdirSync(`${process.cwd()}/public${imagesDir}`, { recursive: true, force: true });
+      fs.rmdirSync(`${process.cwd()}/public${videoDir}`, { recursive: true, force: true });
+    } catch (e) {}
 
     await db.collection('models').deleteOne({ _id: ObjectId(id) });
 
