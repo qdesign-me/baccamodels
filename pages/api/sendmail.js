@@ -35,33 +35,37 @@ export default async function api(req, res) {
   try {
     let form = formidable({ multiples: true });
 
-    await form.parse(req, async (err, fields, files) => {
-      const attachments = [];
-      if (files && files.photos) {
-        let photos = files.photos;
-
-        if (!Array.isArray(files.photos)) {
-          photos = [files.photos];
-        }
-
-        if (photos) {
-          photos.map((file) => {
-            attachments.push({
-              filename: file.originalFilename,
-              contentType: file.mimetype,
-              path: file.filepath,
-            });
-          });
-        }
-      }
-      let html = '';
-      Object.keys(fields).map((key) => {
-        html += `${humanReadable(key)}: ${fields[key]} <br/>`;
+    const { err, fields, files } = await new Promise(function (resolve, reject) {
+      form.parse(req, (err, fields, files) => {
+        resolve({ err, fields, files });
       });
-      await sendEmail(`${process.env.MAIL_USERNAME} Resume Application`, html, attachments);
-
-      return res.status(200).json({ status: 'ok', data: { message: 'Application Submitted!' } });
     });
+
+    const attachments = [];
+    if (files && files.photos) {
+      let photos = files.photos;
+
+      if (!Array.isArray(files.photos)) {
+        photos = [files.photos];
+      }
+
+      if (photos) {
+        photos.map((file) => {
+          attachments.push({
+            filename: file.originalFilename,
+            contentType: file.mimetype,
+            path: file.filepath,
+          });
+        });
+      }
+    }
+    let html = '';
+    Object.keys(fields).map((key) => {
+      html += `${humanReadable(key)}: ${fields[key]} <br/>`;
+    });
+    await sendEmail(`${process.env.MAIL_USERNAME} Resume Application`, html, attachments);
+
+    return res.status(200).json({ status: 'ok', data: { message: 'Application Submitted!' } });
   } catch (error) {
     res.status(404).json({ status: 'error' });
   }
