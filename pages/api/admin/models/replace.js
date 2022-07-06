@@ -37,6 +37,9 @@ export default async function modelsAPI(req, res, prefix) {
 
     const payload = await new Promise(function (resolve, reject) {
       form
+        .on('error', (error) => {
+          console.log('some error', error);
+        })
         .on('field', (field, value) => {
           fields[field] = value;
         })
@@ -45,6 +48,7 @@ export default async function modelsAPI(req, res, prefix) {
           files[field].push(file);
         })
         .on('end', async () => {
+          console.log('parsed', files, fields);
           if (fields.mode === 'validate') {
             const search = { name: fields.name, region: fields.region, category: fields.category };
             if (fields.id !== 'new') search['_id'] = { $ne: ObjectId(fields.id) };
@@ -320,6 +324,7 @@ export default async function modelsAPI(req, res, prefix) {
         });
       form.parse(req);
     });
+
     res.status(200).json(payload);
   } catch (error) {
     console.log('error', error);
