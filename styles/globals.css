@@ -126,6 +126,7 @@
   .home-links {
     @apply relative z-10 flex flex-col justify-center items-center max-w-3xl mx-auto;
     padding: 80px 100px 70px;
+    background: #fff;
   }
   .home-links > ul {
     @apply flex justify-around  text-gray-500;
@@ -135,7 +136,6 @@
     transition: 0.3s;
     font-size: 18px;
     padding: 10px 20px;
-    color: #000;
   }
   .home-links a:hover {
     color: #000;
